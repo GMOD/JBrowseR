@@ -9,7 +9,7 @@ RBrowse <- function(location, width = NULL, height = NULL, elementId = NULL) {
 
   # describe a React component to send to the browser for rendering.
   # TODO: get the location passed to actually be used by widget
-  component <- reactR::component("View", list(location))
+  component <- reactR::component("View", list(location = location))
 
   # create widget
   htmlwidgets::createWidget(
