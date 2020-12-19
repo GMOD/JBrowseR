@@ -2,13 +2,13 @@ library(shiny)
 library(RBrowse)
 
 ui <- fluidPage(
-  titlePanel("reactR HTMLWidget Example"),
+  titlePanel("RBrowse Example"),
   RBrowseOutput('widgetOutput')
 )
 
 server <- function(input, output, session) {
   output$widgetOutput <- renderRBrowse(
-    RBrowse("Foopy doopy!")
+    RBrowse("10:29,838,737..29,838,819")
   )
 }
 
