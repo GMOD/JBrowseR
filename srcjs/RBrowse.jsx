@@ -95,7 +95,7 @@ const defaultSession = {
   },
 };
 
-function View(props) {
+function ViewHg38(props) {
   console.log({ props });
   const state = createViewState({
     assembly,
@@ -110,4 +110,4 @@ function View(props) {
   );
 }
 
-reactWidget("RBrowse", "output", { View: View });
+reactWidget("RBrowse", "output", { ViewHg38: ViewHg38 });
