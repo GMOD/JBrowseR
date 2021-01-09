@@ -8,7 +8,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   output$widgetOutput <- renderRBrowse(
-    RBrowse("10:29,838,737..29,838,819")
+    RBrowse("ViewHg19", "10:29,838,737..29,838,819")
   )
 }
 
