@@ -5,11 +5,10 @@
 #' @import htmlwidgets
 #'
 #' @export
-RBrowse <- function(view, location, width = NULL, height = NULL, elementId = NULL) {
+RBrowse <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
 
   # describe a React component to send to the browser for rendering.
-  # TODO: get the location passed to actually be used by widget
-  component <- reactR::component(view, list(location = location))
+  component <- reactR::component(view, list(...))
 
   # create widget
   htmlwidgets::createWidget(
