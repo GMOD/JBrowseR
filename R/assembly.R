@@ -125,11 +125,11 @@ first_value <- function(x) {
 
 # assembly("foo")
 
-is_url("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
-
-test <- fa_assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
-
-print(test)
+# is_url("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
+#
+# test <- fa_assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
+#
+# print(test)
 
 # fa_assembly("foo.fa")
 
