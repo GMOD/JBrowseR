@@ -4,7 +4,7 @@
 \alias{RBrowse}
 \title{<Add Title>}
 \usage{
-RBrowse(width = NULL, height = NULL, elementId = NULL)
+RBrowse(view, ..., width = NULL, height = NULL, elementId = NULL)
 }
 \description{
 <Add Description>
