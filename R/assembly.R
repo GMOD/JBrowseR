@@ -1,5 +1,4 @@
 library(stringr)
-library(magrittr)
 
 # Interface:
 #
@@ -20,6 +19,7 @@ library(magrittr)
 #' @return
 #' @export
 #'
+#'@importFrom magrittr "%>%"
 #' @examples
 assembly <- function(sequence, bgzip = FALSE) {
   if (!bgzip) {

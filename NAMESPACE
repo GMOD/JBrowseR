@@ -2,5 +2,7 @@
 
 export(RBrowse)
 export(RBrowseOutput)
+export(assembly)
 export(renderRBrowse)
 import(htmlwidgets)
+importFrom(magrittr,"%>%")
