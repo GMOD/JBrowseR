@@ -6,3 +6,4 @@
 ^package\.json$
 ^webpack\.config\.js$
 ^yarn\.lock$
+^LICENSE\.md$
