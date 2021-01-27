@@ -1,6 +1,7 @@
-#' <Add Title>
+#' R interface to JBrowse 2 genome browser
 #'
-#' <Add Description>
+#' Embed a JBrowse 2 linear genome view in your Shiny app,
+#' Rmd document, or interactive R console.
 #'
 #' @import htmlwidgets
 #'
