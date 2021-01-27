@@ -2,10 +2,11 @@
 % Please edit documentation in R/RBrowse.R
 \name{RBrowse}
 \alias{RBrowse}
-\title{<Add Title>}
+\title{R interface to JBrowse 2 genome browser}
 \usage{
 RBrowse(view, ..., width = NULL, height = NULL, elementId = NULL)
 }
 \description{
-<Add Description>
+Embed a JBrowse 2 linear genome view in your Shiny app,
+Rmd document, or interactive R console.
 }
