@@ -48,5 +48,5 @@ For more information on creating these files, visit
 \url{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}
 }
 \examples{
-assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
+assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
 }
