@@ -8,13 +8,15 @@ import {
 const theme = createJBrowseTheme();
 
 export default function View(props) {
-  console.log({ props });
-  const state = createViewState({
-    assembly: props.assembly,
-    tracks: props.tracks,
-    location: props.location,
-    defaultSession: props.defaultSession,
-  });
+  // create object of state options with only those
+  // passed as props
+  const stateOpts = {};
+  for (const [key, value] of Object.entries(props)) {
+    // parse the string of JSON config
+    stateOpts[key] = JSON.parse(value);
+  }
+  console.log({ stateOpts });
+  const state = createViewState(stateOpts);
 
   return (
     <ThemeProvider theme={theme}>
