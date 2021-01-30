@@ -65,23 +65,25 @@ fa_assembly <- function(sequence) {
   # interpolate values into a string of JBrowse configuration
   #
   # note: this gets parsed into JSON in client and used as assembly value
-  stringr::str_glue(
-    "{{ ",
-    '"name": "{name}", ',
-    '"sequence": {{ ',
-    '"type": "ReferenceSequenceTrack", ',
-    '"trackId": "{name}-ReferenceSequenceTrack", ',
-    '"adapter": {{ ',
-    '"type": "IndexedFastaAdapter", ',
-    '"fastaLocation": {{ ',
-    '"uri": "{sequence}" ',
-    "}}, ",
-    '"faiLocation": {{ ',
-    '"uri": "{sequence}.fai" ',
-    "}} ",
-    "}} ",
-    "}} ",
-    "}}"
+  as.character(
+    stringr::str_glue(
+      "{{ ",
+      '"name": "{name}", ',
+      '"sequence": {{ ',
+      '"type": "ReferenceSequenceTrack", ',
+      '"trackId": "{name}-ReferenceSequenceTrack", ',
+      '"adapter": {{ ',
+      '"type": "IndexedFastaAdapter", ',
+      '"fastaLocation": {{ ',
+      '"uri": "{sequence}" ',
+      "}}, ",
+      '"faiLocation": {{ ',
+      '"uri": "{sequence}.fai" ',
+      "}} ",
+      "}} ",
+      "}} ",
+      "}}"
+    )
   )
 }
 
@@ -91,26 +93,28 @@ bgzip_fa_assembly <- function(sequence) {
   # interpolate values into a string of JBrowse configuration
   #
   # note: this gets parsed into JSON in client and used as assembly value
-  stringr::str_glue(
-    "{{ ",
-    '"name": "{name}", ',
-    '"sequence": {{ ',
-    '"type": "ReferenceSequenceTrack", ',
-    '"trackId": "{name}-ReferenceSequenceTrack", ',
-    '"adapter": {{ ',
-    '"type": "BgzipFastaAdapter", ',
-    '"fastaLocation": {{ ',
-    '"uri": "{sequence}" ',
-    "}}, ",
-    '"faiLocation": {{ ',
-    '"uri": "{sequence}.fai" ',
-    "}}, ",
-    '"gziLocation": {{ ',
-    '"uri": "{sequence}.gzi" ',
-    "}} ",
-    "}} ",
-    "}} ",
-    "}}"
+  as.character(
+    stringr::str_glue(
+      "{{ ",
+      '"name": "{name}", ',
+      '"sequence": {{ ',
+      '"type": "ReferenceSequenceTrack", ',
+      '"trackId": "{name}-ReferenceSequenceTrack", ',
+      '"adapter": {{ ',
+      '"type": "BgzipFastaAdapter", ',
+      '"fastaLocation": {{ ',
+      '"uri": "{sequence}" ',
+      "}}, ",
+      '"faiLocation": {{ ',
+      '"uri": "{sequence}.fai" ',
+      "}}, ",
+      '"gziLocation": {{ ',
+      '"uri": "{sequence}.gzi" ',
+      "}} ",
+      "}} ",
+      "}} ",
+      "}}"
+    )
   )
 }
 
