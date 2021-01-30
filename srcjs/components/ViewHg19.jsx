@@ -92,7 +92,12 @@ const defaultSession = {
 };
 
 export default function Hg19View(props) {
-  console.log({ props });
+  // console.log('Props:')
+  // console.log({ props });
+  // console.log('Parsed string value:')
+  // console.log(JSON.parse(props.test))
+  // console.log({assembly: JSON.stringify(assembly)})
+  
   const state = createViewState({
     assembly,
     tracks,
