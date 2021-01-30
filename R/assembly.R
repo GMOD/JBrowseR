@@ -1,14 +1,3 @@
-# Interface:
-#
-# 1. For now, only indexedFasta or bigzipFasta
-#
-# 2. The name is always guessed from file name
-#
-# 3. No aliases for now
-#
-# 4.  If local file, must already be in same directory
-#     (or in directory in same place, i.e. data/hg19.fa)
-
 #' Create an assembly for a custom RBrowse view
 #'
 #' Creates the necessary configuration string for an
@@ -117,3 +106,14 @@ bgzip_fa_assembly <- function(sequence) {
     )
   )
 }
+
+# Interface ---------------------------------------------------------------
+#
+# 1. For now, only indexedFasta or bigzipFasta
+#
+# 2. The name is always guessed from file name
+#
+# 3. No aliases for now
+#
+# 4.  If local file, must already be in same directory
+#     (or in directory in same place, i.e. data/hg19.fa)
