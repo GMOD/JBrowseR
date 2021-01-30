@@ -45,7 +45,7 @@
 #' @param sequence the URL or file path to your fasta file
 #' @param bgzip whether or not your fasta is bgzip compressed
 #'
-#' @return
+#' @return a string of RBrowse assembly configuration
 #' @export
 #'
 #' @importFrom magrittr "%>%"

@@ -12,7 +12,7 @@ assembly(sequence, bgzip = FALSE)
 \item{bgzip}{whether or not your fasta is bgzip compressed}
 }
 \value{
-
+a string of RBrowse assembly configuration
 }
 \description{
 Creates the necessary configuration string for an
