@@ -1,5 +1,3 @@
-library(stringr)
-
 # Interface:
 #
 # 1. For now, only indexedFasta or bigzipFasta
@@ -11,16 +9,48 @@ library(stringr)
 # 4.  If local file, must already be in same directory
 #     (or in directory in same place, i.e. data/hg19.fa)
 
-#' Title
+#' Create an assembly for a custom RBrowse view
 #'
-#' @param sequence
-#' @param bgzip
+#' Creates the necessary configuration string for an
+#' indexed fasta or bgzip fasta so that it can be used
+#' as the assembly in a RBrowse custom linear genome view.
+#'
+#' The string returned by \code{assembly} is stringified JSON.
+#' RBrowse is an interface to JBrowse 2, which receives its
+#' configuration in JSON format. The stringified JSON returned
+#' by \code{assembly} is parsed into a JavaScript object in the
+#' browser, and is used to configure the genome browser.
+#'
+#' It is important to note that while only the fasta file is
+#' passed as an argument, \code{assembly} assumes that a fasta
+#' index of the same name is located with the fasta file (as
+#' well as a gzi file in the case of a bgzip fasta).
+#'
+#' For example:
+#'
+#' \code{assembly("data/hg38.fa")}
+#'
+#' Assumes that \code{data/hg38.fa.fai} also exists.
+#'
+#' \code{assembly("data/hg38.fa", bgzip = TRUE)}
+#'
+#' Assumes that \code{data/hg38.fa.fai} and \code{data/hg38.fa.gzi} both exist.
+#'
+#' This is a JBrowse 2 convention, and the default naming output of samtools
+#' and bgzip.
+#'
+#' For more information on creating these files, visit
+#' \href{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}
+#'
+#' @param sequence the URL or file path to your fasta file
+#' @param bgzip whether or not your fasta is bgzip compressed
 #'
 #' @return
 #' @export
 #'
-#'@importFrom magrittr "%>%"
+#' @importFrom magrittr "%>%"
 #' @examples
+#' assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
 assembly <- function(sequence, bgzip = FALSE) {
   if (!bgzip) {
     fa_assembly(sequence)
