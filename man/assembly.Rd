@@ -45,7 +45,7 @@ This is a JBrowse 2 convention, and the default naming output of samtools
 and bgzip.
 
 For more information on creating these files, visit
-\href{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}
+\url{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}
 }
 \examples{
 assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
