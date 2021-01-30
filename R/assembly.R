@@ -50,7 +50,7 @@
 #'
 #' @importFrom magrittr "%>%"
 #' @examples
-#' assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
+#' assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
 assembly <- function(sequence, bgzip = FALSE) {
   if (!bgzip) {
     fa_assembly(sequence)
@@ -154,15 +154,3 @@ last_value <- function(x) {
 first_value <- function(x) {
   x[1]
 }
-
-# scratch
-
-# assembly("foo")
-
-# is_url("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
-#
-# test <- fa_assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz")
-#
-# print(test)
-
-# fa_assembly("foo.fa")
