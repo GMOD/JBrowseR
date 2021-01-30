@@ -66,7 +66,7 @@ fa_assembly <- function(sequence) {
   #
   # note: this gets parsed into JSON in client and used as assembly value
   stringr::str_glue(
-    '{{ ',
+    "{{ ",
     '"name": "{name}", ',
     '"sequence": {{ ',
     '"type": "ReferenceSequenceTrack", ',
@@ -75,13 +75,13 @@ fa_assembly <- function(sequence) {
     '"type": "IndexedFastaAdapter", ',
     '"fastaLocation": {{ ',
     '"uri": "{sequence}" ',
-    '}}, ',
+    "}}, ",
     '"faiLocation": {{ ',
     '"uri": "{sequence}.fai" ',
-    '}} ',
-    '}} ',
-    '}} ',
-    '}}'
+    "}} ",
+    "}} ",
+    "}} ",
+    "}}"
   )
 }
 
@@ -92,7 +92,7 @@ bgzip_fa_assembly <- function(sequence) {
   #
   # note: this gets parsed into JSON in client and used as assembly value
   stringr::str_glue(
-    '{{ ',
+    "{{ ",
     '"name": "{name}", ',
     '"sequence": {{ ',
     '"type": "ReferenceSequenceTrack", ',
@@ -101,16 +101,16 @@ bgzip_fa_assembly <- function(sequence) {
     '"type": "BgzipFastaAdapter", ',
     '"fastaLocation": {{ ',
     '"uri": "{sequence}" ',
-    '}}, ',
+    "}}, ",
     '"faiLocation": {{ ',
     '"uri": "{sequence}.fai" ',
-    '}}, ',
+    "}}, ",
     '"gziLocation": {{ ',
     '"uri": "{sequence}.gzi" ',
-    '}} ',
-    '}} ',
-    '}} ',
-    '}}'
+    "}} ",
+    "}} ",
+    "}} ",
+    "}}"
   )
 }
 
@@ -162,4 +162,3 @@ first_value <- function(x) {
 # print(test)
 
 # fa_assembly("foo.fa")
-

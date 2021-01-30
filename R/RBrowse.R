@@ -13,11 +13,11 @@ RBrowse <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
 
   # create widget
   htmlwidgets::createWidget(
-    name = 'RBrowse',
+    name = "RBrowse",
     reactR::reactMarkup(component),
     width = width,
     height = height,
-    package = 'RBrowse',
+    package = "RBrowse",
     elementId = elementId
   )
 }
@@ -39,14 +39,16 @@ RBrowse <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
 #' @name RBrowse-shiny
 #'
 #' @export
-RBrowseOutput <- function(outputId, width = '100%', height = '400px'){
-  htmlwidgets::shinyWidgetOutput(outputId, 'RBrowse', width, height, package = 'RBrowse')
+RBrowseOutput <- function(outputId, width = "100%", height = "400px") {
+  htmlwidgets::shinyWidgetOutput(outputId, "RBrowse", width, height, package = "RBrowse")
 }
 
 #' @rdname RBrowse-shiny
 #' @export
 renderRBrowse <- function(expr, env = parent.frame(), quoted = FALSE) {
-  if (!quoted) { expr <- substitute(expr) } # force quoted
+  if (!quoted) {
+    expr <- substitute(expr)
+  } # force quoted
   htmlwidgets::shinyRenderWidget(expr, RBrowseOutput, env, quoted = TRUE)
 }
 
