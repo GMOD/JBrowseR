@@ -68,18 +68,18 @@ bgzip_fa_assembly <- function(sequence) {
     '"type": "ReferenceSequenceTrack", ',
     '"trackId": "{name}-ReferenceSequenceTrack", ',
     '"adapter": {{ ',
-    '"type": "IndexedFastaAdapter", ',
+    '"type": "BgzipFastaAdapter", ',
     '"fastaLocation": {{ ',
-    '"uri": "{sequence}", ',
+    '"uri": "{sequence}" ',
     '}}, ',
     '"faiLocation": {{ ',
     '"uri": "{sequence}.fai" ',
     '}}, ',
     '"gziLocation": {{ ',
     '"uri": "{sequence}.gzi" ',
-    '}}, ',
-    '}}, ',
-    '}}, ',
+    '}} ',
+    '}} ',
+    '}} ',
     '}}'
   )
 }
