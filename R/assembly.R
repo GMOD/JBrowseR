@@ -44,13 +44,13 @@ fa_assembly <- function(sequence) {
     '"adapter": {{ ',
     '"type": "IndexedFastaAdapter", ',
     '"fastaLocation": {{ ',
-    '"uri": "{sequence}", ',
+    '"uri": "{sequence}" ',
     '}}, ',
     '"faiLocation": {{ ',
     '"uri": "{sequence}.fai" ',
-    '}}, ',
-    '}}, ',
-    '}}, ',
+    '}} ',
+    '}} ',
+    '}} ',
     '}}'
   )
 }
