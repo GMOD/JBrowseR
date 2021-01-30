@@ -29,5 +29,7 @@ module.exports = {
     stats: {
         colors: true
     },
-    devtool: 'source-map'
+    // can toggle source map back on during development
+    // devtool: 'source-map'
+    devtool: ''
 };
