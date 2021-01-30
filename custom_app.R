@@ -6,35 +6,19 @@ ui <- fluidPage(
   RBrowseOutput('widgetOutput')
 )
 
+# TODO: I'm going to try passing the custom configurations to View as strings, and then inside View calling JSON.parse
+# to turn them into the correct JavaScript object.
+#
+# This should get around the issues I'm having with passing arrays from R to JS.
+#
+# Workflow:
+#   1. call JSON.stringify() from ViewHg19 to get strings of the config
+#   2. add the strings to this app.
+#   3. call JSON.parse in View to turn the strings into the config objects
+#   4. profit :)
+
 server <- function(input, output, session) {
-  assembly <- list(
-    name =  "hg19",
-    sequence = list(
-      type = "ReferenceSequenceTrack",
-      trackId = "GRCh37-ReferenceSequenceTrack",
-      adapter = list(
-        type = "BgzipFastaAdapter",
-        fastaLocation = list(
-          uri = "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"
-        ),
-        faiLocation = list(
-          uri = "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai"
-        ),
-        gziLocation = list(
-          uri = "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi"
-        )
-      )
-    ),
-    aliases = c("GRCh37"),
-    refNameAliases = list(
-      adapter = list(
-        type = "RefNameAliasAdapter",
-        location = list(
-          uri = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"
-        )
-      )
-    )
-  )
+  assembly <- '{"name":"hg19","sequence":{"type":"ReferenceSequenceTrack","trackId":"GRCh37-ReferenceSequenceTrack","adapter":{"type":"BgzipFastaAdapter","fastaLocation":{"uri":"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"},"faiLocation":{"uri":"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai"},"gziLocation":{"uri":"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi"}}},"aliases":["GRCh37"],"refNameAliases":{"adapter":{"type":"RefNameAliasAdapter","location":{"uri":"https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"}}}}'
 
   tracks <- c(
     list(
