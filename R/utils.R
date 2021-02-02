@@ -31,3 +31,20 @@ last_value <- function(x) {
 first_value <- function(x) {
   x[1]
 }
+
+# get the name out of the assembly config string
+get_assembly_name <- function(assembly) {
+  name_entry <- stringr::str_split(assembly, ",")[[1]][1]
+  stringr::str_split(name_entry, "\"")[[1]][4]
+}
+
+# get the assembly adapter out of the assembly config string
+get_assembly_adapter <- function(assembly) {
+  assembly_vector <- stringr::str_split(assembly, ",")[[1]]
+  adapter <- assembly_vector[4:length(assembly_vector)]
+  adapter_string <- as.character(
+    stringr::str_flatten(adapter, ", ")
+  )
+  # return without the adapter field in front
+  stringr::str_trim(stringr::str_remove(adapter_string, '"adapter":'))
+}
