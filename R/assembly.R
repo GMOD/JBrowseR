@@ -31,7 +31,7 @@
 #' For more information on creating these files, visit
 #' \url{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}
 #'
-#' @param sequence the URL or file path to your fasta file
+#' @param assembly_data the URL or file path to your fasta file
 #' @param bgzip whether or not your fasta is bgzip compressed
 #'
 #' @return a string of RBrowse assembly configuration
@@ -39,16 +39,16 @@
 #'
 #' @examples
 #' assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
-assembly <- function(sequence, bgzip = FALSE) {
+assembly <- function(assembly_data, bgzip = FALSE) {
   if (!bgzip) {
-    fa_assembly(sequence)
+    fa_assembly(assembly_data)
   } else {
-    bgzip_fa_assembly(sequence)
+    bgzip_fa_assembly(assembly_data)
   }
 }
 
-fa_assembly <- function(sequence) {
-  name <- get_name(sequence)
+fa_assembly <- function(assembly_data) {
+  name <- get_name(assembly_data)
 
   # interpolate values into a string of JBrowse configuration
   #
@@ -63,10 +63,10 @@ fa_assembly <- function(sequence) {
       '"adapter": {{ ',
       '"type": "IndexedFastaAdapter", ',
       '"fastaLocation": {{ ',
-      '"uri": "{sequence}" ',
+      '"uri": "{assembly_data}" ',
       "}}, ",
       '"faiLocation": {{ ',
-      '"uri": "{sequence}.fai" ',
+      '"uri": "{assembly_data}.fai" ',
       "}} ",
       "}} ",
       "}} ",
@@ -75,8 +75,8 @@ fa_assembly <- function(sequence) {
   )
 }
 
-bgzip_fa_assembly <- function(sequence) {
-  name <- get_name(sequence)
+bgzip_fa_assembly <- function(assembly_data) {
+  name <- get_name(assembly_data)
 
   # interpolate values into a string of JBrowse configuration
   #
@@ -91,13 +91,13 @@ bgzip_fa_assembly <- function(sequence) {
       '"adapter": {{ ',
       '"type": "BgzipFastaAdapter", ',
       '"fastaLocation": {{ ',
-      '"uri": "{sequence}" ',
+      '"uri": "{assembly_data}" ',
       "}}, ",
       '"faiLocation": {{ ',
-      '"uri": "{sequence}.fai" ',
+      '"uri": "{assembly_data}.fai" ',
       "}}, ",
       '"gziLocation": {{ ',
-      '"uri": "{sequence}.gzi" ',
+      '"uri": "{assembly_data}.gzi" ',
       "}} ",
       "}} ",
       "}} ",

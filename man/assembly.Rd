@@ -4,10 +4,10 @@
 \alias{assembly}
 \title{Create an assembly for a custom JBrowse view}
 \usage{
-assembly(sequence, bgzip = FALSE)
+assembly(assembly_data, bgzip = FALSE)
 }
 \arguments{
-\item{sequence}{the URL or file path to your fasta file}
+\item{assembly_data}{the URL or file path to your fasta file}
 
 \item{bgzip}{whether or not your fasta is bgzip compressed}
 }
