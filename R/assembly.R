@@ -37,7 +37,6 @@
 #' @return a string of RBrowse assembly configuration
 #' @export
 #'
-#' @importFrom magrittr "%>%"
 #' @examples
 #' assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
 assembly <- function(sequence, bgzip = FALSE) {
