@@ -21,6 +21,22 @@ Creates the necessary configuration string for an
 indexed BAM or CRAM alignment so that it can be used
 in a JBrowse custom linear genome view.
 }
+\details{
+It is important to note that while only the BAM/CRAM file is
+passed as an argument, \code{tracks_alignment} assumes that a BAM/CRAM
+index of the same name is located with the file
+
+For example:
+
+\code{track_alignments("data/alignments.bam")}
+
+Assumes that \code{data/alignments.bam.bai} also exists.
+
+This is a JBrowse 2 convention, and the default naming output of samtools
+
+For more information on creating an index with samtools, visit
+\url{https://www.htslib.org/}
+}
 \examples{
 track_alignments("alignments.bam", "hg19")
 track_alignments("alignments.cram", "hg19")
