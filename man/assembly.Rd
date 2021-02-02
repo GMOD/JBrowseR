@@ -2,7 +2,7 @@
 % Please edit documentation in R/assembly.R
 \name{assembly}
 \alias{assembly}
-\title{Create an assembly for a custom RBrowse view}
+\title{Create an assembly for a custom JBrowse view}
 \usage{
 assembly(sequence, bgzip = FALSE)
 }
@@ -17,11 +17,11 @@ a string of RBrowse assembly configuration
 \description{
 Creates the necessary configuration string for an
 indexed fasta or bgzip fasta so that it can be used
-as the assembly in a RBrowse custom linear genome view.
+as the assembly in a JBrowse custom linear genome view.
 }
 \details{
 The string returned by \code{assembly} is stringified JSON.
-RBrowse is an interface to JBrowse 2, which receives its
+JBrowseR is an interface to JBrowse 2, which receives its
 configuration in JSON format. The stringified JSON returned
 by \code{assembly} is parsed into a JavaScript object in the
 browser, and is used to configure the genome browser.
