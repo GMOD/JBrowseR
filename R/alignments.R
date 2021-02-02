@@ -61,7 +61,7 @@ get_alignment_adapter <- function(track_data, assembly) {
         '"uri": "{track_data}" ',
         "}}, ",
         '"craiLocation": {{ "uri": "{index}" }}, ',
-        '"sequenceAdapter": {sequenceAdapter} ',
+        '"sequenceAdapter": {sequence_adapter} ',
         "}}"
       )
     )

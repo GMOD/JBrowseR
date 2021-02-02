@@ -45,6 +45,7 @@ get_assembly_adapter <- function(assembly) {
   adapter_string <- as.character(
     stringr::str_flatten(adapter, ", ")
   )
-  # return without the adapter field in front
-  stringr::str_trim(stringr::str_remove(adapter_string, '"adapter":'))
+  # return without the adapter field in front, or last brackets
+  adapter_string <- stringr::str_trim(stringr::str_remove(adapter_string, '"adapter":'))
+  stringr::str_trunc(adapter_string, nchar(adapter_string) - 3, "right", "")
 }
