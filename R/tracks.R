@@ -42,11 +42,11 @@ track_alignments <- function(data, assembly_name) {
     as.character(
       stringr::str_glue(
         "{{",
-          '"type": "{type}", ',
-          '"name": "{name}", ',
-          '"assemblyNames": ["{assembly_name}"], ',
-          '"trackId": "{track_id}", ',
-          "{adapter} ",
+        '"type": "{type}", ',
+        '"name": "{name}", ',
+        '"assemblyNames": ["{assembly_name}"], ',
+        '"trackId": "{track_id}", ',
+        "{adapter} ",
         "}}"
       )
     )
@@ -59,11 +59,11 @@ get_alignment_adapter <- function(data) {
     as.character(
       stringr::str_glue(
         '"adapter": {{ ',
-          '"type": "BamAdapter", ',
-          '"bamLocation": {{ ',
-          '"uri": "{data}" ',
-          "}}, ",
-          '"index": {{ "location": {{ "uri": "{index}" }} }} ',
+        '"type": "BamAdapter", ',
+        '"bamLocation": {{ ',
+        '"uri": "{data}" ',
+        "}}, ",
+        '"index": {{ "location": {{ "uri": "{index}" }} }} ',
         "}}"
       )
     )
@@ -72,11 +72,11 @@ get_alignment_adapter <- function(data) {
     as.character(
       stringr::str_glue(
         '"adapter": {{ ',
-          '"type": "CramAdapter", ',
-          '"cramLocation": {{ ',
-          '"uri": "{data}" ',
-          "}}, ",
-          '"craiLocation": {{ "uri": "{index}" }} ',
+        '"type": "CramAdapter", ',
+        '"cramLocation": {{ ',
+        '"uri": "{data}" ',
+        "}}, ",
+        '"craiLocation": {{ "uri": "{index}" }} ',
         "}}"
       )
     )
