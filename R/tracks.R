@@ -1,27 +1,35 @@
-#' Title
+#' Create an set of tracks for a custom JBrowse 2 view
 #'
-#' @param type
-#' @param track_file
+#' Accepts any number of tracks, returns the configuration
+#' string necessary to load these tracks into your JBrowse
+#' view.
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' tracks(track_alignments("alignments.bam", "hg19"))
 tracks <- function(...) {
   track_values <- stringr::str_c(..., sep = ", ")
   stringr::str_c("[", track_values, "]")
 }
 
 
-#' Title
+#' Create an AlignmentsTrack for a custom JBrowse 2 view
 #'
-#' @param data
-#' @param assembly_name
+#' Creates the necessary configuration string for an
+#' indexed BAM or CRAM alignment so that it can be used
+#' in a JBrowse custom linear genome view.
+#'
+#' @param data the URL or file path to the BAM/CRAM alignments
+#' @param assembly_name the name of the assembly to display the alignments for
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' track_alignments("alignments.bam", "hg19")
+#' track_alignments("alignments.cram", "hg19")
 track_alignments <- function(data, assembly_name) {
   # print("It's an alignments track!")
   type <- "AlignmentsTrack"
