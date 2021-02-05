@@ -20,9 +20,7 @@ tracks <- function(...) {
 
 # The supported tracks are:
 
-# 'AlignmentsTrack'
-# 'PileupTrack'
-# 'SNPCoverageTrack'
+# 'AlignmentsTrack' (done)
 # 'VariantTrack'
 # 'WiggleTrack'
 
