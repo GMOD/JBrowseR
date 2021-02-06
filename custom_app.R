@@ -16,6 +16,10 @@ server <- function(input, output, session) {
     track_alignments(
       "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/ultra-long-ont_hs37d5_phased.cram",
       assembly
+    ),
+    track_variant(
+      "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz",
+      assembly
     )
   )
 
