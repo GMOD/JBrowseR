@@ -21,9 +21,11 @@ tracks <- function(...) {
 # The supported tracks are:
 
 # 'AlignmentsTrack' (done)
-# 'VariantTrack'
+# 'VariantTrack' (done)
 # 'WiggleTrack'
 
 # and then I want a tracks() function, that takes an arbitrary number
 # of tracks, and glues them into a string with [ at the beginning and ]
 # at the end, so that it will be the array of tracks in the config
+
+# I probably want to expose the theme for customization too
