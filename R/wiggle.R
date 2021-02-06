@@ -1,9 +1,3 @@
-# Note: -------------------------------------------------------------------
-
-# this currently isn't working, where the track draws nothing. I think
-# it is some issue with displayTypes, since WiggleTrack from the docs
-# no longer exists, and I need to use QuantitativeTrack
-
 #' Title
 #'
 #' @param track_data
