@@ -49,3 +49,11 @@ get_assembly_adapter <- function(assembly) {
   adapter_string <- stringr::str_trim(stringr::str_remove(adapter_string, '"adapter":'))
   stringr::str_trunc(adapter_string, nchar(adapter_string) - 3, "right", "")
 }
+
+strip_gz <- function(track_data) {
+  if (stringr::str_ends(track_data, ".gz")) {
+    stringr::str_trunc(track_data, nchar(track_data) - 3, "right", "")
+  } else {
+    track_data
+  }
+}

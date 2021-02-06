@@ -52,7 +52,10 @@ track_alignments <- function(track_data, assembly) {
 }
 
 get_alignment_adapter <- function(track_data, assembly) {
-  if (stringr::str_ends(track_data, ".bam")) {
+  # strip the .gz extension before checking for BAM or CRAM
+  track_non_gz <- strip_gz(track_data)
+
+  if (stringr::str_ends(track_non_gz, ".bam")) {
     index <- stringr::str_c(track_data, ".bai")
     as.character(
       stringr::str_glue(
@@ -65,7 +68,7 @@ get_alignment_adapter <- function(track_data, assembly) {
         "}}"
       )
     )
-  } else if (stringr::str_ends(track_data, ".cram")) {
+  } else if (stringr::str_ends(track_non_gz, ".cram")) {
     index <- stringr::str_c(track_data, ".crai")
     sequence_adapter <- get_assembly_adapter(assembly)
     as.character(
