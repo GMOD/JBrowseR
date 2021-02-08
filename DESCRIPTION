@@ -18,7 +18,8 @@ Imports:
     htmlwidgets,
     reactR,
     stringr,
-    magrittr
+    magrittr,
+    readr
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
