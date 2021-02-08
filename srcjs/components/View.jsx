@@ -5,21 +5,28 @@ import {
   ThemeProvider,
 } from "@jbrowse/react-linear-genome-view";
 
-const theme = createJBrowseTheme();
-
 export default function View(props) {
   // create object of state options with only those
   // passed as props
+  let theme;
   const stateOpts = {};
   for (const [key, value] of Object.entries(props)) {
-    // parse the string of JSON config
-    stateOpts[key] = JSON.parse(value);
+    if (key === "theme") {
+      theme = JSON.parse(value);
+    } else {
+      // parse the string of JSON config
+      key === "location"
+        ? (stateOpts[key] = value)
+        : (stateOpts[key] = JSON.parse(value));
+    }
   }
-  console.log({ stateOpts });
+
+  const jbrowseTheme =
+    theme !== undefined ? createJBrowseTheme(theme) : createJBrowseTheme();
   const state = createViewState(stateOpts);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={jbrowseTheme}>
       <JBrowseLinearGenomeView viewState={state} />
     </ThemeProvider>
   );
