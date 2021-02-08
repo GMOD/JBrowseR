@@ -38,6 +38,8 @@ For more information on creating an index with samtools, visit
 \url{https://www.htslib.org/}
 }
 \examples{
-track_alignments("alignments.bam", "hg19")
-track_alignments("alignments.cram", "hg19")
+assembly <- assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
+
+track_alignments("alignments.bam", assembly)
+track_alignments("alignments.cram", assembly)
 }
