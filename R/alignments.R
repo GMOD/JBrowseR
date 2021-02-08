@@ -27,8 +27,10 @@
 #' @export
 #'
 #' @examples
-#' track_alignments("alignments.bam", "hg19")
-#' track_alignments("alignments.cram", "hg19")
+#' assembly <- assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
+#'
+#' track_alignments("alignments.bam", assembly)
+#' track_alignments("alignments.cram", assembly)
 track_alignments <- function(track_data, assembly) {
   # print("It's an alignments track!")
   type <- "AlignmentsTrack"
