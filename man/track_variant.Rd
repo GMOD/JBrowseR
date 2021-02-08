@@ -38,5 +38,5 @@ For more information on creating an index with tabix, visit
 \examples{
 assembly <- assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
 
-track_alignments("variants.vcf", assembly)
+track_variant("variants.vcf", assembly)
 }
