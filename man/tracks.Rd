@@ -6,8 +6,8 @@
 \usage{
 tracks(...)
 }
-\value{
-
+\arguments{
+\item{...}{The tracks to be added to the JBrowse 2 view}
 }
 \description{
 Accepts any number of tracks, returns the configuration

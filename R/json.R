@@ -15,7 +15,6 @@
 #'
 #' @param file the file path or URL to a JBrowse 2 configuration
 #'
-#' @return
 #' @export
 #'
 #' @examples

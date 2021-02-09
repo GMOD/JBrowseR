@@ -15,9 +15,6 @@ theme(primary, secondary = NULL, tertiary = NULL, quaternary = NULL)
 
 \item{quaternary}{the quaternary color of your custom palette}
 }
-\value{
-
-}
 \description{
 Creates the necessary configuration string
 for a custom theme palette for your browser.

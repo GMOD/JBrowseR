@@ -11,7 +11,6 @@
 #' @param tertiary the tertiary color of your custom palette
 #' @param quaternary the quaternary color of your custom palette
 #'
-#' @return
 #' @export
 #'
 #' @examples

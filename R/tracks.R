@@ -4,7 +4,8 @@
 #' string necessary to load these tracks into your JBrowse
 #' view.
 #'
-#' @return
+#' @param ... The tracks to be added to the JBrowse 2 view
+#'
 #' @export
 #'
 #' @examples
