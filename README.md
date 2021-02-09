@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# RBrowse
+# JBrowseR <img src='man/figures/logo.png' align="right" height="136" />
 
 <!-- badges: start -->
 <!-- badges: end -->
