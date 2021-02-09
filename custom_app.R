@@ -22,11 +22,14 @@ server <- function(input, output, session) {
       assembly
     )
   )
+  theme <- theme("#311b92", "#0097a7", "#f57c00", "#d50000")
 
   output$widgetOutput <- renderRBrowse(
     RBrowse("View",
       assembly = assembly,
-      tracks = tracks
+      tracks = tracks,
+      location = "10:29,838,737..29,838,819",
+      theme = theme
     )
   )
 }
