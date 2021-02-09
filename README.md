@@ -4,6 +4,8 @@
 # JBrowseR <img src='man/figures/logo.png' align="right" height="136" />
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/elliothershberg/RBrowse/workflows/R-CMD-check/badge.svg)](https://github.com/elliothershberg/RBrowse/actions)
 <!-- badges: end -->
 
 JBrowseR is an R package that provides a simple and clean interface to
