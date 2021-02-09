@@ -12,3 +12,7 @@
 ^custom_app\.R$
 ^json_app\.R$
 ^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
