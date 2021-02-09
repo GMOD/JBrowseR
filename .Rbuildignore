@@ -8,3 +8,6 @@
 ^yarn\.lock$
 ^LICENSE\.md$
 ^inst/htmlwidgets/RBrowse\.js\.map$
+^config\.json$
+^custom_app\.R$
+^json_app\.R$
