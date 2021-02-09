@@ -11,3 +11,4 @@
 ^config\.json$
 ^custom_app\.R$
 ^json_app\.R$
+^README\.Rmd$
