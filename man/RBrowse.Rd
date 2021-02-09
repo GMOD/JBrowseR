@@ -6,6 +6,17 @@
 \usage{
 RBrowse(view, ..., width = NULL, height = NULL, elementId = NULL)
 }
+\arguments{
+\item{view}{Which JBrowse 2 view to use. View, JsonView, ViewHg19, Viewhg38}
+
+\item{...}{The parameters passed on to the view}
+
+\item{width}{The width of the htmlwidget}
+
+\item{height}{The height of the htmlwidget}
+
+\item{elementId}{The elementId of the htmlwidget}
+}
 \description{
 Embed a JBrowse 2 linear genome view in your Shiny app,
 Rmd document, or interactive R console.

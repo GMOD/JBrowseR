@@ -3,8 +3,13 @@
 #' Embed a JBrowse 2 linear genome view in your Shiny app,
 #' Rmd document, or interactive R console.
 #'
-#' @import htmlwidgets
+#' @param view Which JBrowse 2 view to use. View, JsonView, ViewHg19, Viewhg38
+#' @param ... The parameters passed on to the view
+#' @param width The width of the htmlwidget
+#' @param height The height of the htmlwidget
+#' @param elementId The elementId of the htmlwidget
 #'
+#' @import htmlwidgets
 #' @export
 RBrowse <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
 
@@ -28,9 +33,8 @@ RBrowse <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
 #' applications and interactive Rmd documents.
 #'
 #' @param outputId output variable to read from
-#' @param width,height Must be a valid CSS unit (like \code{'100\%%'},
-#'   \code{'400px'}, \code{'auto'}) or a number, which will be coerced to a
-#'   string and have \code{'px'} appended.
+#' @param width Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
+#' @param height Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
 #' @param expr An expression that generates a RBrowse
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
@@ -53,6 +57,12 @@ renderRBrowse <- function(expr, env = parent.frame(), quoted = FALSE) {
 }
 
 #' Called by HTMLWidgets to produce the widget's root element.
+#'
+#' @param id htmltools id
+#' @param style htmltools style
+#' @param class htmltools class
+#' @param ... Additional arguments passed on
+#'
 #' @rdname RBrowse-shiny
 RBrowse_html <- function(id, style, class, ...) {
   htmltools::tagList(
