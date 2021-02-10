@@ -40,14 +40,10 @@ get_assembly_name <- function(assembly) {
 
 # get the assembly adapter out of the assembly config string
 get_assembly_adapter <- function(assembly) {
-  assembly_vector <- stringr::str_split(assembly, ",")[[1]]
-  adapter <- assembly_vector[4:length(assembly_vector)]
-  adapter_string <- as.character(
-    stringr::str_flatten(adapter, ", ")
-  )
-  # return without the adapter field in front, or last brackets
-  adapter_string <- stringr::str_trim(stringr::str_remove(adapter_string, '"adapter":'))
-  stringr::str_trunc(adapter_string, nchar(adapter_string) - 3, "right", "")
+  assembly_list <- jsonlite::fromJSON(assembly)
+  adapter <- assembly_list$sequence$adapter
+
+  toJSON(adapter, auto_unbox = TRUE)
 }
 
 strip_gz <- function(track_data) {
