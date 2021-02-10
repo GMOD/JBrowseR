@@ -1,4 +1,5 @@
 var path = require('path');
+var CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
     mode: 'production',
@@ -31,5 +32,10 @@ module.exports = {
     },
     // can toggle source map back on during development
     // devtool: 'source-map'
-    devtool: ''
+    devtool: '',
+    // This makes the bundle go from 2.88 MB -> 984 KB
+    // but currently breaks htmlwidgets
+    // plugins: [new CompressionPlugin({
+    //     deleteOriginalAssets: true
+    // })],
 };
