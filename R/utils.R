@@ -34,8 +34,9 @@ first_value <- function(x) {
 
 # get the name out of the assembly config string
 get_assembly_name <- function(assembly) {
-  name_entry <- stringr::str_split(assembly, ",")[[1]][1]
-  stringr::str_split(name_entry, "\"")[[1]][4]
+  assembly_list <- jsonlite::fromJSON(assembly)
+
+  assembly_list$name
 }
 
 # get the assembly adapter out of the assembly config string
