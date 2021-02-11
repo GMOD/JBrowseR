@@ -8,15 +8,24 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   # create the assembly configuration
-  assembly <- assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
+  assembly <- assembly(
+    "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+    bgzip = TRUE,
+    aliases = c("GRCh37"),
+    refname_aliases = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"
+  )
 
-  # create alignments, variant, and wiggle tracks
+  # create alignments, variant, feature, and wiggle tracks
   alignments <- track_alignments(
     "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/ultra-long-ont_hs37d5_phased.cram",
     assembly
   )
   variant <- track_variant(
     "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz",
+    assembly
+  )
+  feature <- track_feature(
+    "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/ncbi_refseq/GRCh37_latest_genomic.sort.gff.gz",
     assembly
   )
   wiggle <- track_wiggle(
@@ -28,13 +37,14 @@ server <- function(input, output, session) {
   tracks <- tracks(
     alignments,
     variant,
+    feature,
     wiggle
   )
 
   # determine what the browser displays by default
   default_session <- default_session(
     assembly,
-    c(variant, wiggle),
+    c(variant, wiggle, feature),
     display_assembly = FALSE
   )
 
