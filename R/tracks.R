@@ -9,7 +9,12 @@
 #' @export
 #'
 #' @examples
-#' tracks(track_alignments("alignments.bam", "hg19"))
+#' # create an assembly configuration and alignments track
+#' assembly <- assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
+#' alignments <- track_alignments("alignments.bam", assembly)
+#'
+#' # create a tracks configuration with the alignments track
+#' tracks(alignments)
 tracks <- function(...) {
   track_values <- stringr::str_c(..., sep = ", ")
   stringr::str_c("[", track_values, "]")
