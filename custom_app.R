@@ -1,6 +1,8 @@
 library(shiny)
 library(JBrowseR)
 
+# test commit with new repo
+
 ui <- fluidPage(
   titlePanel("JBrowseR Example"),
   JBrowseROutput("widgetOutput")
