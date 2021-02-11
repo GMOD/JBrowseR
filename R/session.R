@@ -84,7 +84,8 @@ get_tracks <- function(assembly, tracks, display_assembly) {
     result <- switch(track_list$type,
       AlignmentsTrack = get_alignments_track(track_list),
       VariantTrack = get_variant_track(track_list),
-      QuantitativeTrack = get_quantitative_track(track_list)
+      QuantitativeTrack = get_quantitative_track(track_list),
+      FeatureTrack = get_feature_track(track_list)
     )
     tracks_result <- c(tracks_result, result)
   }
@@ -143,6 +144,23 @@ get_quantitative_track <- function(track_list) {
       "{{",
       '"type": "LinearWiggleDisplay", ',
       '"configuration": "{stringr::str_c(track_list$trackId, "-LinearWiggleDisplay")}" ',
+      "}}",
+      "]",
+      "}}"
+    )
+  )
+}
+
+get_feature_track <- function(track_list) {
+  as.character(
+    stringr::str_glue(
+      "{{ ",
+      '"type": "FeatureTrack", ',
+      '"configuration": "{track_list$trackId}", ',
+      '"displays": [ ',
+      "{{",
+      '"type": "LinearBasicDisplay", ',
+      '"configuration": "{stringr::str_c(track_list$trackId, "-LinearBasicDisplay")}" ',
       "}}",
       "]",
       "}}"

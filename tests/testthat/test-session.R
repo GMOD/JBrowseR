@@ -17,6 +17,11 @@ test_that("creating a default session returns the correct string", {
     assembly
   )
 
+  feature <- track_feature(
+    "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/ncbi_refseq/GRCh37_latest_genomic.sort.gff.gz",
+    assembly
+  )
+
   expect_type(
     default_session(
       assembly,
@@ -42,5 +47,15 @@ test_that("creating a default session returns the correct string", {
       display_assembly = FALSE
     ),
     "{ \"name\": \"My Session\", \"view\": { \"id\": \"LinearGenomeView\", \"type\": \"LinearGenomeView\", \"tracks\": [  { \"type\": \"AlignmentsTrack\", \"configuration\": \"hg19_ultra-long-ont_hs37d5_phased\", \"displays\": [ {\"type\": \"LinearAlignmentsDisplay\", \"configuration\": \"hg19_ultra-long-ont_hs37d5_phased-LinearAlignmentsDisplay\" }]} ] } }"
+  )
+
+  # test feature track
+  expect_equal(
+    default_session(
+      assembly,
+      c(feature),
+      display_assembly = FALSE
+    ),
+    "{ \"name\": \"My Session\", \"view\": { \"id\": \"LinearGenomeView\", \"type\": \"LinearGenomeView\", \"tracks\": [  { \"type\": \"FeatureTrack\", \"configuration\": \"hg19_GRCh37_latest_genomic\", \"displays\": [ {\"type\": \"LinearBasicDisplay\", \"configuration\": \"hg19_GRCh37_latest_genomic-LinearBasicDisplay\" }]} ] } }"
   )
 })
