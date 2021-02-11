@@ -19,8 +19,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -86,17 +86,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/elliothershberg/JBrowseR/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -124,8 +123,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-rendering-functions" class="hasAnchor"><a href="#section-rendering-functions" class="anchor"></a>Rendering functions</h2>
+          <p class="section-desc"><p>Functions for rendering JBrowserR in various contexts</p></p>
         </th>
       </tr>
       
@@ -136,39 +135,34 @@
       <tr>
         
         <td>
-          <p><code><a href="JBrowseR-shiny.html">JBrowseROutput()</a></code> <code><a href="JBrowseR-shiny.html">renderJBrowseR()</a></code> <code><a href="JBrowseR-shiny.html">JBrowseR_html()</a></code> </p>
-        </td>
-        <td><p>Shiny bindings for JBrowseR</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="JBrowseR.html">JBrowseR()</a></code> </p>
         </td>
         <td><p>R interface to JBrowse 2 genome browser</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="JBrowseR-shiny.html">JBrowseROutput()</a></code> <code><a href="JBrowseR-shiny.html">renderJBrowseR()</a></code> <code><a href="JBrowseR-shiny.html">JBrowseR_html()</a></code> </p>
+        </td>
+        <td><p>Shiny bindings for JBrowseR</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-creating-jbrowser-configuration" class="hasAnchor"><a href="#section-creating-jbrowser-configuration" class="anchor"></a>Creating JBrowseR configuration</h2>
+          <p class="section-desc"><p>Functions for creating JBrowseR configuration strings</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
           <p><code><a href="assembly.html">assembly()</a></code> </p>
         </td>
         <td><p>Create an assembly for a custom JBrowse view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="default_session.html">default_session()</a></code> </p>
-        </td>
-        <td><p>Create a default session for a custom JBrowse view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="json_config.html">json_config()</a></code> </p>
-        </td>
-        <td><p>Read in a JBrowse 2 JSON configuration file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="theme.html">theme()</a></code> </p>
-        </td>
-        <td><p>Create a theme for a custom JBrowse 2 view</p></td>
       </tr><tr>
         
         <td>
@@ -199,6 +193,37 @@
           <p><code><a href="tracks.html">tracks()</a></code> </p>
         </td>
         <td><p>Create an set of tracks for a custom JBrowse 2 view</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="default_session.html">default_session()</a></code> </p>
+        </td>
+        <td><p>Create a default session for a custom JBrowse view</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-advanced-customization" class="hasAnchor"><a href="#section-advanced-customization" class="anchor"></a>Advanced customization</h2>
+          <p class="section-desc"><p>More advanced customization options</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="theme.html">theme()</a></code> </p>
+        </td>
+        <td><p>Create a theme for a custom JBrowse 2 view</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="json_config.html">json_config()</a></code> </p>
+        </td>
+        <td><p>Read in a JBrowse 2 JSON configuration file</p></td>
       </tr>
     </tbody>
     </table>
