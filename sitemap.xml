@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/index.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/index.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/RBrowse-shiny.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/JBrowseR-shiny.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/RBrowse.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/JBrowseR.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/assembly.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/assembly.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/default_session.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/default_session.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/json_config.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/json_config.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/pipe.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/theme.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/theme.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/track_alignments.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_alignments.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/track_feature.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_feature.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/track_variant.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_variant.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/track_wiggle.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_wiggle.html</loc>
   </url>
   <url>
-    <loc>https://elliothershberg.github.io/RBrowse/reference/tracks.html</loc>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/tracks.html</loc>
   </url>
 </urlset>
