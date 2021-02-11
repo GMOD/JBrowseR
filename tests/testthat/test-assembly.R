@@ -11,3 +11,15 @@ test_that("file assemblies return correct string", {
   expect_equal(assembly("data/hg38.fa"), "{ \"name\": \"hg38\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"hg38-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"IndexedFastaAdapter\", \"fastaLocation\": { \"uri\": \"data/hg38.fa\" }, \"faiLocation\": { \"uri\": \"data/hg38.fa.fai\" } } } }")
   expect_equal(assembly("data/hg38.fa", bgzip = TRUE), "{ \"name\": \"hg38\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"hg38-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"BgzipFastaAdapter\", \"fastaLocation\": { \"uri\": \"data/hg38.fa\" }, \"faiLocation\": { \"uri\": \"data/hg38.fa.fai\" }, \"gziLocation\": { \"uri\": \"data/hg38.fa.gzi\" } } } }")
 })
+
+test_that("assembly aliasing works", {
+  expect_equal(
+    assembly <- assembly(
+      "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+      bgzip = TRUE,
+      aliases = c("GRCh37"),
+      refname_aliases = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"
+    ),
+    "{ \"name\": \"hg19\", \"aliases\": [\"GRCh37\"], \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"hg19-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"BgzipFastaAdapter\", \"fastaLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz\" }, \"faiLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai\" }, \"gziLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi\" } } } , \"refNameAliases\": { \"adapter\": { \"type\": \"RefNameAliasAdapter\", \"location\": { \"uri\": \"https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt\" } } } }"
+  )
+})
