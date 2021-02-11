@@ -1,16 +1,16 @@
 library(shiny)
-library(RBrowse)
+library(JBrowseR)
 
 ui <- fluidPage(
   titlePanel("JSON JBrowseR Example"),
-  RBrowseOutput("widgetOutput")
+  JBrowseROutput("widgetOutput")
 )
 
 server <- function(input, output, session) {
   config <- json_config("./config.json")
 
-  output$widgetOutput <- renderRBrowse(
-    RBrowse("JsonView",
+  output$widgetOutput <- renderJBrowseR(
+    JBrowseR("JsonView",
             config = config,
             location = "10:29,838,737..29,838,819"
     )

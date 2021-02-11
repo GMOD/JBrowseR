@@ -1,11 +1,11 @@
 library(shiny)
-library(RBrowse)
+library(JBrowseR)
 
-ui <- fluidPage(titlePanel("RBrowse Example"),
-                RBrowseOutput('widgetOutput'))
+ui <- fluidPage(titlePanel("JBrowseR Example"),
+                JBrowseROutput('widgetOutput'))
 
 server <- function(input, output, session) {
-  output$widgetOutput <- renderRBrowse(RBrowse("ViewHg19",
+  output$widgetOutput <- renderJBrowseR(JBrowseR("ViewHg19",
                                                location = "10:29,838,737..29,838,819"))
 }
 

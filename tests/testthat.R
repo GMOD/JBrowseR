@@ -1,4 +1,4 @@
 library(testthat)
-library(RBrowse)
+library(JBrowseR)
 
-test_check("RBrowse")
+test_check("JBrowseR")

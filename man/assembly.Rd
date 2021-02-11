@@ -18,7 +18,7 @@ name aliases. For more info see
 \url{https://jbrowse.org/jb2/docs/config_guide#configuring-reference-name-aliasing}}
 }
 \value{
-a string of RBrowse assembly configuration
+a string of JBrowseR assembly configuration
 }
 \description{
 Creates the necessary configuration string for an

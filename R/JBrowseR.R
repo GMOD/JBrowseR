@@ -11,49 +11,49 @@
 #'
 #' @import htmlwidgets
 #' @export
-RBrowse <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
+JBrowseR <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
 
   # describe a React component to send to the browser for rendering.
   component <- reactR::component(view, list(...))
 
   # create widget
   htmlwidgets::createWidget(
-    name = "RBrowse",
+    name = "JBrowseR",
     reactR::reactMarkup(component),
     width = width,
     height = height,
-    package = "RBrowse",
+    package = "JBrowseR",
     elementId = elementId
   )
 }
 
-#' Shiny bindings for RBrowse
+#' Shiny bindings for JBrowseR
 #'
-#' Output and render functions for using RBrowse within Shiny
+#' Output and render functions for using JBrowseR within Shiny
 #' applications and interactive Rmd documents.
 #'
 #' @param outputId output variable to read from
 #' @param width Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
 #' @param height Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
-#' @param expr An expression that generates a RBrowse
+#' @param expr An expression that generates a JBrowseR
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.
 #'
-#' @name RBrowse-shiny
+#' @name JBrowseR-shiny
 #'
 #' @export
-RBrowseOutput <- function(outputId, width = "100%", height = "400px") {
-  htmlwidgets::shinyWidgetOutput(outputId, "RBrowse", width, height, package = "RBrowse")
+JBrowseROutput <- function(outputId, width = "100%", height = "400px") {
+  htmlwidgets::shinyWidgetOutput(outputId, "JBrowseR", width, height, package = "JBrowseR")
 }
 
-#' @rdname RBrowse-shiny
+#' @rdname JBrowseR-shiny
 #' @export
-renderRBrowse <- function(expr, env = parent.frame(), quoted = FALSE) {
+renderJBrowseR <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, RBrowseOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(expr, JBrowseROutput, env, quoted = TRUE)
 }
 
 #' Called by HTMLWidgets to produce the widget's root element.
@@ -63,8 +63,8 @@ renderRBrowse <- function(expr, env = parent.frame(), quoted = FALSE) {
 #' @param class htmltools class
 #' @param ... Additional arguments passed on
 #'
-#' @rdname RBrowse-shiny
-RBrowse_html <- function(id, style, class, ...) {
+#' @rdname JBrowseR-shiny
+JBrowseR_html <- function(id, style, class, ...) {
   htmltools::tagList(
     # Necessary for RStudio viewer version < 1.2
     reactR::html_dependency_corejs(),

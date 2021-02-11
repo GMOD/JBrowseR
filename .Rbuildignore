@@ -1,4 +1,4 @@
-^RBrowse\.Rproj$
+^JBrowseR\.Rproj$
 ^\.Rproj\.user$
 ^node_modules$
 ^srcjs$
@@ -7,7 +7,7 @@
 ^webpack\.config\.js$
 ^yarn\.lock$
 ^LICENSE\.md$
-^inst/htmlwidgets/RBrowse\.js\.map$
+^inst/htmlwidgets/JBrowseR\.js\.map$
 ^config\.json$
 ^custom_app\.R$
 ^json_app\.R$

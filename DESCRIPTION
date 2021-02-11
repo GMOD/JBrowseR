@@ -1,13 +1,17 @@
-Package: RBrowse
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Package: JBrowseR
+Title: An R interface to the JBrowse 2 Genome Browser
+Version: 0.7.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Elliot",
+           family = "Hershberg",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "eahershberg@gmail.com",
+           comment = c(ORCID = "https://orcid.org/0000-0003-2068-3366"))
+Description: Provides an R interface to the JBrowse 2 genome browser.
+    Enables embedding a JB2 genome browser in a Shiny app or RMarkdown
+    document. The browser can also be launced from an interactive R console.
+    The browser can be loaded with a variety of common genomics data types,
+    and can be used with a custom theme.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

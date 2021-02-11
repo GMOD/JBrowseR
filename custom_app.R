@@ -1,9 +1,9 @@
 library(shiny)
-library(RBrowse)
+library(JBrowseR)
 
 ui <- fluidPage(
   titlePanel("JBrowseR Example"),
-  RBrowseOutput("widgetOutput")
+  JBrowseROutput("widgetOutput")
 )
 
 server <- function(input, output, session) {
@@ -51,8 +51,8 @@ server <- function(input, output, session) {
   # create a custom color palette theme for the browser
   theme <- theme("#311b92", "#0097a7", "#f57c00", "#d50000")
 
-  output$widgetOutput <- renderRBrowse(
-    RBrowse("View",
+  output$widgetOutput <- renderJBrowseR(
+    JBrowseR("View",
       assembly = assembly,
       tracks = tracks,
       location = "10:31,419,497..33,370,375",

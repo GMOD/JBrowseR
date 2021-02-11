@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/elliothershberg/RBrowse/workflows/R-CMD-check/badge.svg)](https://github.com/elliothershberg/RBrowse/actions)
+[![R-CMD-check](https://github.com/elliothershberg/JBrowseR/workflows/R-CMD-check/badge.svg)](https://github.com/elliothershberg/JBrowseR/actions)
 <!-- badges: end -->
 
 JBrowseR is an R package that provides a simple and clean interface to
@@ -23,18 +23,18 @@ with your data in just a few lines of R code!
 
 ## Installation
 
-You can **soon** install the released version of RBrowse from
+You can **soon** install the released version of JBrowseR from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("RBrowse")
+install.packages("JBrowseR")
 ```
 
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("elliothershberg/RBrowse")
+devtools::install_github("elliothershberg/JBrowseR")
 ```
 
 ## Example
@@ -43,8 +43,8 @@ This line of code can be a used to launch a genome browser from your R
 console:
 
 ``` r
-library(RBrowse)
-RBrowse("ViewHg19",
+library(JBrowseR)
+JBrowseR("ViewHg19",
         location = "10:29,838,737..29,838,819")
 ```
 
