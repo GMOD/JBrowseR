@@ -12,7 +12,7 @@ Description: Provides an R interface to the JBrowse 2 genome browser.
     document. The browser can also be launced from an interactive R console.
     The browser can be loaded with a variety of common genomics data types,
     and can be used with a custom theme.
-License: MIT + file LICENSE
+License: Apache License (>= 2)
 URL: https://elliothershberg.github.io/JBrowseR/
     https://github.com/elliothershberg/JBrowseR
 Encoding: UTF-8
