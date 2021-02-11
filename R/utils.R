@@ -44,7 +44,7 @@ get_assembly_adapter <- function(assembly) {
   assembly_list <- jsonlite::fromJSON(assembly)
   adapter <- assembly_list$sequence$adapter
 
-  toJSON(adapter, auto_unbox = TRUE)
+  jsonlite::toJSON(adapter, auto_unbox = TRUE)
 }
 
 strip_gz <- function(track_data) {
