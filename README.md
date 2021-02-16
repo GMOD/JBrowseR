@@ -39,7 +39,7 @@ devtools::install_github("elliothershberg/JBrowseR")
 
 ## Example
 
-This line of code can be a used to launch a genome browser from your R
+This line of code can be used to launch a genome browser from your R
 console:
 
 ``` r
