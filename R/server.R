@@ -1,3 +1,15 @@
+#' Serve a local data directory for use with a browser
+#'
+#' @param path The path to the directory with data to serve
+#' @param port The port to serve the directory on
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'   server <- serve_data("~/path/to/my-data")
+#'   # use server$stop_server() to stop
+#' }
 serve_data <- function(path, port = 5000) {
   path <- normalizePath(path, mustWork = TRUE)
 
@@ -50,13 +62,10 @@ serve_directory <- function(path) {
       range <- parse_range(req$HTTP_RANGE, req_path)
     }
     type <- guess_type(path)
-    print("About to generate body")
     body <- generate_body(req, req_path)
-    print("After generating body")
     if (is.character(body) && length(body) > 1) {
       body <- paste2(body)
     }
-    body()
     headers <- c(
       list(
         "Access-Control-Allow-Origin" = "*",
@@ -77,10 +86,10 @@ serve_directory <- function(path) {
       },
       "Accept-Ranges" = "bytes"
     )
-    print(headers)
 
     list(
-      status = status, body = body,
+      status = status,
+      body = body,
       headers = headers
     )
   }
@@ -98,24 +107,16 @@ resolve_req_path <- function(req) {
 }
 
 generate_body <- function(req, req_path) {
-  print(req)
-  print(req_path)
   range <- req$HTTP_RANGE
-  print(range)
 
   if (is.null(range)) {
     read_raw(req_path)
   } else {
     range <- parse_range(range, req_path)
-    print("parsed range:")
-    print(range)
     byte2 <- as.numeric(range[2])
     byte3 <- as.numeric(range[3])
 
-    print("After open ended range code")
-
     if (length(range) < 3 || (range[1] != "bytes") || (byte2 >= byte3)) {
-      print("range not satisfiable")
       return(
         list(
           status = 416L, headers = list("Content-Type" = "text/plain"),
@@ -124,7 +125,6 @@ generate_body <- function(req, req_path) {
       )
     }
 
-    print("Reading range from file")
     connection <- file(req_path, open = "rb", raw = TRUE)
     on.exit(close(connection))
     seek(connection, where = byte2, origin = "start")
@@ -161,7 +161,12 @@ parse_range <- function(range, req_path) {
 
 # Notes: ------------------------------------------------------------------
 
-# I'm getting range: bytes 0-131071
+# This is a small static HTTP server for local files
 
-# this is 2^17 = 128 KB
-# this is the chunk size in util/io/rangeFetcher.ts globalRangeCache
+# It is heavily inspired by the static server in the {servr} package by
+# Yihui Xie
+
+# There are two crucial requirements for serving data to JBrowse 2:
+
+# 1. CORS must be enabled. See headers for more info.
+# 2. Must support range requests
