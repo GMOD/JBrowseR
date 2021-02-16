@@ -64,7 +64,7 @@ serve_directory <- function(path) {
     type <- guess_type(path)
     body <- generate_body(req, req_path)
     if (is.character(body) && length(body) > 1) {
-      body <- paste2(body)
+      body <- stringr::str_c(body, collapse = "")
     }
     headers <- c(
       list(
