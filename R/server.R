@@ -1,5 +1,13 @@
 #' Serve a local data directory for use with a browser
 #'
+#' This is a utility function that can be used to server
+#' a local directory with data so that it can be used
+#' in the genome browser.
+#'
+#' Note: This is intended for local development and use.
+#' For a production deployment, refer to the vignette
+#' on creating URLs for more robust options.
+#'
 #' @param path The path to the directory with data to serve
 #' @param port The port to serve the directory on
 #'

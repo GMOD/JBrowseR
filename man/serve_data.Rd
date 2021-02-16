@@ -12,11 +12,18 @@ serve_data(path, port = 5000)
 \item{port}{The port to serve the directory on}
 }
 \description{
-Serve a local data directory for use with a browser
+This is a utility function that can be used to server
+a local directory with data so that it can be used
+in the genome browser.
+}
+\details{
+Note: This is intended for local development and use.
+For a production deployment, refer to the vignette
+on creating URLs for more robust options.
 }
 \examples{
 \dontrun{
-  server <- serve_data("~/path/to/my-data")
-  # use server$stop_server() to stop
+server <- serve_data("~/path/to/my-data")
+# use server$stop_server() to stop
 }
 }
