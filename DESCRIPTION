@@ -28,7 +28,8 @@ Imports:
     readr,
     jsonlite,
     httpuv,
-    mime
+    mime,
+    cli
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
