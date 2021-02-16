@@ -1,0 +1,73 @@
+---
+title: "Introduction to JBrowseR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to JBrowseR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+JBrowseR provides an R interface to the [JBrowse 2](https://jbrowse.org/jb2/) genome browser.
+
+JBrowse 2 is "a pluggable open-source platform for visualizing and integrating biological data".
+It is a fast and flexible tool that can visualize a wide variety of data.
+JBrowse 2 was built using powerful modern web technologies such as [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/).
+One of the core products of JBrowse 2 is a React component that makes it possible to embed a custom genome browser in a web page.
+
+While the JBrowse 2 component is an incredible tool, the main way for developers to use it has been to add it to a React app, which comes with a steep learning curve. 
+That is where JBrowseR comes in!
+Using JBrowseR, it is now possible to:
+
+- Embed the JBrowse 2 Linear Genome View into **Shiny** applications
+- Create interactive **R Markdown** documents with a genome browser displaying your data.
+- Launch a custom genome browser from an interactive R console
+
+And it is possible to do this writing only a small amount of R code.
+
+## The main function
+
+The core function of the package is `JBrowseR()`. There are two key arguments:
+
+- **view**: This selects which React component to render. The four options are:
+  1. ViewHg19
+  2. ViewHg38
+  3. View
+  4. JsonView
+- **...** : Optional arguments to be passed to the browser. The values the browser can use are:
+  1. assembly
+  2. tracks
+  3. location
+  4. defaultSession
+  5. theme
+  6. config
+
+There are a lot of possibilities with all of these options! 
+So let's start simple. 
+The interface enables a [progressive disclosure](https://en.wikipedia.org/wiki/Progressive_disclosure) of complexity.
+
+The only necessary argument is which view. To launch a hg19 browser from the console run:
+
+```{r}
+JBrowseR("ViewHg19")
+```
+
+The `ViewHg19` and `ViewHg38` views are the simplest components of the package.
+They return pre-configured browsers displaying the reference assembly and NCBI RefSeq annotations of the hg19 and hg38 genomes respectively.
+
+We can extend the example to see how optional arguments work by setting the location:
+
+```{r}
+JBrowseR("ViewHg19",
+         location = "10:29,838,737..29,838,819")
+```
+
+This will set the starting location of the browser when it is first loaded.
+
+
+
+
+
