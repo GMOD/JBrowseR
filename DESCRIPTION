@@ -27,7 +27,8 @@ Imports:
     magrittr,
     readr,
     jsonlite,
-    httpuv
+    httpuv,
+    mime
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
