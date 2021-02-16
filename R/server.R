@@ -7,8 +7,8 @@
 #'
 #' @examples
 #' \dontrun{
-#'   server <- serve_data("~/path/to/my-data")
-#'   # use server$stop_server() to stop
+#' server <- serve_data("~/path/to/my-data")
+#' # use server$stop_server() to stop
 #' }
 serve_data <- function(path, port = 5000) {
   path <- normalizePath(path, mustWork = TRUE)
@@ -18,6 +18,8 @@ serve_data <- function(path, port = 5000) {
     original_dir <- setwd(path)
     on.exit(setwd(original_dir))
   }
+
+  generate_cli_message(path, port)
 
   server <- create_server(path, port)
   app <- list(call = serve_directory(path))
@@ -141,11 +143,12 @@ read_raw <- function(req_path) {
 }
 
 guess_type <- function(path) {
-  mimetype = function(...) {
-    system2('mimetype', c('-b', shQuote(path)), ...)
+  mimetype <- function(...) {
+    system2("mimetype", c("-b", shQuote(path)), ...)
   }
-  if (Sys.which('mimetype') == '' || mimetype(stdout = NULL) != 0)
+  if (Sys.which("mimetype") == "" || mimetype(stdout = NULL) != 0) {
     return(mime::guess_type(path))
+  }
   mimetype(stdout = TRUE)
 }
 
@@ -158,6 +161,59 @@ parse_range <- function(range, req_path) {
   range
 }
 
+generate_cli_message <- function(path, port) {
+  data_files <- dir(path)
+
+  cli::cli_par()
+  cli::cli_text("Serving data from: {path}")
+  cli::cli_end()
+
+  cli::cli_par()
+  cli::cli_text("Use the following URLs for your track data:")
+  cli::cli_end()
+
+  alignments <- c()
+  feature <- c()
+  variant <- c()
+  wiggle <- c()
+
+  for (i in seq_along(data_files)) {
+    stripped_gz <- strip_gz(data_files[i])
+
+    if (stringr::str_ends(stripped_gz, ".bam") || stringr::str_ends(stripped_gz, ".cram")) {
+      alignments <- c(alignments, stringr::str_glue("http://127.0.0.1:{port}/{data_files[i]}"))
+    } else if (stringr::str_ends(stripped_gz, ".gff") || stringr::str_ends(stripped_gz, ".gff3")) {
+      feature <- c(feature, stringr::str_glue("http://127.0.0.1:{port}/{data_files[i]}"))
+    } else if (stringr::str_ends(stripped_gz, ".vcf")) {
+      variant <- c(variant, stringr::str_glue("http://127.0.0.1:{port}/{data_files[i]}"))
+    } else if (stringr::str_ends(stripped_gz, ".bw") || stringr::str_ends(stripped_gz, ".bigWig")) {
+      wiggle <- c(wiggle, stringr::str_glue("http://127.0.0.1:{port}/{data_files[i]}"))
+    }
+  }
+
+  log_track_message("Alignments", alignments)
+  log_track_message("Feature", feature)
+  log_track_message("Variant", variant)
+  log_track_message("Wiggle", wiggle)
+
+  cli::cli_par()
+  cli::cli_alert_info("Note: this server is intended for local development and use.")
+  cli::cli_text(
+    "For a production deployment, refer to the vignette about creating URLs for a discussion of better options."
+  )
+  cli::cli_end()
+
+  cli::cli_text("To stop the server, use the $stop_server() function.")
+}
+
+log_track_message <- function(title, track_vector, port) {
+  if (length(track_vector) > 0) {
+    cli::cli_par()
+    cli::cli_h2(title)
+    cli::cli_ul(track_vector)
+    cli::cli_end()
+  }
+}
 
 # Notes: ------------------------------------------------------------------
 
