@@ -7,13 +7,13 @@
 assembly(assembly_data, bgzip = FALSE, aliases = NULL, refname_aliases = NULL)
 }
 \arguments{
-\item{assembly_data}{the URL or file path to your fasta file}
+\item{assembly_data}{the URL to your fasta file}
 
 \item{bgzip}{whether or not your fasta is bgzip compressed}
 
 \item{aliases}{a vector of strings of the aliases for the assembly}
 
-\item{refname_aliases}{the URL or file path to a file containing reference
+\item{refname_aliases}{the URL to a file containing reference
 name aliases. For more info see
 \url{https://jbrowse.org/jb2/docs/config_guide#configuring-reference-name-aliasing}}
 }

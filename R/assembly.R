@@ -31,10 +31,10 @@
 #' For more information on creating these files, visit
 #' \url{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}
 #'
-#' @param assembly_data the URL or file path to your fasta file
+#' @param assembly_data the URL to your fasta file
 #' @param bgzip whether or not your fasta is bgzip compressed
 #' @param aliases a vector of strings of the aliases for the assembly
-#' @param refname_aliases the URL or file path to a file containing reference
+#' @param refname_aliases the URL to a file containing reference
 #'   name aliases. For more info see
 #'   \url{https://jbrowse.org/jb2/docs/config_guide#configuring-reference-name-aliasing}
 #'
