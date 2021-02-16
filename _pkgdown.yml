@@ -27,3 +27,6 @@ reference:
 - contents:
   - theme
   - json_config
+- title: "Utilities"
+- contents:
+  - server
