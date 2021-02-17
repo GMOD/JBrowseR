@@ -54,3 +54,7 @@ JBrowseR("ViewHg19",
 
 In order to get started with JBrowseR, please refer to the vignette that
 best suits your needs:
+
+-   [Introduction](https://elliothershberg.github.io/JBrowseR/articles/JBrowseR.html)
+-   [Custom browser
+    tutorial](https://elliothershberg.github.io/JBrowseR/articles/custom-browser-tutorial.html)
