@@ -2,7 +2,7 @@
 % Please edit documentation in R/tracks.R
 \name{tracks}
 \alias{tracks}
-\title{Create an set of tracks for a custom JBrowse 2 view}
+\title{Create a set of tracks for a custom JBrowse 2 view}
 \usage{
 tracks(...)
 }

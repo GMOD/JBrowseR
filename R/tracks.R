@@ -1,4 +1,4 @@
-#' Create an set of tracks for a custom JBrowse 2 view
+#' Create a set of tracks for a custom JBrowse 2 view
 #'
 #' Accepts any number of tracks, returns the configuration
 #' string necessary to load these tracks into your JBrowse
