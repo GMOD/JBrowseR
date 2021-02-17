@@ -139,7 +139,7 @@ server <- function(input, output, session) {
 
 JBrowseR has functions for adding four track types:
 
-- `track_alignment()`: visualize BAM or CRAM alignment data
+- `track_alignments()`: visualize BAM or CRAM alignment data
 - `track_feature()`: visualize GFF3 data
 - `track_variant()`: visualize VCF data
 - `track_wiggle()`: visualize bigWig data
