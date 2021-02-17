@@ -1,0 +1,268 @@
+---
+title: "Custom browser tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Custom browser tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+This tutorial will cover how to embed JBrowseR into a shiny app, and how to customize the browser by creating data tracks and a custom theme.
+Before we get started with writing R code, it is necessary to cover some JBrowse 2 concepts, and look at how to prepare data for use with the browser.
+There are three core aspects of JBrowse 2 configuration:
+
+- **Assembly**: the reference assembly being displayed
+- **Tracks**: the generic container for displaying various types of genomic data in the browser
+- **defaultSession**: what is displayed when the browser is first loaded
+
+Other import points of configuration are the **location**, which is the location in the genome on first load, and the **theme**, which can be used to create a custome color palette for your browser.
+While all of these values are possible, the only required configuration is an assembly.
+
+## Preparing an assembly
+
+The steps for preparing an assembly for use in the browser can be found in the [JBrowse 2 docs](https://jbrowse.org/jb2/docs/quickstart_cli/), but we will cover them again here.
+In order to be used, an assembly must first be indexed.
+We will be using the Sars-CoV-2 genome for this tutorial.
+
+To create an index, we first need to download the FASTA for the assembly.
+This can be found [here](https://www.ncbi.nlm.nih.gov/nuccore/NC_045512).
+We also need [htslib](http://www.htslib.org/), which provides the tools we need for indexing and compression.
+(I prefer to install these tools using [the bioconda package](https://anaconda.org/bioconda/htslib)).
+The remaining steps assume the htslib is installed, and we have a fasta file named `sars-cov2.fa`.
+
+With these steps taken, we are going to compress and index the assembly, for best performance.
+The necessary commands are:
+
+```{bash}
+# 1. compresses sars-cov2.fa to sars-cov2.fa.gz
+# 2. generates sars-cov2.fa.gz.fai and sars-cov2.fa.gz.gzi
+bgzip sars-cov2.fa
+samtools faidx sars-cov2.fa.gz
+```
+
+For the rest of the tutorial code, we are going to use the following already hosted results of these commands:
+
+- `https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz`
+- `https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.fai`
+- `https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi`
+
+However, these are the same steps for preparing any assembly for use with the browser.
+For notes on create URLs for your data either locally or hosted, read more [here](#).
+
+## Creating a minimal shiny app
+
+[Shiny](https://shiny.rstudio.com/) is an excellent web framework that makes it easy to create interactive web applications with a minimal amount of R code.
+The basic Shiny app consists of a UI and a server:
+
+```{r}
+library(shiny)
+library(JBrowseR)
+
+ui <- fluidPage()
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+
+This is all of the boilerplate code we need for our app.
+Now, we can add the browser displaying the Sars-CoV-2 genome.
+
+```{r}
+ui <- fluidPage(
+  titlePanel("Sars-CoV-2 JBrowseR Example"),
+  # this adds to the browser to the UI, and specifies the output ID in the server
+  JBrowseROutput("browserOutput")
+)
+
+server <- function(input, output, session) {
+  # create the necessary JB2 assembly configuration
+  assembly <- assembly(
+    "https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz",
+    bgzip = TRUE
+  )
+
+  # link the UI with the browser widget
+  output$browserOutput <- renderJBrowseR(
+    JBrowseR(
+      "View",
+      assembly = assembly
+    )
+  )
+}
+
+shinyApp(ui, server)
+```
+
+That is all of the code we need to add a custom genome browser to a Shiny app!
+It is worth noting that the `assembly()` function takes only the root FASTA file as the argument, but infers the `.fai` and `.gzi` files because they use the standard naming convention.
+A similar pattern is true for other tracks that require index files.
+In these cases, it is noted in the function documentation.
+
+## Adding tracks
+
+With an embedded browser running in a Shiny app, we can look at how to add data tracks to the browser.
+Adding tracks takes place in the server function:
+
+```{r}
+server <- function(input, output, session) {
+  # create the necessary JB2 assembly configuration
+  assembly <- assembly(
+    "https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz",
+    bgzip = TRUE
+  )
+
+  # create configuration for a JB2 GFF FeatureTrack
+  annotations_track <- track_feature(
+    "https://jbrowse.org/genomes/sars-cov2/sars-cov2-annotations.sorted.gff.gz",
+    assembly
+  )
+
+  # create the tracks array to pass to browser
+  tracks <- tracks(annotations_track)
+
+  # link the UI with the browser widget
+  output$browserOutput <- renderJBrowseR(
+    JBrowseR(
+      "View",
+      assembly = assembly,
+      # pass our tracks here
+      tracks = tracks
+    )
+  )
+}
+```
+
+JBrowseR has functions for adding four track types:
+
+- `track_alignment()`: visualize BAM or CRAM alignment data
+- `track_feature()`: visualize GFF3 data
+- `track_variant()`: visualize VCF data
+- `track_wiggle()`: visualize bigWig data
+
+Any number of tracks can be passed to the main tracks function, for example:
+
+```{r}
+tracks <- tracks(
+  annotations,
+  variants,
+  alignments
+)
+```
+
+but for now, we will stick with the feature track that we've created.
+
+## Setting a default session
+
+Up until this point, nothing is displayed by default in the browser when the app first loads.
+We can change that by configuring the default session:
+
+```{r}
+# set up the default session for the browser
+default_session <- default_session(
+  assembly,
+  c(annotations_track)
+)
+```
+
+This sets up the browser to display the reference track and the annotations track by default when it loads.
+
+Now we update the call to our renderer:
+
+```{r}
+output$browserOutput <- renderJBrowseR(
+    JBrowseR(
+      "View",
+      assembly = assembly,
+      tracks = tracks,
+      location = "NC_045512.2:1..100",
+      defaultSession = default_session
+    )
+)
+```
+
+Here we have passed the `default_session` we created, and set a starting location for the browser (the first 100 bases).
+
+## Creating a custom theme
+
+In addition to visualizing your own data, you may want your browser to have your own theme.
+Another JBrowseR function makes creating a custom theme very simple:
+
+```{r}
+# accepts up to four colors for creating a custom palette
+theme <- theme("#5da8a3", "#333")
+```
+
+And again we update the renderer, now passing the theme:
+
+```{r}
+output$browserOutput <- renderJBrowseR(
+    JBrowseR(
+      "View",
+      assembly = assembly,
+      tracks = tracks,
+      location = "NC_045512.2:1..100",
+      defaultSession = default_session,
+      theme = theme
+    )
+)
+```
+
+## Putting it all together
+
+Let's take a look at the final complete app:
+
+```{r}
+ui <- fluidPage(
+  titlePanel("Sars-CoV-2 JBrowseR Example"),
+  # this adds to the browser to the UI, and specifies the output ID in the server
+  JBrowseROutput("browserOutput")
+)
+
+server <- function(input, output, session) {
+  # create the necessary JB2 assembly configuration
+  assembly <- assembly(
+    "https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz",
+    bgzip = TRUE
+  )
+
+  # create configuration for a JB2 GFF FeatureTrack
+  annotations_track <- track_feature(
+    "https://jbrowse.org/genomes/sars-cov2/sars-cov2-annotations.sorted.gff.gz",
+    assembly
+  )
+
+  # create the tracks array to pass to browser
+  tracks <- tracks(
+    annotations_track
+  )
+
+  # set up the default session for the browser
+  default_session <- default_session(
+    assembly,
+    c(annotations_track)
+  )
+
+  theme <- theme("#5da8a3", "#333")
+
+  # link the UI with the browser widget
+  output$browserOutput <- renderJBrowseR(
+    JBrowseR(
+      "View",
+      assembly = assembly,
+      tracks = tracks,
+      location = "NC_045512.2:1..100",
+      defaultSession = default_session,
+      theme = theme
+    )
+  )
+}
+
+shinyApp(ui, server)
+```
+
+Awesome, we've added a genome browser with annotations and a custom theme to a Shiny app!
