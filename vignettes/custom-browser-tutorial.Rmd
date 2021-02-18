@@ -19,7 +19,7 @@ There are three core aspects of JBrowse 2 configuration:
 - **Tracks**: the generic container for displaying various types of genomic data in the browser
 - **defaultSession**: what is displayed when the browser is first loaded
 
-Other import points of configuration are the **location**, which is the location in the genome on first load, and the **theme**, which can be used to create a custome color palette for your browser.
+Other import points of configuration are the **location**, which is the location in the genome on first load, and the **theme**, which can be used to create a custom color palette for your browser.
 While all of these values are possible, the only required configuration is an assembly.
 
 ## Preparing an assembly

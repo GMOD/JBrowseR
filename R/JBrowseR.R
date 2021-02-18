@@ -3,7 +3,7 @@
 #' Embed a JBrowse 2 linear genome view in your Shiny app,
 #' Rmd document, or interactive R console.
 #'
-#' @param view Which JBrowse 2 view to use. View, JsonView, ViewHg19, Viewhg38
+#' @param view Which JBrowse 2 view to use. View, JsonView, ViewHg19, ViewHg38
 #' @param ... The parameters passed on to the view
 #' @param width The width of the htmlwidget
 #' @param height The height of the htmlwidget

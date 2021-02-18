@@ -7,7 +7,7 @@
 JBrowseR(view, ..., width = NULL, height = NULL, elementId = NULL)
 }
 \arguments{
-\item{view}{Which JBrowse 2 view to use. View, JsonView, ViewHg19, Viewhg38}
+\item{view}{Which JBrowse 2 view to use. View, JsonView, ViewHg19, ViewHg38}
 
 \item{...}{The parameters passed on to the view}
 

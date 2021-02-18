@@ -11,7 +11,7 @@ Authors@R:
              role = c("aut")))
 Description: Provides an R interface to the JBrowse 2 genome browser.
     Enables embedding a JB2 genome browser in a Shiny app or RMarkdown
-    document. The browser can also be launced from an interactive R console.
+    document. The browser can also be launched from an interactive R console.
     The browser can be loaded with a variety of common genomics data types,
     and can be used with a custom theme.
 License: Apache License (>= 2)
