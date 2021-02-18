@@ -1,0 +1,86 @@
+---
+title: "Creating URLs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating URLs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+All JBrowseR functions that accept data require the data to be in the form of a URL.
+This is because static resources in Shiny apps don't support all of the features need by JBrowse 2.
+However, no matter what, in genomics the data size nearly always prohibits directly including data as a static resource.
+
+There are two key scenarios to consider for creating URLs that can be used with JBrowseR:
+
+1. Using local data on your computer in the browser
+2. Hosting data for a production deployment of a Shiny app
+
+We will look at both of these in this guide.
+
+## Using local data
+
+It is very convenient to be able view local data on your computer in JBrowseR without having to worry about hosting it somewhere.
+JBrowseR includes a small HTTP server that makes this process very simple:
+
+```{r}
+data_server <- serve_data("~/path/to/my-data")
+```
+
+This function creates and starts the server.
+It also logs information such as the URLs for any genomic data files that it detects.
+While this server is running in your R session, any of the URLs can be used as arguments to JBrowseR functions.
+
+To stop the server, simply run:
+
+```{r}
+data_server$stop_server()
+```
+
+While this server is very convenient, it is not intended for production use.
+Shiny apps deployed using [shinyapps.io](https://www.shinyapps.io/) would not be able to use the URLs.
+
+## Hosting options
+
+If you want to deploy an app that uses JBrowseR, you will need to host your data in a way that is accessible to the browser.
+On the JBrowse 2 team, we host our data using [Amazon S3](https://aws.amazon.com/s3/).
+Each item in an S3 bucket has its own URL.
+Another alternative is to host your data using your own web server such as [Apache](https://httpd.apache.org/).
+
+Whichever option works best for your project, there are some configuration requirements that need to be kept in mind.
+HTTP servers must support HTTP `Range` requests, and `CORS`.
+Range requests are necessary because JBrowse 2 and other genome browsers using [byte serving](https://en.wikipedia.org/wiki/Byte_serving) to fetch only small chunks of data necessary to render what is currently in view.
+CORS needs to be enabled because the request is coming from the host where the browser is running, not where the data is located.
+
+Here is an example CORS configuration for an S3 bucket:
+
+```{js}
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [
+            "Accept-Ranges",
+            "Content-Range",
+            "Content-Encoding",
+            "Content-Length"
+        ],
+        "MaxAgeSeconds": 3000
+    }
+]
+```
+
+One other note is that if you use S3 and are planning on using [shinyapps.io](https://www.shinyapps.io/) to deploy your app, you should locate your bucket in Amazon’s AWS US-East region.
+Currently, [shinyapps.io](https://www.shinyapps.io/) is hosted entirely in that region.
+You can expect faster performance with your data hosted in the same location and service as your app!
