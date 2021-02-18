@@ -3,8 +3,10 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   JBrowseR: JBrowseR.html
+  creating-urls: creating-urls.html
   custom-browser-tutorial: custom-browser-tutorial.html
-last_built: 2021-02-17T21:56Z
+  json-tutorial: json-tutorial.html
+last_built: 2021-02-18T02:23Z
 urls:
   reference: https://elliothershberg.github.io/JBrowseR/reference
   article: https://elliothershberg.github.io/JBrowseR/articles
