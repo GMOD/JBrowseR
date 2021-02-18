@@ -1,6 +1,6 @@
 Package: JBrowseR
 Title: An R Interface to the JBrowse 2 Genome Browser
-Version: 0.7.0.9000
+Version: 0.7.0
 Authors@R: 
     person(given = "Elliot",
            family = "Hershberg",
