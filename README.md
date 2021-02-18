@@ -45,7 +45,7 @@ console:
 ``` r
 library(JBrowseR)
 JBrowseR("ViewHg19",
-        location = "10:29,838,737..29,838,819")
+         location = "10:29,838,737..29,838,819")
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
