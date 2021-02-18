@@ -73,11 +73,11 @@ While the hg19 and hg38 views can be great tools for quickly launching a browser
 The main interface of this package involves using the more general `View` component.
 For a tutorial showing how to create a small Shiny application with custom data tracks, head to:
 
-[Custom browser tutorial](#)
+[Custom browser tutorial](https://elliothershberg.github.io/JBrowseR/articles/custom-browser-tutorial.html)
 
 Although the `View` components provides fairly exhaustive access to the customization options of JBrowse 2, it does not expose all of the options available.
 If you find yourself wanting to use advanced features such as coloring features with JavaScript callbacks, or to use more specific rendering functions, it is possible to use the `JsonView` to use a JSON configured browser.
 This provides full access to the configuration API available for JavaScript users of JBrowse 2.
 For a tutorial on what this looks like, visit:
 
-[JSON configuration tutorial](#)
+[JSON configuration tutorial](https://elliothershberg.github.io/JBrowseR/articles/json-tutorial.html)
