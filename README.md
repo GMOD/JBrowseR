@@ -58,3 +58,7 @@ best suits your needs:
 -   [Introduction](https://elliothershberg.github.io/JBrowseR/articles/JBrowseR.html)
 -   [Custom browser
     tutorial](https://elliothershberg.github.io/JBrowseR/articles/custom-browser-tutorial.html)
+-   [JSON configuration
+    tutorial](https://elliothershberg.github.io/JBrowseR/articles/json-tutorial.html)
+-   [Creating
+    URLS](https://elliothershberg.github.io/JBrowseR/articles/creating-urls.html)
