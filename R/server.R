@@ -180,6 +180,7 @@ generate_cli_message <- function(path, port) {
   cli::cli_text("Use the following URLs for your track data:")
   cli::cli_end()
 
+  assembly <- c()
   alignments <- c()
   feature <- c()
   variant <- c()
@@ -188,7 +189,9 @@ generate_cli_message <- function(path, port) {
   for (i in seq_along(data_files)) {
     stripped_gz <- strip_gz(data_files[i])
 
-    if (stringr::str_ends(stripped_gz, ".bam") || stringr::str_ends(stripped_gz, ".cram")) {
+    if (stringr::str_ends(stripped_gz, ".fa") || stringr::str_ends(stripped_gz, ".fasta")) {
+      assembly <- c(assembly, stringr::str_glue("http://127.0.0.1:{port}/{data_files[i]}"))
+    } else if (stringr::str_ends(stripped_gz, ".bam") || stringr::str_ends(stripped_gz, ".cram")) {
       alignments <- c(alignments, stringr::str_glue("http://127.0.0.1:{port}/{data_files[i]}"))
     } else if (stringr::str_ends(stripped_gz, ".gff") || stringr::str_ends(stripped_gz, ".gff3")) {
       feature <- c(feature, stringr::str_glue("http://127.0.0.1:{port}/{data_files[i]}"))
@@ -199,6 +202,7 @@ generate_cli_message <- function(path, port) {
     }
   }
 
+  log_track_message("Assembly", assembly)
   log_track_message("Alignments", alignments)
   log_track_message("Feature", feature)
   log_track_message("Variant", variant)
