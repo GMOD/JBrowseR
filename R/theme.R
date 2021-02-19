@@ -11,6 +11,9 @@
 #' @param tertiary the tertiary color of your custom palette
 #' @param quaternary the quaternary color of your custom palette
 #'
+#' @return a character vector of stringified theme JSON configuration
+#'   to configure a custom color palette for the browser
+#'
 #' @export
 #'
 #' @examples

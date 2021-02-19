@@ -10,6 +10,9 @@
 #' @param display_assembly a boolean determining whether the reference sequence
 #'   is visible or not. TRUE by default.
 #'
+#' @return a character vector of stringified JSON configuration for the
+#'   defaultSession to be used by the browser when first loaded
+#'
 #' @export
 #'
 #' @examples

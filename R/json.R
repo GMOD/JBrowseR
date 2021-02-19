@@ -15,6 +15,9 @@
 #'
 #' @param file the file path or URL to a JBrowse 2 configuration
 #'
+#' @return a character vector of JSON configuration from a JBrowse 2
+#'   configuration file
+#'
 #' @export
 #'
 #' @examples

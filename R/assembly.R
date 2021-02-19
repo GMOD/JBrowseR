@@ -38,7 +38,7 @@
 #'   name aliases. For more info see
 #'   \url{https://jbrowse.org/jb2/docs/config_guide#configuring-reference-name-aliasing}
 #'
-#' @return a string of JBrowseR assembly configuration
+#' @return a character vector of JBrowseR assembly configuration
 #' @export
 #'
 #' @examples

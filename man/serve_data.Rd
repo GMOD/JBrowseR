@@ -11,6 +11,12 @@ serve_data(path, port = 5000)
 
 \item{port}{The port to serve the directory on}
 }
+\value{
+a list containing information about the newly
+created HTTP server including the host, port, interval,
+and URL. The list also contains the stop_server()
+function which can be used to stop the server
+}
 \description{
 This is a utility function that can be used to server
 a local directory with data so that it can be used

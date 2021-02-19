@@ -6,6 +6,9 @@
 #'
 #' @param ... The tracks to be added to the JBrowse 2 view
 #'
+#' @return a character vector of stringified JSON configuration for
+#'   all tracks to add to the browser
+#'
 #' @export
 #'
 #' @examples

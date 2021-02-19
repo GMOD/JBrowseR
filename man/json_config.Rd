@@ -9,6 +9,10 @@ json_config(file)
 \arguments{
 \item{file}{the file path or URL to a JBrowse 2 configuration}
 }
+\value{
+a character vector of JSON configuration from a JBrowse 2
+configuration file
+}
 \description{
 Reads in a JSON file with values for configuring
 your browser. Looks for assembly, tracks, defaultSession,

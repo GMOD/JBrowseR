@@ -15,6 +15,10 @@ command.}
 \item{display_assembly}{a boolean determining whether the reference sequence
 is visible or not. TRUE by default.}
 }
+\value{
+a character vector of stringified JSON configuration for the
+defaultSession to be used by the browser when first loaded
+}
 \description{
 Creates the necessary configuration string for a default session for your
 browser. A default session is the set of tracks that are displayed when your

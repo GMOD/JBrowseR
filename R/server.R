@@ -11,6 +11,11 @@
 #' @param path The path to the directory with data to serve
 #' @param port The port to serve the directory on
 #'
+#' @return a list containing information about the newly
+#'   created HTTP server including the host, port, interval,
+#'   and URL. The list also contains the stop_server()
+#'   function which can be used to stop the server
+#'
 #' @export
 #'
 #' @examples

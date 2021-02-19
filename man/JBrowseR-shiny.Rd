@@ -35,6 +35,13 @@ is useful if you want to save an expression in a variable.}
 
 \item{...}{Additional arguments passed on}
 }
+\value{
+the Shiny UI bindings for a JBrowseR htmlwidget
+
+the Shiny server bindings for a JBrowseR htmlwidget
+
+the root HTML element to render the React component in
+}
 \description{
 Output and render functions for using JBrowseR within Shiny
 applications and interactive Rmd documents.

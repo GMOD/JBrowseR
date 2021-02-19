@@ -9,6 +9,8 @@
 #' @param height The height of the htmlwidget
 #' @param elementId The elementId of the htmlwidget
 #'
+#' @return an htmlwidget of the JBrowse 2 linear genome view.
+#'
 #' @import htmlwidgets
 #' @export
 JBrowseR <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
@@ -42,12 +44,17 @@ JBrowseR <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
 #'
 #' @name JBrowseR-shiny
 #'
+#' @return the Shiny UI bindings for a JBrowseR htmlwidget
+#'
 #' @export
 JBrowseROutput <- function(outputId, width = "100%", height = "400px") {
   htmlwidgets::shinyWidgetOutput(outputId, "JBrowseR", width, height, package = "JBrowseR")
 }
 
 #' @rdname JBrowseR-shiny
+#'
+#' @return the Shiny server bindings for a JBrowseR htmlwidget
+#'
 #' @export
 renderJBrowseR <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
@@ -62,6 +69,8 @@ renderJBrowseR <- function(expr, env = parent.frame(), quoted = FALSE) {
 #' @param style htmltools style
 #' @param class htmltools class
 #' @param ... Additional arguments passed on
+#'
+#' @return the root HTML element to render the React component in
 #'
 #' @rdname JBrowseR-shiny
 JBrowseR_html <- function(id, style, class, ...) {

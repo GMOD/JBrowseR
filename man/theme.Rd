@@ -15,6 +15,10 @@ theme(primary, secondary = NULL, tertiary = NULL, quaternary = NULL)
 
 \item{quaternary}{the quaternary color of your custom palette}
 }
+\value{
+a character vector of stringified theme JSON configuration
+to configure a custom color palette for the browser
+}
 \description{
 Creates the necessary configuration string
 for a custom theme palette for your browser.

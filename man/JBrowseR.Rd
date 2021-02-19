@@ -17,6 +17,9 @@ JBrowseR(view, ..., width = NULL, height = NULL, elementId = NULL)
 
 \item{elementId}{The elementId of the htmlwidget}
 }
+\value{
+an htmlwidget of the JBrowse 2 linear genome view.
+}
 \description{
 Embed a JBrowse 2 linear genome view in your Shiny app,
 Rmd document, or interactive R console.

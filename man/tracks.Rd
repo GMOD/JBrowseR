@@ -9,6 +9,10 @@ tracks(...)
 \arguments{
 \item{...}{The tracks to be added to the JBrowse 2 view}
 }
+\value{
+a character vector of stringified JSON configuration for
+all tracks to add to the browser
+}
 \description{
 Accepts any number of tracks, returns the configuration
 string necessary to load these tracks into your JBrowse
