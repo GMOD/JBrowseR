@@ -1,3 +1,10 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Fixed a typo in the package description.
+
+* Added \value tags to all exported functions in the package clearly describing their output.
+
 ## Test environments
 * local OS X installation, R 4.0.3
 * windows-latest (on Github Actions) R 4.0.4
