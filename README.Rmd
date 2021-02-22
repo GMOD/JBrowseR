@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/elliothershberg/JBrowseR/workflows/R-CMD-check/badge.svg)](https://github.com/elliothershberg/JBrowseR/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/JBrowseR)](https://CRAN.R-project.org/package=JBrowseR)
 <!-- badges: end -->
 
 JBrowseR is an R package that provides a simple and clean interface to [JBrowse 2](https://jbrowse.org/jb2/) for R users.
@@ -30,7 +31,7 @@ With this functionality, you can deploy a first-class genome browser with your d
 
 ## Installation
 
-You can **soon** install the released version of JBrowseR from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of JBrowseR from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
 install.packages("JBrowseR")

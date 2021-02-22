@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/elliothershberg/JBrowseR/workflows/R-CMD-check/badge.svg)](https://github.com/elliothershberg/JBrowseR/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/JBrowseR)](https://CRAN.R-project.org/package=JBrowseR)
 <!-- badges: end -->
 
 JBrowseR is an R package that provides a simple and clean interface to
@@ -23,7 +25,7 @@ with your data in just a few lines of R code!
 
 ## Installation
 
-You can **soon** install the released version of JBrowseR from
+You can install the released version of JBrowseR from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
