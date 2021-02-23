@@ -51,7 +51,7 @@ For the rest of the tutorial code, we are going to use the following already hos
 - `https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi`
 
 However, these are the same steps for preparing any assembly for use with the browser.
-For notes on creating URLs for your data either locally or hosted, read more [here](https://elliothershberg.github.io/JBrowseR/articles/creating-urls.html).
+For notes on creating URLs for your data either locally or hosted, read more [here](https://gmod.github.io/JBrowseR/articles/creating-urls.html).
 
 ## Creating a minimal shiny app
 

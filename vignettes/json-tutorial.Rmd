@@ -12,7 +12,7 @@ knitr::opts_chunk$set(eval = FALSE)
 ```
 
 The main interface of JBrowseR involves using the `View` component.
-An introduction to using this interface can be found [here](https://elliothershberg.github.io/JBrowseR/articles/custom-browser-tutorial.html).
+An introduction to using this interface can be found [here](https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html).
 JBrowseR has several R functions for generating configuration to pass to the `View` component.
 Under the hood, these functions are returning strings of JBrowse 2 JSON configuration.
 
