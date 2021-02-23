@@ -16,7 +16,7 @@ Description: Provides an R interface to the JBrowse 2 genome browser.
     and can be used with a custom theme.
 License: Apache License (>= 2)
 URL: https://gmod.github.io/JBrowseR/
-    https://github.com/gmod/JBrowseR
+    https://github.com/GMOD/JBrowseR
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
