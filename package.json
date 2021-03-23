@@ -1,8 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "@jbrowse/plugin-circular-view": "^1.0.2",
-    "@jbrowse/react-linear-genome-view": "^1.0.2",
+    "@jbrowse/react-linear-genome-view": "^1.0.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
