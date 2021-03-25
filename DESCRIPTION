@@ -18,7 +18,6 @@ License: Apache License (>= 2)
 URL: https://gmod.github.io/JBrowseR/
     https://github.com/GMOD/JBrowseR
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
