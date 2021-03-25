@@ -31,7 +31,7 @@ We will be using the Sars-CoV-2 genome for this tutorial.
 To create an index, we first need to download the FASTA for the assembly.
 This can be found [here](https://www.ncbi.nlm.nih.gov/nuccore/NC_045512).
 We also need [htslib](http://www.htslib.org/), which provides the tools we need for indexing and compression.
-(I prefer to install these tools using [the bioconda package](https://anaconda.org/bioconda/htslib)).
+(I prefer to install htslib using [bioconda](https://bioconda.github.io/)).
 The remaining steps assume the htslib is installed, and we have a fasta file named `sars-cov2.fa`.
 
 With these steps taken, we are going to compress and index the assembly, for best performance.
