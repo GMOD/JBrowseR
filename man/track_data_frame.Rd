@@ -9,7 +9,9 @@ track_data_frame(track_data, track_name, assembly)
 \arguments{
 \item{track_data}{the data frame with track data. Must have cols:
 \code{chrom}, \code{start}, \code{end}, \code{name}. The column
-\code{additional} can optionally be include with more feature information.}
+\code{additional} can optionally be include with more feature information.
+If a \code{score} column is present, it will be used and the track will
+be rendered to display quantitative features.}
 
 \item{track_name}{the name to use for the track}
 

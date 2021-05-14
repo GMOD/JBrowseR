@@ -58,4 +58,21 @@ test_that("creating a data frame track returns the correct string", {
   valid_json <- remove_random_ids(valid_json)
 
   expect_equal(df_json, valid_json)
+
+  # also test for a quantitative track
+  score_df <- df <- data.frame(
+    chrom = c('1', '2'),
+    start = c(123, 456),
+    end = c(789, 101112),
+    name = c('feature1', 'feature2'),
+    score = c(10, 20)
+  )
+
+  score_df_json <- jsonlite::parse_json(track_data_frame(score_df, "quantitative_features", assembly))
+  score_df_json <- remove_random_ids(score_df_json)
+
+  valid_score_json <- jsonlite::parse_json("{ \"type\": \"QuantitativeTrack\", \"name\": \"quantitative_features\", \"assemblyNames\": [\"hg19\"], \"trackId\": \"hg19_quantitative_features\", \"adapter\": { \"type\": \"FromConfigAdapter\", \"features\": [{\"refName\": \"1\", \"start\": 123, \"end\": 789, \"uniqueId\": \"000f0e1c826974d4dcbc3f665337ecb7\", \"name\": \"feature1\", \"type\": \"\", \"score\": 10, \"additional\": \"\" }, {\"refName\": \"2\", \"start\": 456, \"end\": 101112, \"uniqueId\": \"000f0e1c826974d4dcbc3f665337ecb7\", \"name\": \"feature2\", \"type\": \"\", \"score\": 20, \"additional\": \"\" }] } }")
+  valid_score_json <- remove_random_ids(valid_score_json)
+
+  expect_equal(score_df_json, valid_score_json)
 })
