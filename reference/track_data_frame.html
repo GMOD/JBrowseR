@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • JBrowseR</title>
+<title>Create a track from an R data frame for a custom JBrowse 2 view — track_data_frame • JBrowseR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Create a track from an R data frame for a custom JBrowse 2 view — track_data_frame" />
+<meta property="og:description" content="Creates the necessary configuration string for an R data frame so that it can
+be viewed as a track in a JBrowse custom linear genome view." />
 <meta property="og:image" content="https://elliothershberg.github.io/JBrowseR/logo.png" />
 
 
@@ -66,7 +68,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -131,153 +133,58 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Create a track from an R data frame for a custom JBrowse 2 view</h1>
+    <small class="dont-index">Source: <a href='https://github.com/GMOD/JBrowseR/blob/master/R/data_frame.R'><code>R/data_frame.R</code></a></small>
+    <div class="hidden name"><code>track_data_frame.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Creates the necessary configuration string for an R data frame so that it can
+be viewed as a track in a JBrowse custom linear genome view.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>track_data_frame</span><span class='op'>(</span><span class='va'>track_data</span>, <span class='va'>track_name</span>, <span class='va'>assembly</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-rendering-functions" class="hasAnchor"><a href="#section-rendering-functions" class="anchor"></a>Rendering functions</h2>
-          <p class="section-desc"><p>Functions for rendering JBrowserR in various contexts</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="JBrowseR.html">JBrowseR()</a></code> </p>
-        </td>
-        <td><p>R interface to JBrowse 2 genome browser</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="JBrowseR-shiny.html">JBrowseROutput()</a></code> <code><a href="JBrowseR-shiny.html">renderJBrowseR()</a></code> <code><a href="JBrowseR-shiny.html">JBrowseR_html()</a></code> </p>
-        </td>
-        <td><p>Shiny bindings for JBrowseR</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-creating-jbrowser-configuration" class="hasAnchor"><a href="#section-creating-jbrowser-configuration" class="anchor"></a>Creating JBrowseR configuration</h2>
-          <p class="section-desc"><p>Functions for creating JBrowseR configuration strings</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="assembly.html">assembly()</a></code> </p>
-        </td>
-        <td><p>Create an assembly for a custom JBrowse view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="track_alignments.html">track_alignments()</a></code> </p>
-        </td>
-        <td><p>Create an AlignmentsTrack for a custom JBrowse 2 view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="track_data_frame.html">track_data_frame()</a></code> </p>
-        </td>
-        <td><p>Create a track from an R data frame for a custom JBrowse 2 view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="track_feature.html">track_feature()</a></code> </p>
-        </td>
-        <td><p>Create a FeatureTrack for a custom JBrowse 2 view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="track_variant.html">track_variant()</a></code> </p>
-        </td>
-        <td><p>Create a VariantTrack for a custom JBrowse 2 view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="track_wiggle.html">track_wiggle()</a></code> </p>
-        </td>
-        <td><p>Create a WiggleTrack for a custom JBrowse 2 view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tracks.html">tracks()</a></code> </p>
-        </td>
-        <td><p>Create a set of tracks for a custom JBrowse 2 view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="default_session.html">default_session()</a></code> </p>
-        </td>
-        <td><p>Create a default session for a custom JBrowse view</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-advanced-customization" class="hasAnchor"><a href="#section-advanced-customization" class="anchor"></a>Advanced customization</h2>
-          <p class="section-desc"><p>More advanced customization options</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="theme.html">theme()</a></code> </p>
-        </td>
-        <td><p>Create a theme for a custom JBrowse 2 view</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="json_config.html">json_config()</a></code> </p>
-        </td>
-        <td><p>Read in a JBrowse 2 JSON configuration file</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-utilities" class="hasAnchor"><a href="#section-utilities" class="anchor"></a>Utilities</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="serve_data.html">serve_data()</a></code> </p>
-        </td>
-        <td><p>Serve a local data directory for use with a browser</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>track_data</th>
+      <td><p>the data frame with track data. Must have cols:
+<code>chrom</code>, <code>start</code>, <code>end</code>, <code>name</code>. The column
+<code>additional</code> can optionally be include with more feature information.
+If a <code>score</code> column is present, it will be used and the track will
+be rendered to display quantitative features.</p></td>
+    </tr>
+    <tr>
+      <th>track_name</th>
+      <td><p>the name to use for the track</p></td>
+    </tr>
+    <tr>
+      <th>assembly</th>
+      <td><p>the config string generated by <code>assembly</code></p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a character vector of stringified track JSON configuration</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>assembly</span> <span class='op'>&lt;-</span> <span class='fu'><a href='assembly.html'>assembly</a></span><span class='op'>(</span><span class='st'>"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>, bgzip <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
+<span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+        chrom <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span>,
+        start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>123</span>, <span class='fl'>456</span><span class='op'>)</span>,
+        end <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>789</span>, <span class='fl'>101112</span><span class='op'>)</span>,
+        name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'feature1'</span>, <span class='st'>'feature2'</span><span class='op'>)</span>
+      <span class='op'>)</span>
+
+<span class='fu'>track_data_frame</span><span class='op'>(</span><span class='va'>df</span>, <span class='st'>"my_features"</span>, <span class='va'>assembly</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "{ \"type\": \"FeatureTrack\", \"name\": \"my_features\", \"assemblyNames\": [\"hg19\"], \"trackId\": \"hg19_my_features\", \"adapter\": { \"type\": \"FromConfigAdapter\", \"features\": [{\"refName\": \"1\", \"start\": 123, \"end\": 789, \"uniqueId\": \"d159f37fd8d68717d59169813eaabd61\", \"name\": \"feature1\", \"type\": \"\", \"additional\": \"\" }, {\"refName\": \"2\", \"start\": 456, \"end\": 101112, \"uniqueId\": \"d159f37fd8d68717d59169813eaabd61\", \"name\": \"feature2\", \"type\": \"\", \"additional\": \"\" }] } }"</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
