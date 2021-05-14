@@ -32,5 +32,5 @@ df <- data.frame(
         name = c('feature1', 'feature2')
       )
 
-
+track_data_frame(df, "my_features", assembly)
 }
