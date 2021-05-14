@@ -2,15 +2,11 @@
 ^\.Rproj\.user$
 ^node_modules$
 ^srcjs$
-^app\.R$
 ^package\.json$
 ^webpack\.config\.js$
 ^yarn\.lock$
 ^LICENSE\.md$
 ^inst/htmlwidgets/JBrowseR\.js\.map$
-^config\.json$
-^custom_app\.R$
-^json_app\.R$
 ^README\.Rmd$
 ^_pkgdown\.yml$
 ^docs$
@@ -18,3 +14,4 @@
 ^\.github$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
+^example_apps$
