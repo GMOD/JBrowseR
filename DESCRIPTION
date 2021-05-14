@@ -31,7 +31,8 @@ Imports:
     httpuv,
     mime,
     cli,
-    ids
+    ids,
+    dplyr
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
