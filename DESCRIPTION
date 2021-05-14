@@ -30,7 +30,8 @@ Imports:
     jsonlite,
     httpuv,
     mime,
-    cli
+    cli,
+    ids
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
