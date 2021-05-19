@@ -5,6 +5,8 @@ import {
   ThemeProvider,
 } from "@jbrowse/react-linear-genome-view";
 
+import { messageShiny } from "../utils";
+
 export default function View(props) {
   // create object of state options with only those
   // passed as props
@@ -20,6 +22,7 @@ export default function View(props) {
         : (stateOpts[key] = JSON.parse(value));
     }
   }
+  stateOpts.onChange = messageShiny;
 
   const jbrowseTheme =
     theme !== undefined ? createJBrowseTheme(theme) : createJBrowseTheme();
