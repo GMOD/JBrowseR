@@ -5,6 +5,8 @@ import {
   ThemeProvider,
 } from "@jbrowse/react-linear-genome-view";
 
+import { messageShiny } from "../utils";
+
 const theme = createJBrowseTheme();
 
 const assembly = {
@@ -97,6 +99,7 @@ export default function Hg19View(props) {
     tracks,
     location: props.location,
     defaultSession,
+    onChange: messageShiny,
   });
 
   return (

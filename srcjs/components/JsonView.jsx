@@ -5,6 +5,8 @@ import {
   ThemeProvider,
 } from "@jbrowse/react-linear-genome-view";
 
+import { messageShiny } from "../utils";
+
 export default function View(props) {
   const configObject = JSON.parse(props.config);
   const { assembly, tracks, defaultSession, theme } = configObject;
@@ -14,6 +16,7 @@ export default function View(props) {
     tracks,
     defaultSession,
     location,
+    onChange: messageShiny,
   });
 
   const jbrowseTheme =
