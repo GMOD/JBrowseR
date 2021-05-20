@@ -1,6 +1,7 @@
 library(shiny)
 library(tibble)
 library(DT)
+library(dplyr)
 library(JBrowseR)
 
 ui <- fluidPage(
