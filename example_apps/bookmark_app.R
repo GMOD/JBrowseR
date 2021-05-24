@@ -44,7 +44,7 @@ server <- function(input, output, session) {
   observeEvent(input$delete, {
     if (!is.null(input$bookmarks_rows_selected)) {
       values$bookmark_df <- values$bookmark_df %>%
-        filter(!row_number() %in% input$bookmarks_rows_selected)
+        slice(-input$bookmarks_rows_selected)
     }
   })
 
