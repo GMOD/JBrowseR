@@ -1,13 +1,9 @@
 import {
   createViewState,
-  createJBrowseTheme,
   JBrowseLinearGenomeView,
-  ThemeProvider,
 } from "@jbrowse/react-linear-genome-view";
 
 import { messageShiny } from "../utils";
-
-const theme = createJBrowseTheme();
 
 const assembly = {
   name: "hg19",
@@ -103,8 +99,6 @@ export default function Hg19View(props) {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <JBrowseLinearGenomeView viewState={state} />
-    </ThemeProvider>
+    <JBrowseLinearGenomeView viewState={state} />
   );
 }
