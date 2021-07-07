@@ -1,8 +1,6 @@
 import {
   createViewState,
-  createJBrowseTheme,
   JBrowseLinearGenomeView,
-  ThemeProvider,
 } from "@jbrowse/react-linear-genome-view";
 
 import { messageShiny } from "../utils";
@@ -17,14 +15,10 @@ export default function View(props) {
     defaultSession,
     location,
     onChange: messageShiny,
+    configuration: { theme },
   });
 
-  const jbrowseTheme =
-    theme !== undefined ? createJBrowseTheme(theme) : createJBrowseTheme();
-
   return (
-    <ThemeProvider theme={jbrowseTheme}>
-      <JBrowseLinearGenomeView viewState={state} />
-    </ThemeProvider>
+    <JBrowseLinearGenomeView viewState={state} />
   );
 }

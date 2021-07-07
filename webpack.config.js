@@ -27,6 +27,9 @@ module.exports = {
         'react-dom': 'window.ReactDOM',
         'reactR': 'window.reactR'
     },
+    node: {
+        fs: 'empty'
+    },
     stats: {
         colors: true
     },
