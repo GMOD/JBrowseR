@@ -1,3 +1,16 @@
+# JBrowser 0.8.1
+
+This PR consists of updates to the JS side of the package:
+
+- Upgrades `@jbrowse/react-linear-genome-view` to latest release (1.3.2). This includes:
+  - new SVG export feature! 📸
+  - a fix for better supporting Dialog components in the UI 🔨
+  - performance improvements 🚀
+  - better theming support (you can now change the colors of the bases!) 🎨
+- Updates the internal React components in the package based on new API changes to the React LGV
+
+There are no changes to the R interface.
+
 # JBrowseR 0.8.0
 
 * Added the `track_data_frame()` track type. This makes it possible to create JB2 tracks directly
