@@ -64,3 +64,17 @@ best suits your needs:
     tutorial](https://gmod.github.io/JBrowseR/articles/json-tutorial.html)
 -   [Creating
     URLS](https://gmod.github.io/JBrowseR/articles/creating-urls.html)
+
+## Citation
+
+If you use JBrowseR in your research, please cite the following
+publication:
+
+[Hershberg et al., 2021. JBrowseR: An R Interface to the JBrowse 2
+Genome Browser](https://doi.org/10.1093/bioinformatics/btab459)
+
+    @article{hershberg2021jbrowser,
+      title={JBrowseR: An R Interface to the JBrowse 2 Genome Browser},
+      author={Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},
+      journal={Bioinformatics}
+    }
