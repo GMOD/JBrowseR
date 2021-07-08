@@ -1,6 +1,6 @@
 # JBrowser 0.8.1
 
-This PR consists of updates to the JS side of the package:
+This release consists of updates to the JS side of the package:
 
 - Upgrades `@jbrowse/react-linear-genome-view` to latest release (1.3.2). This includes:
   - new SVG export feature! 📸
