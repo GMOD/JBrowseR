@@ -12,8 +12,8 @@
 #' @export
 #'
 #' @examples
-#' track_variant(
-#'   "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz",
+#' track_wiggle(
+#'   "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.regions.bw",
 #'   assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
 #' )
 track_wiggle <- function(track_data, assembly) {
