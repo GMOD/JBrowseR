@@ -19,7 +19,7 @@ URL: https://gmod.github.io/JBrowseR/
     https://github.com/GMOD/JBrowseR
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     htmltools,
     htmlwidgets,
