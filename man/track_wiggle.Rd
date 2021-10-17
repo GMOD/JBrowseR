@@ -21,7 +21,7 @@ in a JBrowse custom linear genome view.
 }
 \examples{
 track_wiggle(
-  "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.regions.bw",
+  "https://jbrowse.org/genomes/hg19/COLO829/colo_normal.bw",
   assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
 )
 }
