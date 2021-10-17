@@ -20,8 +20,8 @@ bigWig file so that it can be used
 in a JBrowse custom linear genome view.
 }
 \examples{
-track_variant(
-  "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz",
+track_wiggle(
+  "https://jbrowse.org/genomes/hg19/COLO829/colo_normal.bw",
   assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
 )
 }
