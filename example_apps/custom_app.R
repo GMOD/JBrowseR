@@ -2,6 +2,11 @@ library(shiny)
 library(JBrowseR)
 
 ui <- fluidPage(
+  tags$head(
+    tags$style(HTML(
+      "html { font-size: 14px }"
+    ))
+  ),
   titlePanel("JBrowseR Example"),
   JBrowseROutput("widgetOutput")
 )
