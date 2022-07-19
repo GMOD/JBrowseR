@@ -1,5 +1,6 @@
 var path = require('path');
 var CompressionPlugin = require("compression-webpack-plugin");
+var webpack = require('webpack')
 
 module.exports = {
     mode: 'production',
@@ -33,6 +34,11 @@ module.exports = {
     stats: {
         colors: true
     },
+    plugins: [
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
+    ],
     // can toggle source map back on during development
     // devtool: 'source-map'
     devtool: '',
