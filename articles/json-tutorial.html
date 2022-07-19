@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.1</span>
       </span>
     </div>
 
@@ -51,7 +53,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,7 +76,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/GMOD/JBrowseR/">
+  <a href="https://github.com/GMOD/JBrowseR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -95,18 +97,18 @@
       <h1 data-toc-skip>Advanced JSON tutorial</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/GMOD/JBrowseR/blob/master/vignettes/json-tutorial.Rmd"><code>vignettes/json-tutorial.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/GMOD/JBrowseR/blob/HEAD/vignettes/json-tutorial.Rmd" class="external-link"><code>vignettes/json-tutorial.Rmd</code></a></small>
       <div class="hidden name"><code>json-tutorial.Rmd</code></div>
 
     </div>
 
     
     
-<p>The main interface of JBrowseR involves using the <code>View</code> component. An introduction to using this interface can be found <a href="https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html">here</a>. JBrowseR has several R functions for generating configuration to pass to the <code>View</code> component. Under the hood, these functions are returning strings of JBrowse 2 JSON configuration.</p>
+<p>The main interface of JBrowseR involves using the <code>View</code> component. An introduction to using this interface can be found <a href="https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html" class="external-link">here</a>. JBrowseR has several R functions for generating configuration to pass to the <code>View</code> component. Under the hood, these functions are returning strings of JBrowse 2 JSON configuration.</p>
 <p>While JBrowseR supports the majority of JBrowse 2 configuration and greatly simplifies usage, it does not support the entire configuration API. If you find yourself wanting to do something unique or custom that JBrowse 2 supports but isn’t provided by the <code>View</code> component, you can use the <code>JsonView</code> component. This component can be passed a full JSON configuration as an argument.</p>
-<div id="example-json-configuration" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example-json-configuration" class="anchor"></a>Example JSON configuration</h2>
+<div class="section level2">
+<h2 id="example-json-configuration">Example JSON configuration<a class="anchor" aria-label="anchor" href="#example-json-configuration"></a>
+</h2>
 <p>This is what the JSON configuration for an assembly looks like:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">{</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a>  <span class="st">"assembly"</span><span class="op">:</span> <span class="op">{</span></span>
@@ -131,53 +133,52 @@
 <span id="cb1-21"><a href="#cb1-21"></a><span class="op">}</span></span></code></pre></div>
 <p>Let’s see how this compares to the configuration generated JBrowseR:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span>
-  <span class="st">"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz"</span>,
-  bgzip <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
-<pre><code>## [1] "{ \"name\": \"sars-cov2\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"sars-cov2-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"BgzipFastaAdapter\", \"fastaLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz\" }, \"faiLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.fai\" }, \"gziLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi\" } } } }"</code></pre>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/" class="external-link">JBrowseR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span></span>
+<span>  <span class="st">"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz"</span>,</span>
+<span>  bgzip <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "{ \"name\": \"sars-cov2\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"sars-cov2-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"BgzipFastaAdapter\", \"fastaLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz\" }, \"faiLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.fai\" }, \"gziLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi\" } } } }"</span></span></code></pre>
 <p>JBrowseR generates equivalent JSON for the same assembly. This gives a better understanding of what is happening when generating JBrowse 2 configuration using JBrowseR.</p>
 </div>
-<div id="using-the-jsonview" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-the-jsonview" class="anchor"></a>Using the <code>JsonView</code>
+<div class="section level2">
+<h2 id="using-the-jsonview">Using the <code>JsonView</code><a class="anchor" aria-label="anchor" href="#using-the-jsonview"></a>
 </h2>
 <p>Now, if we have a JSON file <code>config.json</code> containing the configuration above, we can parse it and use it to configure a browser. Here is what this looks like:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">shiny</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span>
-
-<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">fluidPage</span><span class="op">(</span>
-  <span class="fu">titlePanel</span><span class="op">(</span><span class="st">"JSON JBrowseR Example"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/JBrowseR-shiny.html">JBrowseROutput</a></span><span class="op">(</span><span class="st">"browserOutput"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  <span class="co"># using JBrowseR helper function to parse the config</span>
-  <span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/json_config.html">json_config</a></span><span class="op">(</span><span class="st">"./config.json"</span><span class="op">)</span>
-
-  <span class="va">output</span><span class="op">$</span><span class="va">browserOutput</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JBrowseR-shiny.html">renderJBrowseR</a></span><span class="op">(</span>
-    <span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"JsonView"</span>,
-            config <span class="op">=</span> <span class="va">config</span>,
-            location <span class="op">=</span> <span class="st">"NC_045512.2:1..2,000"</span>
-    <span class="op">)</span>
-  <span class="op">)</span>
-<span class="op">}</span>
-
-<span class="fu">shinyApp</span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/" class="external-link">JBrowseR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">fluidPage</span><span class="op">(</span></span>
+<span>  <span class="fu">titlePanel</span><span class="op">(</span><span class="st">"JSON JBrowseR Example"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/JBrowseR-shiny.html">JBrowseROutput</a></span><span class="op">(</span><span class="st">"browserOutput"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># using JBrowseR helper function to parse the config</span></span>
+<span>  <span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/json_config.html">json_config</a></span><span class="op">(</span><span class="st">"./config.json"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">browserOutput</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JBrowseR-shiny.html">renderJBrowseR</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"JsonView"</span>,</span>
+<span>            config <span class="op">=</span> <span class="va">config</span>,</span>
+<span>            location <span class="op">=</span> <span class="st">"NC_045512.2:1..2,000"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu">shinyApp</span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="resources" class="section level2">
-<h2 class="hasAnchor">
-<a href="#resources" class="anchor"></a>Resources</h2>
+<div class="section level2">
+<h2 id="resources">Resources<a class="anchor" aria-label="anchor" href="#resources"></a>
+</h2>
 <p>Here are some great resources for learning more about JBrowse 2 configuration:</p>
 <ul>
-<li><a href="https://jbrowse.org/jb2/docs/config_guide">JBrowse 2 config guide</a></li>
-<li><a href="https://github.com/GMOD/jbrowse-components/blob/master/products/jbrowse-react-linear-genome-view/docs/example.md">JBrowse 2 React component example</a></li>
-<li><a href="https://jbrowse.org/jb2/docs/quickstart_cli">JBrowse 2 CLI quickstart</a></li>
-<li><a href="https://jbrowse.org/jb2/docs/quickstart_gui">JBrowse 2 graphical config editing quickstart</a></li>
-<li><a href="https://github.com/GMOD/jbrowse-components/tree/master/test_data">JBrowse 2 test data</a></li>
+<li><a href="https://jbrowse.org/jb2/docs/config_guide" class="external-link">JBrowse 2 config guide</a></li>
+<li><a href="https://github.com/GMOD/jbrowse-components/blob/master/products/jbrowse-react-linear-genome-view/docs/example.md" class="external-link">JBrowse 2 React component example</a></li>
+<li><a href="https://jbrowse.org/jb2/docs/quickstart_cli" class="external-link">JBrowse 2 CLI quickstart</a></li>
+<li><a href="https://jbrowse.org/jb2/docs/quickstart_gui" class="external-link">JBrowse 2 graphical config editing quickstart</a></li>
+<li><a href="https://github.com/GMOD/jbrowse-components/tree/master/test_data" class="external-link">JBrowse 2 test data</a></li>
 </ul>
 <p>One important point when looking at JB2 config files is that the main app accepts an array of assembly objects. On the other hand, the React LGV component only accepts one assembly object, since it is a single linear genome view. Since JBrowseR is powered by the LGV component, it also only accepts a single assembly.</p>
 </div>
@@ -194,11 +195,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Elliot Hershberg, the JBrowse 2 Team.</p>
+  <p></p>
+<p>Developed by Elliot Hershberg, the JBrowse 2 Team.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -206,6 +209,8 @@
 
   
 
+
+  
 
   </body>
 </html>

@@ -1,12 +1,12 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   JBrowseR: JBrowseR.html
   creating-urls: creating-urls.html
   custom-browser-tutorial: custom-browser-tutorial.html
   json-tutorial: json-tutorial.html
-last_built: 2021-10-17T23:25Z
+last_built: 2022-07-19T22:25Z
 urls:
   reference: https://elliothershberg.github.io/JBrowseR/reference
   article: https://elliothershberg.github.io/JBrowseR/articles

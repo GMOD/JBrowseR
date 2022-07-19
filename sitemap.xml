@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/404.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/articles/JBrowseR.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/articles/creating-urls.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/articles/custom-browser-tutorial.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/articles/json-tutorial.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/authors.html</loc>
+  </url>
+  <url>
     <loc>https://elliothershberg.github.io/JBrowseR/index.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/news/index.html</loc>
   </url>
   <url>
     <loc>https://elliothershberg.github.io/JBrowseR/reference/JBrowseR-shiny.html</loc>
@@ -16,6 +43,9 @@
     <loc>https://elliothershberg.github.io/JBrowseR/reference/default_session.html</loc>
   </url>
   <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://elliothershberg.github.io/JBrowseR/reference/json_config.html</loc>
   </url>
   <url>
@@ -23,6 +53,9 @@
   </url>
   <url>
     <loc>https://elliothershberg.github.io/JBrowseR/reference/serve_data.html</loc>
+  </url>
+  <url>
+    <loc>https://elliothershberg.github.io/JBrowseR/reference/text_index.html</loc>
   </url>
   <url>
     <loc>https://elliothershberg.github.io/JBrowseR/reference/theme.html</loc>
@@ -44,17 +77,5 @@
   </url>
   <url>
     <loc>https://elliothershberg.github.io/JBrowseR/reference/tracks.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/JBrowseR.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/creating-urls.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/custom-browser-tutorial.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/json-tutorial.html</loc>
   </url>
 </urlset>
