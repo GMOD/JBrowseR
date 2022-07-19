@@ -1,3 +1,8 @@
+# JBrowse 0.9.1
+
+- Updated `@jbrowse/react-linear-genome-view` to latest release (2.0.1). Check out the [JB2 release notes](https://jbrowse.org/jb2/blog/2022/07/13/v2.0.1-release/) to learn about all of the features!
+- Added a new function `text_index()` to provide support for text search.
+
 # JBrowseR 0.9.0
 
 - Updated `@jbrowse/react-linear-genome-view` to latest release (1.4.4). Check out the [JB2 release notes](https://jbrowse.org/jb2/blog/2021/09/14/v1.4.4-release/) to learn about all of the features!
