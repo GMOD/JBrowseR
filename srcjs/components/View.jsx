@@ -14,6 +14,8 @@ export default function View(props) {
     if (key === "theme") {
       theme = JSON.parse(value);
       stateOpts["configuration"] = { theme };
+    } else if (key == "text_index") {
+      stateOpts["aggregateTextSearchAdapters"] = [JSON.parse(value)];
     } else {
       // parse the string of JSON config
       key === "location"
@@ -25,7 +27,5 @@ export default function View(props) {
 
   const state = createViewState(stateOpts);
 
-  return (
-    <JBrowseLinearGenomeView viewState={state} />
-  );
+  return <JBrowseLinearGenomeView viewState={state} />;
 }

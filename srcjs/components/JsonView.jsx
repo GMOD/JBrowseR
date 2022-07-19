@@ -7,7 +7,7 @@ import { messageShiny } from "../utils";
 
 export default function View(props) {
   const configObject = JSON.parse(props.config);
-  const { assembly, tracks, defaultSession, theme } = configObject;
+  const { assembly, tracks, defaultSession, theme, text_index } = configObject;
   const location = props.location;
   const state = createViewState({
     assembly,
@@ -16,9 +16,8 @@ export default function View(props) {
     location,
     onChange: messageShiny,
     configuration: { theme },
+    aggregateTextSearchAdapters: [text_index],
   });
 
-  return (
-    <JBrowseLinearGenomeView viewState={state} />
-  );
+  return <JBrowseLinearGenomeView viewState={state} />;
 }
