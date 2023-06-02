@@ -8,7 +8,7 @@
  * the LGV ViewState with what was changed.
  */
 export function messageShiny(patch) {
-  if (typeof Shiny === undefined) {
+  if (typeof Shiny === 'undefined') {
     return
   }
 
