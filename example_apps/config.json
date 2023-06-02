@@ -1,9 +1,7 @@
 {
   "assembly": {
     "name": "hg19",
-    "aliases": [
-      "GRCh37"
-    ],
+    "aliases": ["GRCh37"],
     "sequence": {
       "type": "ReferenceSequenceTrack",
       "trackId": "Pd8Wh30ei9R",

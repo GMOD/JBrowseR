@@ -1,93 +1,90 @@
 import {
   createViewState,
   JBrowseLinearGenomeView,
-} from "@jbrowse/react-linear-genome-view";
+} from '@jbrowse/react-linear-genome-view'
 
-import { messageShiny } from "../utils";
+import { messageShiny } from '../utils'
 
 const assembly = {
-  name: "hg19",
+  name: 'hg19',
   sequence: {
-    type: "ReferenceSequenceTrack",
-    trackId: "GRCh37-ReferenceSequenceTrack",
+    type: 'ReferenceSequenceTrack',
+    trackId: 'GRCh37-ReferenceSequenceTrack',
     adapter: {
-      type: "BgzipFastaAdapter",
+      type: 'BgzipFastaAdapter',
       fastaLocation: {
-        uri: "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+        uri: 'https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz',
       },
       faiLocation: {
-        uri: "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai",
+        uri: 'https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai',
       },
       gziLocation: {
-        uri: "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi",
+        uri: 'https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi',
       },
     },
   },
-  aliases: ["GRCh37"],
+  aliases: ['GRCh37'],
   refNameAliases: {
     adapter: {
-      type: "RefNameAliasAdapter",
+      type: 'RefNameAliasAdapter',
       location: {
-        uri:
-          "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt",
+        uri: 'https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt',
       },
     },
   },
-};
+}
 
 const tracks = [
   {
-    type: "FeatureTrack",
-    trackId: "ncbi_gff_hg19",
-    name: "NCBI RefSeq (GFF3Tabix)",
-    assemblyNames: ["hg19"],
-    category: ["Annotation"],
+    type: 'FeatureTrack',
+    trackId: 'ncbi_gff_hg19',
+    name: 'NCBI RefSeq (GFF3Tabix)',
+    assemblyNames: ['hg19'],
+    category: ['Annotation'],
     adapter: {
-      type: "Gff3TabixAdapter",
+      type: 'Gff3TabixAdapter',
       gffGzLocation: {
-        uri:
-          "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
+        uri: 'https://s3.amazonaws.com/jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz',
       },
       index: {
         location: {
-          uri:
-            "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz.tbi",
+          uri: 'https://s3.amazonaws.com/jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz.tbi',
         },
       },
     },
   },
-];
+]
 
 const defaultSession = {
-  name: "My session",
+  name: 'My session',
   view: {
-    id: "linearGenomeView",
-    type: "LinearGenomeView",
+    id: 'linearGenomeView',
+    type: 'LinearGenomeView',
     tracks: [
       {
-        type: "ReferenceSequenceTrack",
-        configuration: "GRCh37-ReferenceSequenceTrack",
+        type: 'ReferenceSequenceTrack',
+        configuration: 'GRCh37-ReferenceSequenceTrack',
         displays: [
           {
-            type: "LinearReferenceSequenceDisplay",
+            type: 'LinearReferenceSequenceDisplay',
             configuration:
-              "GRCh37-ReferenceSequenceTrack-LinearReferenceSequenceDisplay",
+              'GRCh37-ReferenceSequenceTrack-LinearReferenceSequenceDisplay',
           },
         ],
       },
       {
-        type: "FeatureTrack",
-        configuration: "ncbi_gff_hg19",
+        type: 'FeatureTrack',
+        configuration: 'ncbi_gff_hg19',
         displays: [
           {
-            type: "LinearBasicDisplay",
-            configuration: "ncbi_gff_hg19-LinearBasicDisplay",
+            type: 'LinearBasicDisplay',
+            configuration: 'ncbi_gff_hg19-LinearBasicDisplay',
           },
         ],
       },
     ],
   },
-};
+}
 
 export default function Hg19View(props) {
   const state = createViewState({
@@ -96,9 +93,7 @@ export default function Hg19View(props) {
     location: props.location,
     defaultSession,
     onChange: messageShiny,
-  });
+  })
 
-  return (
-    <JBrowseLinearGenomeView viewState={state} />
-  );
+  return <JBrowseLinearGenomeView viewState={state} />
 }

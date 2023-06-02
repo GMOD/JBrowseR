@@ -1,14 +1,14 @@
 import {
   createViewState,
   JBrowseLinearGenomeView,
-} from "@jbrowse/react-linear-genome-view";
+} from '@jbrowse/react-linear-genome-view'
 
-import { messageShiny } from "../utils";
+import { messageShiny } from '../utils'
 
 export default function View(props) {
-  const configObject = JSON.parse(props.config);
-  const { assembly, tracks, defaultSession, theme, text_index } = configObject;
-  const location = props.location;
+  const configObject = JSON.parse(props.config)
+  const { assembly, tracks, defaultSession, theme, text_index } = configObject
+  const location = props.location
   const state = createViewState({
     assembly,
     tracks,
@@ -17,7 +17,7 @@ export default function View(props) {
     onChange: messageShiny,
     configuration: { theme },
     aggregateTextSearchAdapters: [text_index],
-  });
+  })
 
-  return <JBrowseLinearGenomeView viewState={state} />;
+  return <JBrowseLinearGenomeView viewState={state} />
 }

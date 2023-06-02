@@ -9,25 +9,25 @@ navbar:
     home: ~
 
 reference:
-- title: "Rendering functions"
-  desc: "Functions for rendering JBrowserR in various contexts"
-- contents:
-  - JBrowseR
-  - renderJBrowseR
-  - JBrowseROutput
-  - JBrowseR_html
-- title: "Creating JBrowseR configuration"
-  desc: "Functions for creating JBrowseR configuration strings"
-- contents:
-  - assembly
-  - starts_with("track")
-  - default_session
-- title: "Advanced customization"
-  desc: "More advanced customization options"
-- contents:
-  - theme
-  - json_config
-  - text_index
-- title: "Utilities"
-- contents:
-  - serve_data
+  - title: 'Rendering functions'
+    desc: 'Functions for rendering JBrowserR in various contexts'
+  - contents:
+      - JBrowseR
+      - renderJBrowseR
+      - JBrowseROutput
+      - JBrowseR_html
+  - title: 'Creating JBrowseR configuration'
+    desc: 'Functions for creating JBrowseR configuration strings'
+  - contents:
+      - assembly
+      - starts_with("track")
+      - default_session
+  - title: 'Advanced customization'
+    desc: 'More advanced customization options'
+  - contents:
+      - theme
+      - json_config
+      - text_index
+  - title: 'Utilities'
+  - contents:
+      - serve_data
