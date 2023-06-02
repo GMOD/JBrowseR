@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="json-tutorial_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Advanced JSON tutorial</h1>
@@ -104,34 +104,44 @@
 
     
     
-<p>The main interface of JBrowseR involves using the <code>View</code> component. An introduction to using this interface can be found <a href="https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html" class="external-link">here</a>. JBrowseR has several R functions for generating configuration to pass to the <code>View</code> component. Under the hood, these functions are returning strings of JBrowse 2 JSON configuration.</p>
-<p>While JBrowseR supports the majority of JBrowse 2 configuration and greatly simplifies usage, it does not support the entire configuration API. If you find yourself wanting to do something unique or custom that JBrowse 2 supports but isn’t provided by the <code>View</code> component, you can use the <code>JsonView</code> component. This component can be passed a full JSON configuration as an argument.</p>
+<p>The main interface of JBrowseR involves using the <code>View</code>
+component. An introduction to using this interface can be found <a href="https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html" class="external-link">here</a>.
+JBrowseR has several R functions for generating configuration to pass to
+the <code>View</code> component. Under the hood, these functions are
+returning strings of JBrowse 2 JSON configuration.</p>
+<p>While JBrowseR supports the majority of JBrowse 2 configuration and
+greatly simplifies usage, it does not support the entire configuration
+API. If you find yourself wanting to do something unique or custom that
+JBrowse 2 supports but isn’t provided by the <code>View</code>
+component, you can use the <code>JsonView</code> component. This
+component can be passed a full JSON configuration as an argument.</p>
 <div class="section level2">
 <h2 id="example-json-configuration">Example JSON configuration<a class="anchor" aria-label="anchor" href="#example-json-configuration"></a>
 </h2>
 <p>This is what the JSON configuration for an assembly looks like:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">{</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="st">"assembly"</span><span class="op">:</span> <span class="op">{</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>    <span class="st">"name"</span><span class="op">:</span> <span class="st">"Sars-Cov2"</span><span class="op">,</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>    <span class="st">"sequence"</span><span class="op">:</span> <span class="op">{</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a>      <span class="st">"type"</span><span class="op">:</span> <span class="st">"ReferenceSequenceTrack"</span><span class="op">,</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>      <span class="st">"trackId"</span><span class="op">:</span> <span class="st">"Sars-Cov2-ReferenceSequenceTrack"</span><span class="op">,</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>      <span class="st">"adapter"</span><span class="op">:</span> <span class="op">{</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>        <span class="st">"type"</span><span class="op">:</span> <span class="st">"BgzipFastaAdapter"</span><span class="op">,</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>        <span class="st">"fastaLocation"</span><span class="op">:</span> <span class="op">{</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>          <span class="st">"uri"</span><span class="op">:</span> <span class="st">"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz"</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a>        <span class="op">},</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a>        <span class="st">"faiLocation"</span><span class="op">:</span> <span class="op">{</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a>          <span class="st">"uri"</span><span class="op">:</span> <span class="st">"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.fai"</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a>        <span class="op">},</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a>        <span class="st">"gziLocation"</span><span class="op">:</span> <span class="op">{</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a>          <span class="st">"uri"</span><span class="op">:</span> <span class="st">"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi"</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a>        <span class="op">}</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a>      <span class="op">}</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a>    <span class="op">}</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a>  <span class="op">}</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a><span class="op">}</span></span></code></pre></div>
-<p>Let’s see how this compares to the configuration generated JBrowseR:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"assembly"</span><span class="op">:</span> {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"name"</span><span class="op">:</span> <span class="st">"Sars-Cov2"</span><span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sequence"</span><span class="op">:</span> {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"type"</span><span class="op">:</span> <span class="st">"ReferenceSequenceTrack"</span><span class="op">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"trackId"</span><span class="op">:</span> <span class="st">"Sars-Cov2-ReferenceSequenceTrack"</span><span class="op">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"adapter"</span><span class="op">:</span> {</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"type"</span><span class="op">:</span> <span class="st">"BgzipFastaAdapter"</span><span class="op">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"fastaLocation"</span><span class="op">:</span> {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>          <span class="st">"uri"</span><span class="op">:</span> <span class="st">"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        }<span class="op">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"faiLocation"</span><span class="op">:</span> {</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>          <span class="st">"uri"</span><span class="op">:</span> <span class="st">"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.fai"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        }<span class="op">,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"gziLocation"</span><span class="op">:</span> {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">"uri"</span><span class="op">:</span> <span class="st">"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi"</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Let’s see how this compares to the configuration generated
+JBrowseR:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/" class="external-link">JBrowseR</a></span><span class="op">)</span></span>
 <span></span>
@@ -140,12 +150,16 @@
 <span>  bgzip <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "{ \"name\": \"sars-cov2\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"sars-cov2-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"BgzipFastaAdapter\", \"fastaLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz\" }, \"faiLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.fai\" }, \"gziLocation\": { \"uri\": \"https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi\" } } } }"</span></span></code></pre>
-<p>JBrowseR generates equivalent JSON for the same assembly. This gives a better understanding of what is happening when generating JBrowse 2 configuration using JBrowseR.</p>
+<p>JBrowseR generates equivalent JSON for the same assembly. This gives
+a better understanding of what is happening when generating JBrowse 2
+configuration using JBrowseR.</p>
 </div>
 <div class="section level2">
 <h2 id="using-the-jsonview">Using the <code>JsonView</code><a class="anchor" aria-label="anchor" href="#using-the-jsonview"></a>
 </h2>
-<p>Now, if we have a JSON file <code>config.json</code> containing the configuration above, we can parse it and use it to configure a browser. Here is what this looks like:</p>
+<p>Now, if we have a JSON file <code>config.json</code> containing the
+configuration above, we can parse it and use it to configure a browser.
+Here is what this looks like:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/" class="external-link">JBrowseR</a></span><span class="op">)</span></span>
@@ -172,15 +186,25 @@
 <div class="section level2">
 <h2 id="resources">Resources<a class="anchor" aria-label="anchor" href="#resources"></a>
 </h2>
-<p>Here are some great resources for learning more about JBrowse 2 configuration:</p>
+<p>Here are some great resources for learning more about JBrowse 2
+configuration:</p>
 <ul>
-<li><a href="https://jbrowse.org/jb2/docs/config_guide" class="external-link">JBrowse 2 config guide</a></li>
-<li><a href="https://github.com/GMOD/jbrowse-components/blob/master/products/jbrowse-react-linear-genome-view/docs/example.md" class="external-link">JBrowse 2 React component example</a></li>
-<li><a href="https://jbrowse.org/jb2/docs/quickstart_cli" class="external-link">JBrowse 2 CLI quickstart</a></li>
-<li><a href="https://jbrowse.org/jb2/docs/quickstart_gui" class="external-link">JBrowse 2 graphical config editing quickstart</a></li>
-<li><a href="https://github.com/GMOD/jbrowse-components/tree/master/test_data" class="external-link">JBrowse 2 test data</a></li>
+<li><a href="https://jbrowse.org/jb2/docs/config_guide" class="external-link">JBrowse 2 config
+guide</a></li>
+<li><a href="https://github.com/GMOD/jbrowse-components/blob/master/products/jbrowse-react-linear-genome-view/docs/example.md" class="external-link">JBrowse
+2 React component example</a></li>
+<li><a href="https://jbrowse.org/jb2/docs/quickstart_cli" class="external-link">JBrowse 2 CLI
+quickstart</a></li>
+<li><a href="https://jbrowse.org/jb2/docs/quickstart_gui" class="external-link">JBrowse 2
+graphical config editing quickstart</a></li>
+<li><a href="https://github.com/GMOD/jbrowse-components/tree/master/test_data" class="external-link">JBrowse
+2 test data</a></li>
 </ul>
-<p>One important point when looking at JB2 config files is that the main app accepts an array of assembly objects. On the other hand, the React LGV component only accepts one assembly object, since it is a single linear genome view. Since JBrowseR is powered by the LGV component, it also only accepts a single assembly.</p>
+<p>One important point when looking at JB2 config files is that the main
+app accepts an array of assembly objects. On the other hand, the React
+LGV component only accepts one assembly object, since it is a single
+linear genome view. Since JBrowseR is powered by the LGV component, it
+also only accepts a single assembly.</p>
 </div>
   </div>
 
@@ -201,7 +225,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

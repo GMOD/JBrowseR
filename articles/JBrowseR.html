@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="JBrowseR_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to JBrowseR</h1>
@@ -105,21 +105,35 @@
     
     
 <p>JBrowseR provides an R interface to the <a href="https://jbrowse.org/jb2/" class="external-link">JBrowse 2</a> genome browser.</p>
-<p>JBrowse 2 is “a pluggable open-source platform for visualizing and integrating biological data”. It is a fast and flexible tool that can visualize a wide variety of data. JBrowse 2 was built using powerful modern web technologies such as <a href="https://reactjs.org/" class="external-link">React</a> and <a href="https://www.typescriptlang.org/" class="external-link">TypeScript</a>. One of the core products of JBrowse 2 is a React component that makes it possible to embed a custom genome browser in a web page.</p>
-<p>While the JBrowse 2 component is an incredible tool, the main way for developers to use it has been to add it to a React app, which comes with a steep learning curve. That is where JBrowseR comes in! Using JBrowseR, it is now possible to:</p>
+<p>JBrowse 2 is “a pluggable open-source platform for visualizing and
+integrating biological data”. It is a fast and flexible tool that can
+visualize a wide variety of data. JBrowse 2 was built using powerful
+modern web technologies such as <a href="https://reactjs.org/" class="external-link">React</a>
+and <a href="https://www.typescriptlang.org/" class="external-link">TypeScript</a>. One of the
+core products of JBrowse 2 is a React component that makes it possible
+to embed a custom genome browser in a web page.</p>
+<p>While the JBrowse 2 component is an incredible tool, the main way for
+developers to use it has been to add it to a React app, which comes with
+a steep learning curve. That is where JBrowseR comes in! Using JBrowseR,
+it is now possible to:</p>
 <ul>
-<li>Embed the JBrowse 2 Linear Genome View into <strong>Shiny</strong> applications</li>
-<li>Create interactive <strong>R Markdown</strong> documents with a genome browser displaying your data.</li>
+<li>Embed the JBrowse 2 Linear Genome View into <strong>Shiny</strong>
+applications</li>
+<li>Create interactive <strong>R Markdown</strong> documents with a
+genome browser displaying your data.</li>
 <li>Launch a custom genome browser from an interactive R console</li>
 </ul>
-<p>And it is possible to do this writing only a small amount of R code.</p>
+<p>And it is possible to do this writing only a small amount of R
+code.</p>
 <div class="section level2">
 <h2 id="the-main-function">The main function<a class="anchor" aria-label="anchor" href="#the-main-function"></a>
 </h2>
-<p>The core function of the package is <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code>. There are two key arguments:</p>
+<p>The core function of the package is <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code>. There
+are two key arguments:</p>
 <ul>
 <li>
-<strong>view</strong>: This selects which React component to render. The four options are:
+<strong>view</strong>: This selects which React component to render.
+The four options are:
 <ol style="list-style-type: decimal">
 <li>ViewHg19</li>
 <li>ViewHg38</li>
@@ -128,7 +142,8 @@
 </ol>
 </li>
 <li>
-<strong>…</strong> : Optional arguments to be passed to the browser. The values the browser can use are:
+<strong>…</strong> : Optional arguments to be passed to the browser.
+The values the browser can use are:
 <ol style="list-style-type: decimal">
 <li>assembly</li>
 <li>tracks</li>
@@ -139,24 +154,46 @@
 </ol>
 </li>
 </ul>
-<p>There are a lot of possibilities with all of these options! So let’s start simple. The interface enables a <a href="https://en.wikipedia.org/wiki/Progressive_disclosure" class="external-link">progressive disclosure</a> of complexity.</p>
-<p>The only necessary argument is which view. To launch a hg19 browser from the console run:</p>
+<p>There are a lot of possibilities with all of these options! So let’s
+start simple. The interface enables a <a href="https://en.wikipedia.org/wiki/Progressive_disclosure" class="external-link">progressive
+disclosure</a> of complexity.</p>
+<p>The only necessary argument is which view. To launch a hg19 browser
+from the console run:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"ViewHg19"</span><span class="op">)</span></span></code></pre></div>
-<p>The <code>ViewHg19</code> and <code>ViewHg38</code> views are the simplest components of the package. They return pre-configured browsers displaying the reference assembly and NCBI RefSeq annotations of the hg19 and hg38 genomes respectively.</p>
-<p>We can extend the example to see how optional arguments work by setting the location:</p>
+<p>The <code>ViewHg19</code> and <code>ViewHg38</code> views are the
+simplest components of the package. They return pre-configured browsers
+displaying the reference assembly and NCBI RefSeq annotations of the
+hg19 and hg38 genomes respectively.</p>
+<p>We can extend the example to see how optional arguments work by
+setting the location:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"ViewHg19"</span>,</span>
 <span>         location <span class="op">=</span> <span class="st">"10:29,838,737..29,838,819"</span><span class="op">)</span></span></code></pre></div>
-<p>This will set the starting location of the browser when it is first loaded.</p>
+<p>This will set the starting location of the browser when it is first
+loaded.</p>
 </div>
 <div class="section level2">
 <h2 id="more-configuration">More configuration<a class="anchor" aria-label="anchor" href="#more-configuration"></a>
 </h2>
-<p>While the hg19 and hg38 views can be great tools for quickly launching a browser, we have already reached the end of the road for what can be done with them. The main interface of this package involves using the more general <code>View</code> component. For a tutorial showing how to create a small Shiny application with custom data tracks, head to:</p>
-<p><a href="https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html" class="external-link">Custom browser tutorial</a></p>
-<p>Although the <code>View</code> components provides fairly exhaustive access to the customization options of JBrowse 2, it does not expose all of the options available. If you find yourself wanting to use advanced features such as coloring features with JavaScript callbacks, or to use more specific rendering functions, it is possible to use the <code>JsonView</code> to use a JSON configured browser. This provides full access to the configuration API available for JavaScript users of JBrowse 2. For a tutorial on what this looks like, visit:</p>
-<p><a href="https://gmod.github.io/JBrowseR/articles/json-tutorial.html" class="external-link">JSON configuration tutorial</a></p>
+<p>While the hg19 and hg38 views can be great tools for quickly
+launching a browser, we have already reached the end of the road for
+what can be done with them. The main interface of this package involves
+using the more general <code>View</code> component. For a tutorial
+showing how to create a small Shiny application with custom data tracks,
+head to:</p>
+<p><a href="https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html" class="external-link">Custom
+browser tutorial</a></p>
+<p>Although the <code>View</code> components provides fairly exhaustive
+access to the customization options of JBrowse 2, it does not expose all
+of the options available. If you find yourself wanting to use advanced
+features such as coloring features with JavaScript callbacks, or to use
+more specific rendering functions, it is possible to use the
+<code>JsonView</code> to use a JSON configured browser. This provides
+full access to the configuration API available for JavaScript users of
+JBrowse 2. For a tutorial on what this looks like, visit:</p>
+<p><a href="https://gmod.github.io/JBrowseR/articles/json-tutorial.html" class="external-link">JSON
+configuration tutorial</a></p>
 </div>
   </div>
 
@@ -177,7 +214,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

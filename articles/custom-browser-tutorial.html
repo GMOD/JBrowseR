@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="custom-browser-tutorial_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Custom browser tutorial</h1>
@@ -104,38 +104,66 @@
 
     
     
-<p>This tutorial will cover how to embed JBrowseR into a shiny app, and how to customize the browser by creating data tracks and a custom theme. Before we get started with writing R code, it is necessary to cover some JBrowse 2 concepts, and look at how to prepare data for use with the browser. There are three core aspects of JBrowse 2 configuration:</p>
+<p>This tutorial will cover how to embed JBrowseR into a shiny app, and
+how to customize the browser by creating data tracks and a custom theme.
+Before we get started with writing R code, it is necessary to cover some
+JBrowse 2 concepts, and look at how to prepare data for use with the
+browser. There are three core aspects of JBrowse 2 configuration:</p>
 <ul>
 <li>
-<strong>Assembly</strong>: the reference assembly being displayed</li>
+<strong>Assembly</strong>: the reference assembly being
+displayed</li>
 <li>
-<strong>Tracks</strong>: the generic container for displaying various types of genomic data in the browser</li>
+<strong>Tracks</strong>: the generic container for displaying
+various types of genomic data in the browser</li>
 <li>
-<strong>defaultSession</strong>: what is displayed when the browser is first loaded</li>
+<strong>defaultSession</strong>: what is displayed when the browser
+is first loaded</li>
 </ul>
-<p>Other import points of configuration are the <strong>location</strong>, which is the location in the genome on first load, and the <strong>theme</strong>, which can be used to create a custom color palette for your browser. While all of these values are possible, the only required configuration is an assembly.</p>
+<p>Other import points of configuration are the
+<strong>location</strong>, which is the location in the genome on first
+load, and the <strong>theme</strong>, which can be used to create a
+custom color palette for your browser. While all of these values are
+possible, the only required configuration is an assembly.</p>
 <div class="section level2">
 <h2 id="preparing-an-assembly">Preparing an assembly<a class="anchor" aria-label="anchor" href="#preparing-an-assembly"></a>
 </h2>
-<p>The steps for preparing an assembly for use in the browser can be found in the <a href="https://jbrowse.org/jb2/docs/quickstart_cli/" class="external-link">JBrowse 2 docs</a>, but we will cover them again here. In order to be used, an assembly must first be indexed. We will be using the Sars-CoV-2 genome for this tutorial.</p>
-<p>To create an index, we first need to download the FASTA for the assembly. This can be found <a href="https://www.ncbi.nlm.nih.gov/nuccore/NC_045512" class="external-link">here</a>. We also need <a href="http://www.htslib.org/" class="external-link">htslib</a>, which provides the tools we need for indexing and compression. (I prefer to install htslib using <a href="https://bioconda.github.io/" class="external-link">bioconda</a>). The remaining steps assume the htslib is installed, and we have a fasta file named <code>sars-cov2.fa</code>.</p>
-<p>With these steps taken, we are going to compress and index the assembly, for best performance. The necessary commands are:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># 1. compresses sars-cov2.fa to sars-cov2.fa.gz</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># 2. generates sars-cov2.fa.gz.fai and sars-cov2.fa.gz.gzi</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="ex">bgzip</span> sars-cov2.fa</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="ex">samtools</span> faidx sars-cov2.fa.gz</span></code></pre></div>
-<p>For the rest of the tutorial code, we are going to use the following already hosted results of these commands:</p>
+<p>The steps for preparing an assembly for use in the browser can be
+found in the <a href="https://jbrowse.org/jb2/docs/quickstart_cli/" class="external-link">JBrowse 2 docs</a>,
+but we will cover them again here. In order to be used, an assembly must
+first be indexed. We will be using the Sars-CoV-2 genome for this
+tutorial.</p>
+<p>To create an index, we first need to download the FASTA for the
+assembly. This can be found <a href="https://www.ncbi.nlm.nih.gov/nuccore/NC_045512" class="external-link">here</a>. We also
+need <a href="http://www.htslib.org/" class="external-link">htslib</a>, which provides the
+tools we need for indexing and compression. (I prefer to install htslib
+using <a href="https://bioconda.github.io/" class="external-link">bioconda</a>). The remaining
+steps assume the htslib is installed, and we have a fasta file named
+<code>sars-cov2.fa</code>.</p>
+<p>With these steps taken, we are going to compress and index the
+assembly, for best performance. The necessary commands are:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. compresses sars-cov2.fa to sars-cov2.fa.gz</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. generates sars-cov2.fa.gz.fai and sars-cov2.fa.gz.gzi</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bgzip</span> sars-cov2.fa</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> faidx sars-cov2.fa.gz</span></code></pre></div>
+<p>For the rest of the tutorial code, we are going to use the following
+already hosted results of these commands:</p>
 <ul>
 <li><code>https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz</code></li>
 <li><code>https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.fai</code></li>
 <li><code>https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi</code></li>
 </ul>
-<p>However, these are the same steps for preparing any assembly for use with the browser. For notes on creating URLs for your data either locally or hosted, read more <a href="https://gmod.github.io/JBrowseR/articles/creating-urls.html" class="external-link">here</a>.</p>
+<p>However, these are the same steps for preparing any assembly for use
+with the browser. For notes on creating URLs for your data either
+locally or hosted, read more <a href="https://gmod.github.io/JBrowseR/articles/creating-urls.html" class="external-link">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="creating-a-minimal-shiny-app">Creating a minimal shiny app<a class="anchor" aria-label="anchor" href="#creating-a-minimal-shiny-app"></a>
 </h2>
-<p><a href="https://shiny.rstudio.com/" class="external-link">Shiny</a> is an excellent web framework that makes it easy to create interactive web applications with a minimal amount of R code. The basic Shiny app consists of a UI and a server:</p>
+<p><a href="https://shiny.rstudio.com/" class="external-link">Shiny</a> is an excellent web
+framework that makes it easy to create interactive web applications with
+a minimal amount of R code. The basic Shiny app consists of a UI and a
+server:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/" class="external-link">JBrowseR</a></span><span class="op">)</span></span>
@@ -145,7 +173,8 @@
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">shinyApp</span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-<p>This is all of the boilerplate code we need for our app. Now, we can add the browser displaying the Sars-CoV-2 genome.</p>
+<p>This is all of the boilerplate code we need for our app. Now, we can
+add the browser displaying the Sars-CoV-2 genome.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">fluidPage</span><span class="op">(</span></span>
 <span>  <span class="fu">titlePanel</span><span class="op">(</span><span class="st">"Sars-CoV-2 JBrowseR Example"</span><span class="op">)</span>,</span>
@@ -170,12 +199,20 @@
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">shinyApp</span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-<p>That is all of the code we need to add a custom genome browser to a Shiny app! It is worth noting that the <code><a href="../reference/assembly.html">assembly()</a></code> function takes only the root FASTA file as the argument, but infers the <code>.fai</code> and <code>.gzi</code> files because they use the standard naming convention. A similar pattern is true for other tracks that require index files. In these cases, it is noted in the function documentation.</p>
+<p>That is all of the code we need to add a custom genome browser to a
+Shiny app! It is worth noting that the <code><a href="../reference/assembly.html">assembly()</a></code> function
+takes only the root FASTA file as the argument, but infers the
+<code>.fai</code> and <code>.gzi</code> files because they use the
+standard naming convention. A similar pattern is true for other tracks
+that require index files. In these cases, it is noted in the function
+documentation.</p>
 </div>
 <div class="section level2">
 <h2 id="adding-tracks">Adding tracks<a class="anchor" aria-label="anchor" href="#adding-tracks"></a>
 </h2>
-<p>With an embedded browser running in a Shiny app, we can look at how to add data tracks to the browser. Adding tracks takes place in the server function:</p>
+<p>With an embedded browser running in a Shiny app, we can look at how
+to add data tracks to the browser. Adding tracks takes place in the
+server function:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># create the necessary JB2 assembly configuration</span></span>
@@ -206,7 +243,8 @@
 <p>JBrowseR has functions for adding four track types:</p>
 <ul>
 <li>
-<code><a href="../reference/track_alignments.html">track_alignments()</a></code>: visualize BAM or CRAM alignment data</li>
+<code><a href="../reference/track_alignments.html">track_alignments()</a></code>: visualize BAM or CRAM alignment
+data</li>
 <li>
 <code><a href="../reference/track_feature.html">track_feature()</a></code>: visualize GFF3 data</li>
 <li>
@@ -214,26 +252,31 @@
 <li>
 <code><a href="../reference/track_wiggle.html">track_wiggle()</a></code>: visualize bigWig data</li>
 </ul>
-<p>Any number of tracks can be passed to the main tracks function, for example:</p>
+<p>Any number of tracks can be passed to the main tracks function, for
+example:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tracks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span></span>
 <span>  <span class="va">annotations</span>,</span>
 <span>  <span class="va">variants</span>,</span>
 <span>  <span class="va">alignments</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>but for now, we will stick with the feature track that we’ve created.</p>
+<p>but for now, we will stick with the feature track that we’ve
+created.</p>
 </div>
 <div class="section level2">
 <h2 id="setting-a-default-session">Setting a default session<a class="anchor" aria-label="anchor" href="#setting-a-default-session"></a>
 </h2>
-<p>Up until this point, nothing is displayed by default in the browser when the app first loads. We can change that by configuring the default session:</p>
+<p>Up until this point, nothing is displayed by default in the browser
+when the app first loads. We can change that by configuring the default
+session:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set up the default session for the browser</span></span>
 <span><span class="va">default_session</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/default_session.html">default_session</a></span><span class="op">(</span></span>
 <span>  <span class="va">assembly</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">annotations_track</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>This sets up the browser to display the reference track and the annotations track by default when it loads.</p>
+<p>This sets up the browser to display the reference track and the
+annotations track by default when it loads.</p>
 <p>Now we update the call to our renderer:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output</span><span class="op">$</span><span class="va">browserOutput</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JBrowseR-shiny.html">renderJBrowseR</a></span><span class="op">(</span></span>
@@ -245,12 +288,15 @@
 <span>      defaultSession <span class="op">=</span> <span class="va">default_session</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Here we have passed the <code>default_session</code> we created, and set a starting location for the browser (the first 100 bases).</p>
+<p>Here we have passed the <code>default_session</code> we created, and
+set a starting location for the browser (the first 100 bases).</p>
 </div>
 <div class="section level2">
 <h2 id="creating-a-custom-theme">Creating a custom theme<a class="anchor" aria-label="anchor" href="#creating-a-custom-theme"></a>
 </h2>
-<p>In addition to visualizing your own data, you may want your browser to have your own theme. Another JBrowseR function makes creating a custom theme very simple:</p>
+<p>In addition to visualizing your own data, you may want your browser
+to have your own theme. Another JBrowseR function makes creating a
+custom theme very simple:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># accepts up to four colors for creating a custom palette</span></span>
 <span><span class="va">theme</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/theme.html">theme</a></span><span class="op">(</span><span class="st">"#5da8a3"</span>, <span class="st">"#333"</span><span class="op">)</span></span></code></pre></div>
@@ -318,7 +364,8 @@
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">shinyApp</span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-<p>Awesome, we’ve added a genome browser with annotations and a custom theme to a Shiny app!</p>
+<p>Awesome, we’ve added a genome browser with annotations and a custom
+theme to a Shiny app!</p>
 </div>
   </div>
 
@@ -339,7 +386,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
