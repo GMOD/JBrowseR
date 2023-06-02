@@ -1,3 +1,8 @@
+# JBrowse 0.10.0
+
+- Updated `@jbrowse/react-linear-genome-view` to latest release (2.5.0)
+- Fixed issue clicking features when running outside of Shiny
+
 # JBrowse 0.9.1
 
 - Updated `@jbrowse/react-linear-genome-view` to latest release (2.0.1). Check
