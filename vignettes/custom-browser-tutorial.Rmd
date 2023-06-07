@@ -55,7 +55,7 @@ For notes on creating URLs for your data either locally or hosted, read more [he
 
 ## Creating a minimal shiny app
 
-[Shiny](https://shiny.rstudio.com/) is an excellent web framework that makes it easy to create interactive web applications with a minimal amount of R code.
+[Shiny](https://shiny.posit.co/) is an excellent web framework that makes it easy to create interactive web applications with a minimal amount of R code.
 The basic Shiny app consists of a UI and a server:
 
 ```{r}

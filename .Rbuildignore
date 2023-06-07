@@ -16,3 +16,6 @@
 ^CRAN-RELEASE$
 ^example_apps$
 ^CRAN-SUBMISSION$
+^\.prettierrc.json$
+^\.prettierignore$
+^CONTRIBUTING\.md$
