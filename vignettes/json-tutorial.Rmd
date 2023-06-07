@@ -98,7 +98,7 @@ Here are some great resources for learning more about JBrowse 2 configuration:
 - [JBrowse 2 config guide](https://jbrowse.org/jb2/docs/config_guide)
 - [JBrowse 2 React component example](https://github.com/GMOD/jbrowse-components/blob/master/products/jbrowse-react-linear-genome-view/docs/example.md)
 - [JBrowse 2 CLI quickstart](https://jbrowse.org/jb2/docs/quickstart_cli)
-- [JBrowse 2 graphical config editing quickstart](https://jbrowse.org/jb2/docs/quickstart_gui)
+- [JBrowse 2 graphical config editing quickstart](https://jbrowse.org/jb2/docs/tutorials/config_gui/)
 - [JBrowse 2 test data](https://github.com/GMOD/jbrowse-components/tree/master/test_data)
 
 One important point when looking at JB2 config files is that the main app accepts an array of assembly objects.
