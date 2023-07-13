@@ -27,7 +27,6 @@ Using JBrowseR, you can:
 - Deploy a genome browser directly from the R console to view your data
 - Customize your genome browser to display your own data
 
-With this functionality, you can deploy a first-class genome browser with your data in just a few lines of R code!
 
 ## Installation
 
@@ -49,8 +48,7 @@ This line of code can be used to launch a genome browser from your R console:
 
 ```{r example, eval=FALSE}
 library(JBrowseR)
-JBrowseR("ViewHg19",
-         location = "10:29,838,737..29,838,819")
+JBrowseR("ViewHg19", location = "10:29,838,737..29,838,819")
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
@@ -63,6 +61,40 @@ In order to get started with JBrowseR, please refer to the vignette that best su
 - [Custom browser tutorial](https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html)
 - [JSON configuration tutorial](https://gmod.github.io/JBrowseR/articles/json-tutorial.html)
 - [Creating URLS](https://gmod.github.io/JBrowseR/articles/creating-urls.html)
+
+## Live demos
+
+
+### Basic usage including text search index
+
+Allows you to search by gene name
+
+https://gmod.shinyapps.io/basic_usage_with_text_index
+
+### Multi purpose demo app
+
+Shows a "bookmark" type feature, loading data from data frame, and buttons to navigate to genes of interest
+
+https://gmod.shinyapps.io/bookmarks_demo
+
+### Load config.json file
+
+Shows loading a config.json file
+
+https://gmod.shinyapps.io/load_config_json
+
+### Load data frame
+
+Simple example showing a data frame as a track
+
+https://gmod.shinyapps.io/load_data_frame
+
+### Gene fusion example
+
+Shows putative gene fusions in the SKBR3 breast cancer cell line
+
+https://gmod.shinyapps.io/skbr3_gene_fusions
+
 
 ## Citation
 
