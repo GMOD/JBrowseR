@@ -102,7 +102,6 @@
 </h1></div>
 <!-- badges: start -->
 
-<!-- badges: end -->
 <p>JBrowseR is an R package that provides a simple and clean interface to <a href="https://jbrowse.org/jb2/" class="external-link">JBrowse 2</a> for R users. Using JBrowseR, you can:</p>
 <ul>
 <li>Embed the JBrowse 2 genome browser in <strong>R Markdown</strong> documents and <strong>Shiny applications</strong>
@@ -110,7 +109,6 @@
 <li>Deploy a genome browser directly from the R console to view your data</li>
 <li>Customize your genome browser to display your own data</li>
 </ul>
-<p>With this functionality, you can deploy a first-class genome browser with your data in just a few lines of R code!</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -128,8 +126,7 @@
 <p>This line of code can be used to launch a genome browser from your R console:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/" class="external-link">JBrowseR</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"ViewHg19"</span>,</span>
-<span>         location <span class="op">=</span> <span class="st">"10:29,838,737..29,838,819"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"ViewHg19"</span>, location <span class="op">=</span> <span class="st">"10:29,838,737..29,838,819"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-example-1.png" width="100%"></p>
 </div>
 <div class="section level2">
@@ -140,19 +137,53 @@
 <li><a href="https://gmod.github.io/JBrowseR/articles/JBrowseR.html" class="external-link">Introduction</a></li>
 <li><a href="https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html" class="external-link">Custom browser tutorial</a></li>
 <li><a href="https://gmod.github.io/JBrowseR/articles/json-tutorial.html" class="external-link">JSON configuration tutorial</a></li>
-<li><a href="https://gmod.github.io/JBrowseR/articles/creating-urls.html" class="external-link">Creating URLs</a></li>
+<li><a href="https://gmod.github.io/JBrowseR/articles/creating-urls.html" class="external-link">Creating URLS</a></li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="live-demos">Live demos<a class="anchor" aria-label="anchor" href="#live-demos"></a>
+</h2>
+<div class="section level3">
+<h3 id="basic-usage-including-text-search-index">Basic usage including text search index<a class="anchor" aria-label="anchor" href="#basic-usage-including-text-search-index"></a>
+</h3>
+<p>Allows you to search by gene name</p>
+<p><a href="https://gmod.shinyapps.io/basic_usage_with_text_index" class="external-link uri">https://gmod.shinyapps.io/basic_usage_with_text_index</a></p>
+</div>
+<div class="section level3">
+<h3 id="multi-purpose-demo-app">Multi purpose demo app<a class="anchor" aria-label="anchor" href="#multi-purpose-demo-app"></a>
+</h3>
+<p>Shows a “bookmark” type feature, loading data from data frame, and buttons to navigate to genes of interest</p>
+<p><a href="https://gmod.shinyapps.io/bookmarks_demo" class="external-link uri">https://gmod.shinyapps.io/bookmarks_demo</a></p>
+</div>
+<div class="section level3">
+<h3 id="load-configjson-file">Load config.json file<a class="anchor" aria-label="anchor" href="#load-configjson-file"></a>
+</h3>
+<p>Shows loading a config.json file</p>
+<p><a href="https://gmod.shinyapps.io/load_config_json" class="external-link uri">https://gmod.shinyapps.io/load_config_json</a></p>
+</div>
+<div class="section level3">
+<h3 id="load-data-frame">Load data frame<a class="anchor" aria-label="anchor" href="#load-data-frame"></a>
+</h3>
+<p>Simple example showing a data frame as a track</p>
+<p><a href="https://gmod.shinyapps.io/load_data_frame" class="external-link uri">https://gmod.shinyapps.io/load_data_frame</a></p>
+</div>
+<div class="section level3">
+<h3 id="gene-fusion-example">Gene fusion example<a class="anchor" aria-label="anchor" href="#gene-fusion-example"></a>
+</h3>
+<p>Shows putative gene fusions in the SKBR3 breast cancer cell line</p>
+<p><a href="https://gmod.shinyapps.io/skbr3_gene_fusions" class="external-link uri">https://gmod.shinyapps.io/skbr3_gene_fusions</a></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>If you use JBrowseR in your research, please cite the following publication:</p>
 <p><a href="https://doi.org/10.1093/bioinformatics/btab459" class="external-link">Hershberg et al., 2021. JBrowseR: An R Interface to the JBrowse 2 Genome Browser</a></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">@</span>article{hershberg2021jbrowser,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  title<span class="ot">=</span>{JBrowseR<span class="sc">:</span> An R Interface to the JBrowse <span class="dv">2</span> Genome Browser},</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  author<span class="ot">=</span>{Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  journal<span class="ot">=</span>{Bioinformatics}</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>@article{hershberg2021jbrowser,
+  title={JBrowseR: An R Interface to the JBrowse 2 Genome Browser},
+  author={Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},
+  journal={Bioinformatics}
+}</code></pre>
 </div>
 </div>
   </div>
