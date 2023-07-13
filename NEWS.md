@@ -1,22 +1,22 @@
+# JBrowseR 0.10.1
+
+- Updated to @jbrowse/react-linear-genome-view@2.6.2
+- Updated webpack build and dev dependencies
+
 # JBrowseR 0.10.0
 
-- Updated `@jbrowse/react-linear-genome-view` to latest release (2.5.0)
+- Updated to @jbrowse/react-linear-genome-view@2.5.0
+- Updated to webpack 5
 - Fixed issue clicking features when running outside of Shiny
 
 # JBrowse 0.9.1
 
-- Updated `@jbrowse/react-linear-genome-view` to latest release (2.0.1). Check
-  out the
-  [JB2 release notes](https://jbrowse.org/jb2/blog/2022/07/13/v2.0.1-release/)
-  to learn about all of the features!
+- Updated to @jbrowse/react-linear-genome-view@2.0.1
 - Added a new function `text_index()` to provide support for text search.
 
 # JBrowseR 0.9.0
 
-- Updated `@jbrowse/react-linear-genome-view` to latest release (1.4.4). Check
-  out the
-  [JB2 release notes](https://jbrowse.org/jb2/blog/2021/09/14/v1.4.4-release/)
-  to learn about all of the features!
+- Updated to @jbrowse/react-linear-genome-view@1.4.4
 - Fixed the code example for `track_wiggle()`.
 - Updated the URL for the hg38 to fix the CORS error from the old source.
 
@@ -24,8 +24,7 @@
 
 This release consists of updates to the JS side of the package:
 
-- Upgrades `@jbrowse/react-linear-genome-view` to latest release (1.3.2). This
-  includes:
+- Updated to @jbrowse/react-linear-genome-view@1.3.2. This includes:
   - new SVG export feature! 📸
   - a fix for better supporting Dialog components in the UI 🔨
   - performance improvements 🚀
@@ -46,8 +45,8 @@ There are no changes to the R interface.
 # JBrowseR 0.7.1
 
 - Updated URLS in Description to reflect new home in GMOD Github organization.
-- Upgraded to @jbrowse/react-linear-genome-view version 1.0.4 (fixes issues with
-  Safari and iOS compatibility).
+- Updated to @jbrowse/react-linear-genome-view@1.0.4 (fixes issues with Safari
+  and iOS compatibility).
 
 # JBrowseR 0.7.0
 
