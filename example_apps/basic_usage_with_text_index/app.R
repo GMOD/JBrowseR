@@ -1,8 +1,13 @@
 library(shiny)
 library(JBrowseR)
+library(bslib)
 
-ui <- fluidPage(titlePanel("JBrowseR Example"),
-                JBrowseROutput("widgetOutput"))
+ui <- fluidPage(
+  # Overriding the default bootstrap theme is needed to get proper font size
+  theme = bs_theme(version = 5),
+  titlePanel("JBrowseR Example"),
+  JBrowseROutput("widgetOutput")
+)
 
 server <- function(input, output, session) {
   hg38 <- assembly(
