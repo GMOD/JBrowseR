@@ -23,9 +23,9 @@ Creates the necessary configuration string for an adapter to a text index for
 gene name search in the browser.
 }
 \details{
-Note: this function currently only supports aggregate indeces.
+Note: this function currently only supports aggregate indices.
 
-For more information on JBrowse 2 text indeces, visit:
+For more information on JBrowse 2 text indices, visit:
 \url{https://jbrowse.org/jb2/docs/config_guide/#text-searching}
 }
 \examples{
