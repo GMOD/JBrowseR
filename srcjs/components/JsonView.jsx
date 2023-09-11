@@ -14,6 +14,7 @@ export default function View(props) {
     theme,
     text_index,
     plugins: pluginInput = [],
+    internetAccounts,
   } = configObject
   const location = props.location
 
@@ -31,6 +32,7 @@ export default function View(props) {
           onChange: messageShiny,
           configuration: { theme },
           aggregateTextSearchAdapters: [text_index],
+          internetAccounts,
           plugins: plugins.map(p => p.plugin),
         })
         state.session.view.showTrack('segdups_ucsc_hg19')
