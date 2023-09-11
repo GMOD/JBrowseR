@@ -109,3 +109,21 @@ If you use JBrowseR in your research, please cite the following publication:
   journal={Bioinformatics}
 }
 ```
+
+## For developers
+
+To modify the codebase, you can set up a dev environment as follows
+
+
+```
+git clone https://github.com/GMOD/JBrowseR
+cd JBrowseR
+yarn
+yarn build # build current webpack dependencies
+R
+install.packages('devtools')
+devtools::install()
+library(JBrowseR)
+JBrowseR("ViewHg19", location = "10:29,838,737..29,838,819")      # this will now use your local build of JBrowseR
+```
+
