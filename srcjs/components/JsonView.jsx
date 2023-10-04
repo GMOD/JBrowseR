@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import {
   createViewState,
   JBrowseLinearGenomeView,
@@ -18,8 +17,8 @@ export default function View(props) {
   } = configObject
   const location = props.location
 
-  const [viewState, setViewState] = useState()
-  useEffect(() => {
+  const [viewState, setViewState] = React.useState()
+  React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     ;(async () => {
       try {
