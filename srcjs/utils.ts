@@ -7,7 +7,8 @@
  * @param patch The JSON patch received from
  * the LGV ViewState with what was changed.
  */
-export function messageShiny(patch) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function messageShiny(patch: any) {
   if (typeof Shiny === 'undefined') {
     return
   }
@@ -17,9 +18,9 @@ export function messageShiny(patch) {
   if (path.endsWith('featureData')) {
     Shiny.setInputValue('selectedFeature', value)
   } else if (path.endsWith('Feature') && value) {
-      const { featureData } = value
-      if (featureData) {
-        Shiny.setInputValue('selectedFeature', featureData)
-      }
+    const { featureData } = value
+    if (featureData) {
+      Shiny.setInputValue('selectedFeature', featureData)
     }
+  }
 }

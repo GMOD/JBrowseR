@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   createViewState,
   JBrowseLinearGenomeView,
@@ -86,12 +87,11 @@ const defaultSession = {
   },
 }
 
-export default function ViewHg38(props) {
-  console.log({ props })
+export default function ViewHg38({location}:{location:string}) {
   const state = createViewState({
     assembly,
     tracks,
-    location: props.location,
+    location,
     defaultSession,
     onChange: messageShiny,
   })
