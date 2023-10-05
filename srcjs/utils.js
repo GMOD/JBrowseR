@@ -16,12 +16,10 @@ export function messageShiny(patch) {
 
   if (path.endsWith('featureData')) {
     Shiny.setInputValue('selectedFeature', value)
-  } else if (path.endsWith('Feature')) {
-    if (value) {
+  } else if (path.endsWith('Feature') && value) {
       const { featureData } = value
       if (featureData) {
         Shiny.setInputValue('selectedFeature', featureData)
       }
     }
-  }
 }
