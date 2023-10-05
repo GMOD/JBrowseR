@@ -12,16 +12,20 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(t|j)sx?$/,
         loader: 'babel-loader',
         options: {
-          presets: ['@babel/preset-env', '@babel/preset-react'],
+          presets: [
+            '@babel/preset-env',
+            '@babel/preset-react',
+            '@babel/preset-typescript',
+          ],
         },
       },
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   externals: {
     react: 'window.React',
