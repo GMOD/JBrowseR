@@ -4,7 +4,7 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'production',
-  entry: [path.join(__dirname, 'srcjs', 'JBrowseR.jsx')],
+  entry: [path.join(__dirname, 'srcjs', 'JBrowseR.tsx')],
   output: {
     path: path.join(__dirname, 'inst/htmlwidgets'),
     filename: 'JBrowseR.js',
