@@ -1,0 +1,83 @@
+{
+  "assembly": {
+    "name": "hg19",
+    "aliases": ["GRCh37"],
+    "sequence": {
+      "type": "ReferenceSequenceTrack",
+      "trackId": "Pd8Wh30ei9R",
+      "adapter": {
+        "type": "BgzipFastaAdapter",
+        "fastaLocation": {
+          "uri": "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+          "locationType": "UriLocation"
+        },
+        "faiLocation": {
+          "uri": "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai",
+          "locationType": "UriLocation"
+        },
+        "gziLocation": {
+          "uri": "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "refNameAliases": {
+      "adapter": {
+        "type": "RefNameAliasAdapter",
+        "location": {
+          "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt",
+          "locationType": "UriLocation"
+        }
+      }
+    },
+    "cytobands": {
+      "adapter": {
+        "type": "CytobandAdapter",
+        "cytobandLocation": {
+          "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/cytoBand.txt"
+        }
+      }
+    }
+  },
+  "tracks": [
+    {
+      "type": "FeatureTrack",
+      "trackId": "ncbi_gff_hg19",
+      "name": "NCBI RefSeq w/ subfeature details",
+      "formatDetails": {
+        "subfeatures": "jexl:{name:'<a href=https://google.com/?q='+feature.name+'>'+feature.name+'</a>'}"
+      },
+      "assemblyNames": ["hg19"],
+      "category": ["Annotation"],
+      "metadata": {
+        "source": "https://www.ncbi.nlm.nih.gov/genome/guide/human/",
+        "dateaccessed": "12/03/2020"
+      },
+      "adapter": {
+        "type": "Gff3TabixAdapter",
+        "gffGzLocation": {
+          "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/ncbi_refseq/GRCh37_latest_genomic.sort.gff.gz",
+          "internetAccountId": "httpHeaders"
+        },
+        "index": {
+          "location": {
+            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/ncbi_refseq/GRCh37_latest_genomic.sort.gff.gz.tbi",
+            "internetAccountId": "httpHeaders"
+          }
+        }
+      }
+    }
+  ],
+  "internetAccounts": [
+    {
+      "type": "ModifyHTTPHeadersInternetAccount",
+      "internetAccountId": "httpHeaders"
+    }
+  ],
+  "plugins": [
+    {
+      "name": "ModifyHTTPHeaders",
+      "url": "https://s3.amazonaws.com/jbrowse.org/demos/jbrowse-plugin-modifyhttpheaders.umd.development.js"
+    }
+  ]
+}
