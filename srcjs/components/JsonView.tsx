@@ -28,6 +28,7 @@ export default function View({
           defaultSession,
           theme,
           text_index,
+          internetAccounts,
           plugins: pluginInput = [],
         } = JSON.parse(config)
         const plugins = await loadPlugins(pluginInput)
@@ -39,6 +40,7 @@ export default function View({
           onChange: messageShiny,
           configuration: { theme },
           aggregateTextSearchAdapters: [text_index],
+          internetAccounts,
           plugins: plugins.map(p => p.plugin),
         })
         setViewState(state)
