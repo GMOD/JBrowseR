@@ -5,6 +5,12 @@ object-assign
 */
 
 /*!
+ * Based on xzwasm (c) Steve Sanderson. License: MIT - https://github.com/SteveSanderson/xzwasm
+ * Contains xz-embedded by Lasse Collin and Igor Pavlov. License: Public domain - https://tukaani.org/xz/embedded.html
+ * and walloc (c) 2020 Igalia, S.L. License: MIT - https://github.com/wingo/walloc
+ */
+
+/*!
  * Determine if an object is a Buffer
  *
  * @author   Feross Aboukhadijeh <https://feross.org>
@@ -130,7 +136,7 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 /**
- * @mui/x-data-grid v6.16.3
+ * @mui/x-data-grid v6.17.0
  *
  * @license MIT
  * This source code is licensed under the MIT license found in the
