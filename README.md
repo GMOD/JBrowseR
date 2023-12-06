@@ -63,31 +63,43 @@ In order to get started with JBrowseR, please refer to the vignette that best su
 
 Allows you to search by gene name
 
-https://gmod.shinyapps.io/basic_usage_with_text_index
+- Link demo: https://gmod.shinyapps.io/basic_usage_with_text_index
+- Source code: https://github.com/GMOD/JBrowseR/blob/main/example_apps/basic_usage_with_text_index/app.R
 
 ### Multi purpose demo app
 
 Shows a "bookmark" type feature, loading data from data frame, and buttons to navigate to genes of interest
 
-https://gmod.shinyapps.io/bookmarks_demo
+- Live link: https://gmod.shinyapps.io/bookmarks_demo
+- Source code: https://github.com/GMOD/JBrowseR/blob/main/example_apps/bookmarks_demo/app.R
 
 ### Load config.json file
 
 Shows loading a config.json file
 
-https://gmod.shinyapps.io/load_config_json
+- Live link: https://gmod.shinyapps.io/load_config_json
+- Source code: https://github.com/GMOD/JBrowseR/blob/main/example_apps/load_config_json/app.R
 
 ### Load data frame
 
 Simple example showing a data frame as a track
 
-https://gmod.shinyapps.io/load_data_frame
+- Live link: https://gmod.shinyapps.io/load_data_frame
+- Source code: https://github.com/GMOD/JBrowseR/blob/main/example_apps/load_data_frame/app.R
 
 ### Gene fusion example
 
 Shows putative gene fusions in the SKBR3 breast cancer cell line
 
-https://gmod.shinyapps.io/skbr3_gene_fusions
+- Live link: https://gmod.shinyapps.io/skbr3_gene_fusions
+- Source code: https://github.com/GMOD/JBrowseR/blob/main/example_apps/skbr3_gene_fusions/app.R
+
+### Using plugins
+
+Uses the config.json loading method
+
+- Live link: not yet online
+- Source code: https://github.com/GMOD/JBrowseR/blob/main/example_apps/using_plugins/app.R
 
 
 ## Citation
