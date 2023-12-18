@@ -1,8 +1,8 @@
-/*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/
+/*!
+ * Based on xzwasm (c) Steve Sanderson. License: MIT - https://github.com/SteveSanderson/xzwasm
+ * Contains xz-embedded by Lasse Collin and Igor Pavlov. License: Public domain - https://tukaani.org/xz/embedded.html
+ * and walloc (c) 2020 Igalia, S.L. License: MIT - https://github.com/wingo/walloc
+ */
 
 /*!
  * Determine if an object is a Buffer
@@ -100,23 +100,33 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 /**
- * @license
- * Copyright 2009 The Closure Library Authors
- * Copyright 2020 Daniel Wirtz / The long.js Authors.
+ * @license React
+ * react-dom-server-legacy.browser.production.min.js
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * react-dom-server.browser.production.min.js
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * SPDX-License-Identifier: Apache-2.0
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * react-jsx-runtime.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 /**
@@ -130,7 +140,7 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 /**
- * @mui/x-data-grid v6.16.3
+ * @mui/x-data-grid v6.18.5
  *
  * @license MIT
  * This source code is licensed under the MIT license found in the
@@ -154,24 +164,6 @@ PERFORMANCE OF THIS SOFTWARE.
 
 /** @license React v16.13.1
  * react-is.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-/** @license React v17.0.2
- * react-dom-server.browser.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-/** @license React v17.0.2
- * react-jsx-runtime.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
