@@ -29,7 +29,7 @@
 #' and bgzip.
 #'
 #' For more information on creating these files, visit
-#' \url{https://jbrowse.org/jb2/docs/quickstart_cli#adding-a-genome-assembly}
+#' \url{https://jbrowse.org/jb2/docs/quickstart_web#adding-a-genome-assembly}
 #'
 #' @param assembly_data the URL to your fasta file
 #' @param bgzip whether or not your fasta is bgzip compressed
