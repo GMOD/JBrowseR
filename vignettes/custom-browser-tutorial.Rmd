@@ -24,7 +24,7 @@ While all of these values are possible, the only required configuration is an as
 
 ## Preparing an assembly
 
-The steps for preparing an assembly for use in the browser can be found in the [JBrowse 2 docs](https://jbrowse.org/jb2/docs/quickstart_cli/), but we will cover them again here.
+The steps for preparing an assembly for use in the browser can be found in the [JBrowse 2 docs](https://jbrowse.org/jb2/docs/quickstart_web/), but we will cover them again here.
 In order to be used, an assembly must first be indexed.
 We will be using the Sars-CoV-2 genome for this tutorial.
 

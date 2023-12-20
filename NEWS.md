@@ -1,3 +1,8 @@
+# JBrowseR 0.10.2
+
+- Updated to @jbrowse/react-linear-genome-view@2.10.0
+- Adds support for lzma cram
+
 # JBrowseR 0.10.1
 
 - Updated to @jbrowse/react-linear-genome-view@2.6.2
