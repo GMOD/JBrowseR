@@ -5,27 +5,27 @@
     "lint": "eslint srcjs"
   },
   "dependencies": {
-    "@jbrowse/react-linear-genome-view": "^2.5.0",
+    "@jbrowse/react-linear-genome-view": "^2.10.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.1",
-    "@babel/preset-env": "^7.22.4",
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.22.3",
     "@babel/preset-typescript": "^7.23.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
     "babel-loader": "^9.1.2",
-    "eslint": "^8.49.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "eslint-plugin-unicorn": "^49.0.0",
+    "eslint-plugin-unicorn": "^51.0.1",
     "node-polyfill-webpack-plugin": "^3.0.0",
-    "prettier": "^3.0.3",
+    "prettier": "^3.2.5",
     "typescript": "^5.2.2",
-    "webpack": "^5.85.0",
+    "webpack": "^5.90.3",
     "webpack-cli": "^5.1.1"
   }
 }

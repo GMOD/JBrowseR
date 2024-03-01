@@ -87,7 +87,7 @@ const defaultSession = {
   },
 }
 
-export default function ViewHg38({location}:{location:string}) {
+export default function ViewHg38({ location }: { location: string }) {
   const state = createViewState({
     assembly,
     tracks,
