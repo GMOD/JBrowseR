@@ -24,7 +24,7 @@ export default function View(props: {
     ...rest,
     onChange: messageShiny,
     configuration: { theme },
-    aggregateTextSearchAdapters: text_index,
+    aggregateTextSearchAdapters: [text_index],
     location,
     assembly,
     tracks,
