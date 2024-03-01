@@ -76,7 +76,7 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-/*! @license DOMPurify 3.0.6 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.0.6/LICENSE */
+/*! @license DOMPurify 3.0.9 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.0.9/LICENSE */
 
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 
@@ -140,7 +140,15 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 /**
- * @mui/x-data-grid v6.18.5
+ * @mui/material v5.15.11
+ *
+ * @license MIT
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @mui/x-data-grid v6.19.5
  *
  * @license MIT
  * This source code is licensed under the MIT license found in the
