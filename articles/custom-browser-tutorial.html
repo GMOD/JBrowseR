@@ -142,10 +142,10 @@ steps assume the htslib is installed, and we have a fasta file named
 <code>sars-cov2.fa</code>.</p>
 <p>With these steps taken, we are going to compress and index the
 assembly, for best performance. The necessary commands are:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. compresses sars-cov2.fa to sars-cov2.fa.gz</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. generates sars-cov2.fa.gz.fai and sars-cov2.fa.gz.gzi</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bgzip</span> sars-cov2.fa</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> faidx sars-cov2.fa.gz</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># 1. compresses sars-cov2.fa to sars-cov2.fa.gz</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># 2. generates sars-cov2.fa.gz.fai and sars-cov2.fa.gz.gzi</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="ex">bgzip</span> sars-cov2.fa</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="ex">samtools</span> faidx sars-cov2.fa.gz</span></code></pre></div>
 <p>For the rest of the tutorial code, we are going to use the following
 already hosted results of these commands:</p>
 <ul>
