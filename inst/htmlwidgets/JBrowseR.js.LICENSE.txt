@@ -82,22 +82,7 @@ PERFORMANCE OF THIS SOFTWARE.
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
-
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
-/*!!
- *  Canvas 2 Svg v1.0.15
- *  A low level canvas to SVG converter. Uses a mock canvas context to build an SVG document.
- *
- *  Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- *
- *  Author:
- *  Kerry Liu
- *
- *  Copyright (c) 2014 Gliffy Inc.
- */
 
 /**
  * @license React
@@ -112,6 +97,16 @@ PERFORMANCE OF THIS SOFTWARE.
 /**
  * @license React
  * react-dom-server.browser.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * react-is.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -148,7 +143,7 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 /**
- * @mui/x-data-grid v6.19.5
+ * @mui/x-data-grid v6.19.6
  *
  * @license MIT
  * This source code is licensed under the MIT license found in the
