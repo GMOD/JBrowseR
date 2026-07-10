@@ -19,9 +19,11 @@ JBrowseR(
 )
 }
 \arguments{
-\item{assembly}{Either a hub name understood by jbrowse.org (e.g. \code{"hg38"},
-\code{"hg19"}, or a GenArk accession like \code{"GCF_000001405.40"}) or an assembly
-config list from \code{\link[=assembly]{assembly()}}.}
+\item{assembly}{A hub name understood by jbrowse.org (e.g. \code{"hg38"}, \code{"hg19"},
+or a GenArk accession like \code{"GCF_000001405.40"}), a sequence-file URL the
+view builds an assembly from (\code{".../hg38.fa.gz"}, \verb{.2bit}), or an assembly
+config list from \code{\link[=assembly]{assembly()}} (needed only for aliases or a non-sibling
+index).}
 
 \item{tracks}{A list of track configs, e.g. from \code{\link[=tracks]{tracks()}} / \code{\link[=track]{track()}}.
 Tracks missing \code{assemblyNames} are backfilled with the assembly's name.}

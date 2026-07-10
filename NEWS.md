@@ -10,10 +10,21 @@
   and `theme()`, which now return lists rather than JSON strings.
 - `tracks` entries also accept a bare data-URL string or a `c(url, index)` pair,
   not just a `track()` config, so a whole browser can skip the constructor.
+- Track-type/adapter inference is delegated to JBrowse core: `track()` now
+  returns a loose `list(uri = ...)` spec that the view expands at display time
+  with the same format plugins the "Add track" flow uses. So any format a bundled
+  plugin recognizes works (`.bam`/`.cram`, `.vcf`, `.gff`/`.gff3`/`.gtf`/`.bed`
+  plain or bgzipped, `.bb`/`.bigWig`, `.hic`, …) — not a fixed R-side list — and
+  a bgzipped file resolves to its indexed tabix adapter, a plain one to the
+  whole-file adapter. `track()` no longer takes `type`/`adapter_type`; pass
+  overrides as extra `...` arguments, or a full config list for a specific
+  adapter.
 - `track(url, index = ...)` names a non-sibling index (a `.csi` index is
-  detected by extension); `.hic` (Hi-C) and bgzipped `.gtf.gz` are now inferred.
-  A bgzipped `.gff`/`.gtf`/`.bed`/`.vcf` resolves to its indexed tabix adapter,
-  a plain uncompressed one to the whole-file adapter.
+  detected by extension).
+- `assembly` also accepts a bare sequence-file URL (`".../genome.fa.gz"`, or a
+  `.2bit`); the view builds the assembly from it, deriving the name from the
+  file, so `assembly()` is only needed for reference-name aliases or a
+  non-sibling index.
 - The old string-building helpers (`track_alignments()`, `track_variant()`,
   `track_wiggle()`, `track_feature()`, `default_session()`) and the `view=`
   first argument (`"View"`/`"JsonView"`/`"ViewHg19"`/`"ViewHg38"`) are removed.

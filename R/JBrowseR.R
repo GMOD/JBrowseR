@@ -8,9 +8,11 @@
 #' helper constructors ([assembly()], [track()], [tracks()], [text_index()],
 #' [theme()]). Nothing is imperative and no JSON strings are assembled by hand.
 #'
-#' @param assembly Either a hub name understood by jbrowse.org (e.g. `"hg38"`,
-#'   `"hg19"`, or a GenArk accession like `"GCF_000001405.40"`) or an assembly
-#'   config list from [assembly()].
+#' @param assembly A hub name understood by jbrowse.org (e.g. `"hg38"`, `"hg19"`,
+#'   or a GenArk accession like `"GCF_000001405.40"`), a sequence-file URL the
+#'   view builds an assembly from (`".../hg38.fa.gz"`, `.2bit`), or an assembly
+#'   config list from [assembly()] (needed only for aliases or a non-sibling
+#'   index).
 #' @param tracks A list of track configs, e.g. from [tracks()] / [track()].
 #'   Tracks missing `assemblyNames` are backfilled with the assembly's name.
 #' @param location A region string (`"chr1:1-1000"`) or, when the assembly hub
@@ -67,10 +69,13 @@ JBrowseR <- function(assembly, tracks = NULL, location = NULL,
   )
 }
 
-# the assembly name, whether the assembly is a hub-name string or a config list
+# the assembly name for backfilling tracks. A config list carries it under
+# $name. A string is either a sequence-file URL the view builds an assembly from
+# (name derived from the file, matching makeAssembly) or a hub name that is
+# itself the resolved name.
 assembly_name <- function(assembly) {
   if (is.character(assembly)) {
-    assembly
+    if (is_sequence_uri(assembly)) assembly_name_from_uri(assembly) else assembly
   } else {
     assembly$name
   }

@@ -70,8 +70,12 @@ Recognized extensions cover the common genomics types:
 | `.bw`, `.bigWig` | quantitative | `BigWigAdapter` |
 | `.hic` | Hi-C contact matrix | `HicAdapter` |
 
-Anything not covered can be built explicitly with `type=` and `adapter_type=`,
-or by passing a plain config list.
+The list isn't hard-coded in R — the view infers the adapter with JBrowse's own
+format plugins, so any format a bundled plugin recognizes works. Anything the
+inference gets wrong, or a track needing a specific adapter, is a plain config
+list (the full JBrowse track JSON); extra arguments to `track()` (e.g.
+`type = "AlignmentsTrack"`) ride onto the track and override the inferred
+defaults.
 
 When you only need the defaults, a bare URL string is a track — `track()` is
 just the same thing with room for `name=` and extra config. So a whole browser

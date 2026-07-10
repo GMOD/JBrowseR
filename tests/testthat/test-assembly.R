@@ -20,3 +20,13 @@ test_that("assembly() attaches refNameAliases when given", {
   expect_equal(a$refNameAliases$adapter$type, "RefNameAliasAdapter")
   expect_equal(a$refNameAliases$adapter$uri, "https://example.com/aliases.txt")
 })
+
+test_that("assembly_name derives from a sequence URL but not a hub name", {
+  # a bare FASTA URL as the assembly is named after the file (the view's
+  # makeAssembly does the same), so backfill uses the derived name
+  expect_equal(assembly_name("https://x.org/data/hg38.fa.gz?t=1"), "hg38")
+  expect_equal(assembly_name("genome.2bit"), "genome")
+  # a hub name (or GenArk accession) is itself the resolved name
+  expect_equal(assembly_name("hg38"), "hg38")
+  expect_equal(assembly_name("GCF_000001405.40"), "GCF_000001405.40")
+})
