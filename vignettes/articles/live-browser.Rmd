@@ -1,0 +1,76 @@
+---
+title: "Live embedded browsers"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Every browser on this page is a **live, interactive JBrowse 2** — pan, zoom, and
+click features directly in the page. This article is part of the website only
+(it is not a package vignette), so it can embed the full widget; the
+[Introduction](../JBrowseR.html) uses screenshots to stay within CRAN's size
+limits.
+
+```{r setup}
+library(JBrowseR)
+```
+
+## A hosted genome
+
+Name a genome hub and you get the assembly, reference-name aliases, cytobands,
+and gene-name search for free. Here `location = "BRCA1"` resolves through the
+hub's search index.
+
+```{r hub}
+JBrowseR(
+  "hg38",
+  tracks = tracks(track(
+    paste0(
+      "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/",
+      "GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
+    ),
+    name = "NCBI RefSeq Genes"
+  )),
+  location = "BRCA1"
+)
+```
+
+## A custom genome from a FASTA URL
+
+No hub needed for your own genome: pass a sequence-file URL straight to
+`assembly`. The view builds the assembly from it (naming it after the file), and
+a bare data-file URL in `tracks` is inferred into a track — here an alignments
+track from a BAM.
+
+```{r custom}
+JBrowseR(
+  "https://jbrowse.org/genomes/volvox/volvox.fa",
+  tracks = list("https://jbrowse.org/genomes/volvox/volvox.bam"),
+  location = "ctgA:1..5,000"
+)
+```
+
+## An R result as a track
+
+Turn a data frame of features into a track with `track_data_frame()` — no files,
+no web server. A `score` column makes it quantitative.
+
+```{r dataframe}
+peaks <- data.frame(
+  chrom = "17",
+  start = seq(43000000, 43120000, by = 12000),
+  end = seq(43000000, 43120000, by = 12000) + 4000,
+  name = paste0("peak", seq_len(11)),
+  score = round(runif(11, 5, 100))
+)
+
+JBrowseR(
+  "hg38",
+  tracks = list(track_data_frame(peaks, "R_peaks")),
+  location = "17:43,000,000..43,125,000"
+)
+```

@@ -3,6 +3,7 @@
 ^node_modules$
 ^tools$
 ^live-demos$
+^vignettes/articles$
 ^srcjs$
 ^package\.json$
 ^vite\.config\.js$
