@@ -4,18 +4,11 @@
 \alias{assembly}
 \title{Describe a genome assembly from a FASTA URL}
 \usage{
-assembly(
-  fasta,
-  name = NULL,
-  aliases = NULL,
-  refname_aliases = NULL,
-  bgzip = NULL
-)
+assembly(fasta, name = NULL, aliases = NULL, refname_aliases = NULL)
 }
 \arguments{
-\item{fasta}{URL to the sequence. A \verb{.2bit} file uses \code{TwoBitAdapter}; a \code{.gz}
-FASTA is treated as bgzip-compressed (\code{BgzipFastaAdapter}); any other FASTA
-as plain indexed FASTA (\code{IndexedFastaAdapter}).}
+\item{fasta}{URL to the sequence: a \code{.fa}/\code{.fasta} (optionally bgzipped) or a
+\verb{.2bit}. The adapter type is inferred from the extension by JBrowse.}
 
 \item{name}{Assembly name. Defaults to the FASTA file's base name.}
 
@@ -23,17 +16,17 @@ as plain indexed FASTA (\code{IndexedFastaAdapter}).}
 
 \item{refname_aliases}{URL to a reference-name alias table mapping e.g. \code{1}
 to \code{chr1}.}
-
-\item{bgzip}{Force bgzip vs indexed FASTA. Defaults to autodetection from the
-\code{.gz} extension.}
 }
 \value{
 an assembly config list for \code{\link[=JBrowseR]{JBrowseR()}}
 }
 \description{
-Builds an assembly config for a custom genome. JBrowse derives the index
-locations (\code{.fai}, and \code{.gzi} for bgzip) from the FASTA URL automatically, so
-only the FASTA is required.
+Builds an assembly config for a custom genome using the flat \verb{\{ name, uri \}}
+shorthand: JBrowse itself picks the concrete adapter type
+(\code{IndexedFastaAdapter}/\code{BgzipFastaAdapter}/\code{TwoBitAdapter}) from the extension,
+derives the \code{.fai}/\code{.gzi} index locations, and fills in the reference sequence
+track when the config loads, so only the FASTA URL is required and no
+adapter-type table lives in R.
 }
 \details{
 For common human/model genomes you do not need this at all — pass a hub name
