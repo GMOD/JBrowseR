@@ -13,8 +13,14 @@ library(JBrowseR)
 `JBrowseR()` shows a single linear view. For anything comparative — synteny,
 dotplots, breakpoint-split — `JBrowseRApp()` drives the full JBrowse 2 app, and a
 `views` list describes what to open. Each entry is a `list(type, init)` spec, the
-same vocabulary JBrowse Web serializes into its `?session=spec-…` URLs, built
-with `linear_view()`, `synteny_view()`, or `dotplot_view()`.
+same vocabulary JBrowse Web serializes into its
+[`?session=spec-…` URLs](https://jbrowse.org/jb2/docs/urlparams/), built with
+`linear_view()`, `synteny_view()`, or `dotplot_view()`. The fields each `init`
+accepts come from the view's
+[state-model docs](https://jbrowse.org/jb2/docs/models/) — see
+[LinearSyntenyView](https://jbrowse.org/jb2/docs/models/linearsyntenyview/) — and
+the PAF track is a
+[`PAFAdapter`](https://jbrowse.org/jb2/docs/config/pafadapter/).
 
 The browser below is **live** — drag either genome to pan; the ribbon between
 them follows.

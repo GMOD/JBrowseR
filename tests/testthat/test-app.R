@@ -41,5 +41,5 @@ test_that("synteny_track builds a PAF config spanning two assemblies", {
   expect_equal(t$assemblyNames, list("hg38", "mm39"))
   expect_equal(t$adapter$type, "PAFAdapter")
   expect_equal(t$adapter$targetAssembly, "hg38")
-  expect_equal(t$adapter$pafLocation$uri, "data/hg38_mm39.paf")
+  expect_equal(t$adapter$uri, "data/hg38_mm39.paf")
 })

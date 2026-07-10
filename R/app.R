@@ -148,7 +148,7 @@ synteny_track <- function(uri, target_assembly, query_assembly, name = NULL,
       type = "PAFAdapter",
       targetAssembly = target_assembly,
       queryAssembly = query_assembly,
-      pafLocation = list(uri = uri)
+      uri = uri
     )
   )
   utils::modifyList(out, list(...))

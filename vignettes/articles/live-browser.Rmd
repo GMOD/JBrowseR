@@ -78,9 +78,13 @@ JBrowseR(
 ## A statistical plot (GWAS Manhattan)
 
 A track isn't only features and coverage — a display can plot data. Point a
-`GWASTrack` at genome-wide summary statistics and give it a
-`LinearManhattanDisplay`, and the same linear view becomes a Manhattan plot:
-the `displays` block picks the plot; no special widget needed.
+[`GWASTrack`](https://jbrowse.org/jb2/docs/config/gwasadapter/) at genome-wide
+summary statistics and give it a
+[`LinearManhattanDisplay`](https://jbrowse.org/jb2/docs/config/linearmanhattandisplay/),
+and the same linear view becomes a Manhattan plot: the `displays` block picks the
+plot; no special widget needed. The adapter's `uri` shorthand finds the `.tbi`
+index next to the data, and JBrowse fills in `displayId`, so the config stays
+short.
 
 ```{r manhattan}
 JBrowseR(
@@ -93,18 +97,9 @@ JBrowseR(
     adapter = list(
       type = "GWASAdapter",
       scoreColumn = "neg_log_pvalue",
-      bedGzLocation = list(
-        uri = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"
-      ),
-      index = list(location = list(
-        uri = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz.tbi"
-      ))
+      uri = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"
     ),
-    displays = list(list(
-      type = "LinearManhattanDisplay",
-      displayId = "gwas_track-manhattan",
-      height = 250
-    ))
+    displays = list(list(type = "LinearManhattanDisplay", height = 250))
   )),
   location = "2"
 )
