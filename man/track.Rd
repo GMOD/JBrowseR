@@ -11,6 +11,7 @@ track(
   adapter_type = NULL,
   track_id = NULL,
   assembly_names = NULL,
+  index = NULL,
   ...
 )
 }
@@ -28,6 +29,9 @@ track(
 \item{assembly_names}{Assembly name(s) the track belongs to. Usually left
 \code{NULL} — \code{\link[=JBrowseR]{JBrowseR()}} backfills it from the loaded assembly.}
 
+\item{index}{URL of the index file when it isn't the conventional sibling of
+\code{url} (\code{.bai}/\code{.crai}/\code{.tbi}). A \code{.csi} index is detected by extension.}
+
 \item{...}{Extra config merged into the track (e.g. \code{category = list("Genes")}).}
 }
 \value{
@@ -41,8 +45,8 @@ is required.
 }
 \details{
 Recognized extensions: \code{.bam}/\code{.cram} (alignments), \code{.vcf.gz} (variants),
-\code{.gff}/\code{.gff3}/\code{.bed} gzipped (features), \code{.bb}/\code{.bigBed} (features),
-\code{.bw}/\code{.bigWig} (quantitative).
+\code{.gff}/\code{.gff3}/\code{.gtf}/\code{.bed} gzipped (features), \code{.bb}/\code{.bigBed} (features),
+\code{.bw}/\code{.bigWig} (quantitative), \code{.hic} (Hi-C contact matrix).
 }
 \examples{
 track("https://jbrowse.org/genomes/hg19/gencode.v19.sorted.gff.gz", name = "Genes")

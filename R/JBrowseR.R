@@ -76,13 +76,15 @@ assembly_name <- function(assembly) {
   }
 }
 
-# tracks default to the loaded assembly; fill assemblyNames when a track omits it
+# normalize each entry (a bare URL or c(url, index) pair becomes a track config)
+# then fill assemblyNames from the loaded assembly when a track omits it
 backfill_assembly_names <- function(tracks, name) {
-  if (is.null(tracks) || is.null(name)) {
+  if (is.null(tracks)) {
     tracks
   } else {
-    lapply(tracks, function(track) {
-      if (is.null(track$assemblyNames)) {
+    lapply(tracks, \(entry) {
+      track <- normalize_track(entry)
+      if (!is.null(name) && is.null(track$assemblyNames)) {
         track$assemblyNames <- list(name)
       }
       track
