@@ -1,6 +1,8 @@
 ^JBrowseR\.Rproj$
 ^\.Rproj\.user$
 ^node_modules$
+^tools$
+^live-demos$
 ^srcjs$
 ^package\.json$
 ^vite\.config\.js$
