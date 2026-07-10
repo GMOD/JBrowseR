@@ -8,6 +8,10 @@
   line. Build custom browsers from plain values with `assembly()`, `track()`
   (track type and index files inferred from the URL), `tracks()`, `text_index()`,
   and `theme()`, which now return lists rather than JSON strings.
+- `tracks` entries also accept a bare data-URL string or a `c(url, index)` pair,
+  not just a `track()` config, so a whole browser can skip the constructor.
+- `track(url, index = ...)` names a non-sibling index (a `.csi` index is
+  detected by extension); `.hic` (Hi-C) and bgzipped `.gtf.gz` are now inferred.
 - The old string-building helpers (`track_alignments()`, `track_variant()`,
   `track_wiggle()`, `track_feature()`, `default_session()`) and the `view=`
   first argument (`"View"`/`"JsonView"`/`"ViewHg19"`/`"ViewHg38"`) are removed.

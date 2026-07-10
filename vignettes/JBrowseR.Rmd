@@ -65,12 +65,36 @@ Recognized extensions cover the common genomics types:
 |---|---|---|
 | `.bam`, `.cram` | alignments | `BamAdapter`, `CramAdapter` |
 | `.vcf.gz` | variants | `VcfTabixAdapter` |
-| `.gff.gz`, `.gff3.gz`, `.bed.gz` | features | `Gff3TabixAdapter`, `BedTabixAdapter` |
+| `.gff.gz`, `.gff3.gz`, `.gtf.gz`, `.bed.gz` | features | `Gff3TabixAdapter`, `GtfTabixAdapter`, `BedTabixAdapter` |
 | `.bb`, `.bigBed` | features | `BigBedAdapter` |
 | `.bw`, `.bigWig` | quantitative | `BigWigAdapter` |
+| `.hic` | Hi-C contact matrix | `HicAdapter` |
 
 Anything not covered can be built explicitly with `type=` and `adapter_type=`,
 or by passing a plain config list.
+
+When you only need the defaults, a bare URL string is a track — `track()` is
+just the same thing with room for `name=` and extra config. So a whole browser
+can skip the constructor entirely:
+
+```{r}
+JBrowseR(
+  "hg38",
+  tracks = list(
+    "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
+    "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
+  ),
+  location = "BRCA1"
+)
+```
+
+Index files (`.bai`/`.crai`/`.tbi`) default to the conventional sibling of the
+data URL. When yours lives elsewhere — or is a `.csi` index — name it with
+`index=`, or as the second element of a `c(url, index)` pair in `tracks`:
+
+```{r}
+track("https://example.com/reads.bam", index = "https://example.com/reads.bai")
+```
 
 ## A gallery
 
