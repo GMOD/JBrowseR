@@ -1,162 +1,54 @@
-#' Create an assembly for a custom JBrowse view
+#' Describe a genome assembly from a FASTA URL
 #'
-#' Creates the necessary configuration string for an
-#' indexed fasta or bgzip fasta so that it can be used
-#' as the assembly in a JBrowse custom linear genome view.
+#' Builds an assembly config for a custom genome. JBrowse derives the index
+#' locations (`.fai`, and `.gzi` for bgzip) from the FASTA URL automatically, so
+#' only the FASTA is required.
 #'
-#' The string returned by \code{assembly} is stringified JSON.
-#' JBrowseR is an interface to JBrowse 2, which receives its
-#' configuration in JSON format. The stringified JSON returned
-#' by \code{assembly} is parsed into a JavaScript object in the
-#' browser, and is used to configure the genome browser.
+#' For common human/model genomes you do not need this at all — pass a hub name
+#' straight to [JBrowseR()] (e.g. `JBrowseR("hg38")`) and the assembly, reference
+#' name aliases, cytobands, and gene-name search all come preconfigured.
 #'
-#' It is important to note that while only the fasta file is
-#' passed as an argument, \code{assembly} assumes that a fasta
-#' index of the same name is located with the fasta file (as
-#' well as a gzi file in the case of a bgzip fasta).
+#' @param fasta URL to the FASTA. A `.gz` file is treated as bgzip-compressed
+#'   (`BgzipFastaAdapter`), otherwise as plain indexed FASTA
+#'   (`IndexedFastaAdapter`).
+#' @param name Assembly name. Defaults to the FASTA file's base name.
+#' @param aliases Reference-name aliases for the assembly (e.g. `"GRCh37"`).
+#' @param refname_aliases URL to a reference-name alias table mapping e.g. `1`
+#'   to `chr1`.
+#' @param bgzip Force bgzip vs indexed FASTA. Defaults to autodetection from the
+#'   `.gz` extension.
 #'
-#' For example:
-#'
-#' \code{assembly("data/hg38.fa")}
-#'
-#' Assumes that \code{data/hg38.fa.fai} also exists.
-#'
-#' \code{assembly("data/hg38.fa", bgzip = TRUE)}
-#'
-#' Assumes that \code{data/hg38.fa.fai} and \code{data/hg38.fa.gzi} both exist.
-#'
-#' This is a JBrowse 2 convention, and the default naming output of samtools
-#' and bgzip.
-#'
-#' For more information on creating these files, visit
-#' \url{https://jbrowse.org/jb2/docs/quickstart_web#adding-a-genome-assembly}
-#'
-#' @param assembly_data the URL to your fasta file
-#' @param bgzip whether or not your fasta is bgzip compressed
-#' @param aliases a vector of strings of the aliases for the assembly
-#' @param refname_aliases the URL to a file containing reference
-#'   name aliases. For more info see
-#'   \url{https://jbrowse.org/jb2/docs/config_guide#configuring-reference-name-aliasing}
-#'
-#' @return a character vector of JBrowseR assembly configuration
+#' @return an assembly config list for [JBrowseR()]
 #' @export
 #'
 #' @examples
-#' assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
-assembly <- function(assembly_data, bgzip = FALSE, aliases = NULL, refname_aliases = NULL) {
-  if (!bgzip) {
-    fa_assembly(assembly_data, aliases, refname_aliases)
-  } else {
-    bgzip_fa_assembly(assembly_data, aliases, refname_aliases)
-  }
-}
+#' assembly(
+#'   "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+#'   aliases = "GRCh37"
+#' )
+assembly <- function(fasta, name = NULL, aliases = NULL, refname_aliases = NULL,
+                     bgzip = NULL) {
+  name <- name %||% base_name(fasta)
+  bgzip <- bgzip %||% endsWith(fasta, ".gz")
 
-fa_assembly <- function(assembly_data, aliases, refname_aliases) {
-  name <- get_name(assembly_data)
-  aliases <- get_aliases(aliases)
-  refname_aliases <- get_refname_aliases(refname_aliases)
-
-  # interpolate values into a string of JBrowse configuration
-  #
-  # note: this gets parsed into JSON in client and used as assembly value
-  as.character(
-    stringr::str_glue(
-      "{{ ",
-      '"name": "{name}", ',
-      "{aliases}",
-      '"sequence": {{ ',
-      '"type": "ReferenceSequenceTrack", ',
-      '"trackId": "{name}-ReferenceSequenceTrack", ',
-      '"adapter": {{ ',
-      '"type": "IndexedFastaAdapter", ',
-      '"fastaLocation": {{ ',
-      '"uri": "{assembly_data}" ',
-      "}}, ",
-      '"faiLocation": {{ ',
-      '"uri": "{assembly_data}.fai" ',
-      "}} ",
-      "}} ",
-      "}} ",
-      "{refname_aliases}",
-      "}}"
-    )
-  )
-}
-
-bgzip_fa_assembly <- function(assembly_data, aliases, refname_aliases) {
-  name <- get_name(assembly_data)
-  aliases <- get_aliases(aliases)
-  refname_aliases <- get_refname_aliases(refname_aliases)
-
-  # interpolate values into a string of JBrowse configuration
-  #
-  # note: this gets parsed into JSON in client and used as assembly value
-  as.character(
-    stringr::str_glue(
-      "{{ ",
-      '"name": "{name}", ',
-      "{aliases}",
-      '"sequence": {{ ',
-      '"type": "ReferenceSequenceTrack", ',
-      '"trackId": "{name}-ReferenceSequenceTrack", ',
-      '"adapter": {{ ',
-      '"type": "BgzipFastaAdapter", ',
-      '"fastaLocation": {{ ',
-      '"uri": "{assembly_data}" ',
-      "}}, ",
-      '"faiLocation": {{ ',
-      '"uri": "{assembly_data}.fai" ',
-      "}}, ",
-      '"gziLocation": {{ ',
-      '"uri": "{assembly_data}.gzi" ',
-      "}} ",
-      "}} ",
-      "}} ",
-      "{refname_aliases}",
-      "}}"
-    )
-  )
-}
-
-# create a JSON array of aliases for the config
-# c("hg19", "GRCh37") -> "aliases": ["hg19", "GRCh37"]
-get_aliases <- function(aliases) {
-  if (!is.null(aliases)) {
-    for (i in seq_along(aliases)) {
-      aliases[i] <- stringr::str_c('"', aliases[i], '"')
-    }
-
-    alias_array <- stringr::str_c(
-      "[",
-      stringr::str_c(aliases, collapse = ", "),
-      "]"
-    )
-
-    stringr::str_c(
-      '"aliases": ',
-      alias_array,
-      ", "
-    )
-  } else {
-    ""
-  }
-}
-
-get_refname_aliases <- function(refname_aliases) {
-  if (!is.null(refname_aliases)) {
-    as.character(
-      stringr::str_glue(
-        ', "refNameAliases": {{ ',
-        '"adapter": {{ ',
-        '"type": "RefNameAliasAdapter", ',
-        '"location": {{ ',
-        '"uri": "{refname_aliases}" ',
-        "}} ",
-        "}} ",
-        "}} "
+  out <- list(
+    name = name,
+    sequence = list(
+      type = "ReferenceSequenceTrack",
+      trackId = paste0(name, "-ReferenceSequenceTrack"),
+      adapter = list(
+        type = if (bgzip) "BgzipFastaAdapter" else "IndexedFastaAdapter",
+        uri = fasta
       )
     )
-  } else {
-    ""
+  )
+  if (!is.null(aliases)) {
+    out$aliases <- as.list(aliases)
   }
+  if (!is.null(refname_aliases)) {
+    out$refNameAliases <- list(
+      adapter = list(type = "RefNameAliasAdapter", uri = refname_aliases)
+    )
+  }
+  out
 }

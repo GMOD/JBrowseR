@@ -2,27 +2,23 @@
 % Please edit documentation in R/tracks.R
 \name{tracks}
 \alias{tracks}
-\title{Create a set of tracks for a custom JBrowse 2 view}
+\title{Collect tracks into a list for JBrowseR}
 \usage{
 tracks(...)
 }
 \arguments{
-\item{...}{The tracks to be added to the JBrowse 2 view}
+\item{...}{track configs, e.g. from \code{\link[=track]{track()}}}
 }
 \value{
-a character vector of stringified JSON configuration for
-all tracks to add to the browser
+a list of track configs
 }
 \description{
-Accepts any number of tracks, returns the configuration
-string necessary to load these tracks into your JBrowse
-view.
+A thin readability wrapper around \code{list()} that gathers \code{\link[=track]{track()}} configs
+into the list \code{\link[=JBrowseR]{JBrowseR()}} expects.
 }
 \examples{
-# create an assembly configuration and alignments track
-assembly <- assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
-alignments <- track_alignments("alignments.bam", assembly)
-
-# create a tracks configuration with the alignments track
-tracks(alignments)
+tracks(
+  track("https://example.com/genes.gff.gz", name = "Genes"),
+  track("https://example.com/reads.bam", name = "Reads")
+)
 }

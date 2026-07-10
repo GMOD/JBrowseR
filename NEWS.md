@@ -1,3 +1,20 @@
+# JBrowseR 0.11.0
+
+- Upgraded to the GPU-accelerated JBrowse 2 v4 linear genome view
+  (`@jbrowse/react-linear-genome-view2`), driven through the shared
+  framework-agnostic `@jbrowse/embedded-linear-genome-view` controller.
+- New declarative API. `JBrowseR("hg38", location = "BRCA1")` loads a whole
+  hosted genome (assembly, reference-name aliases, cytobands, gene search) in one
+  line. Build custom browsers from plain values with `assembly()`, `track()`
+  (track type and index files inferred from the URL), `tracks()`, `text_index()`,
+  and `theme()`, which now return lists rather than JSON strings.
+- The old string-building helpers (`track_alignments()`, `track_variant()`,
+  `track_wiggle()`, `track_feature()`, `default_session()`) and the `view=`
+  first argument (`"View"`/`"JsonView"`/`"ViewHg19"`/`"ViewHg38"`) are removed.
+  Pass a hub name or `assembly()` config directly; use `config =` for a full
+  JBrowse config.
+- Build switched to Vite + pnpm; reactR is no longer a dependency.
+
 # JBrowseR 0.10.2
 
 - Updated to @jbrowse/react-linear-genome-view@2.10.0

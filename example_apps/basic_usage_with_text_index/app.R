@@ -2,34 +2,24 @@ library(shiny)
 library(JBrowseR)
 library(bslib)
 
+# A hub assembly (here hg38) ships gene-name search, so `location` can be a gene
+# symbol like "BRCA1" with no extra setup.
+
 ui <- fluidPage(
-  # Overriding the default bootstrap theme is needed to get proper font size
   theme = bs_theme(version = 5),
-  titlePanel("JBrowseR Example"),
+  titlePanel("JBrowseR: search by gene name"),
   JBrowseROutput("widgetOutput")
 )
 
 server <- function(input, output, session) {
-  hg38 <- assembly(
-    "https://jbrowse.org/genomes/GRCh38/fasta/hg38.prefix.fa.gz",
-    bgzip = TRUE,
-    aliases = c("GRCh38"),
-    refname_aliases = "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/hg38_aliases.txt"
-  )
-
-
   output$widgetOutput <- renderJBrowseR(JBrowseR(
-    "View",
-    location = "10:29,838,737..29,838,819",
-    assembly = hg38,
-    text_index = text_index(
-      "https://jbrowse.org/genomes/GRCh38/trix/hg38.ix",
-      "https://jbrowse.org/genomes/GRCh38/trix/hg38.ixx",
-      "https://jbrowse.org/genomes/GRCh38/trix/meta.json",
-      "hg38"
-    )
+    "hg38",
+    tracks = tracks(track(
+      "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
+      name = "NCBI RefSeq Genes"
+    )),
+    location = "BRCA1"
   ))
-
 }
 
 shinyApp(ui, server)

@@ -1,6 +1,3 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -9,116 +6,126 @@ output: github_document
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/GMOD/JBrowseR/workflows/R-CMD-check/badge.svg)](https://github.com/gmod/JBrowseR/actions)
-[![CRAN status](https://www.r-pkg.org/badges/version/JBrowseR)](https://CRAN.R-project.org/package=JBrowseR)
-
+[![CRAN
+status](https://www.r-pkg.org/badges/version/JBrowseR)](https://CRAN.R-project.org/package=JBrowseR)
+[![Open In
+Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_colab.ipynb)
 <!-- badges: end -->
 
-JBrowseR is an R package that provides a simple and clean interface to
-[JBrowse 2](https://jbrowse.org/jb2/) for R users. Using JBrowseR, you can:
+JBrowseR provides an R interface to the [JBrowse
+2](https://jbrowse.org/jb2/) genome browser. It renders the interactive,
+GPU-accelerated JBrowse 2 linear genome view as an
+[htmlwidget](https://www.htmlwidgets.org/), so you can embed a full
+genome browser in an **R Markdown** document, a **Shiny** app, or
+straight from the **R console**.
 
-- Embed the JBrowse 2 genome browser in **R Markdown** documents and **Shiny
-  applications**
-- Deploy a genome browser directly from the R console to view your data
-- Customize your genome browser to display your own data
+The API is declarative: you describe the browser with plain values, and
+helper constructors build the config. There are no JSON strings to
+assemble and nothing imperative to wire up.
+
+``` r
+library(JBrowseR)
+
+# an entire human genome browser in one line — assembly, reference name
+# aliases, cytobands, and gene-name search all included
+JBrowseR("hg38", location = "BRCA1")
+```
 
 ## Installation
 
-You can install the released version of JBrowseR from
-[CRAN](https://CRAN.R-project.org) with:
+Released version from [CRAN](https://CRAN.R-project.org):
 
-```r
+``` r
 install.packages("JBrowseR")
 ```
 
-And the development version from [GitHub](https://github.com/) with:
+Development version from [GitHub](https://github.com/GMOD/JBrowseR):
 
-```r
-# install.packages("devtools")
-devtools::install_github("gmod/JBrowseR")
+``` r
+# install.packages("remotes")
+remotes::install_github("GMOD/JBrowseR")
 ```
 
-## Example
+## Quick tour
 
-This line of code can be used to launch a genome browser from your R console:
+Point at a hub genome by name and add tracks by URL — the track type and
+its index files are inferred automatically.
 
-```r
-library(JBrowseR)
-JBrowseR("ViewHg19", location = "10:29,838,737..29,838,819")
+``` r
+JBrowseR(
+  "hg38",
+  tracks = tracks(
+    track(
+      "https://jbrowse.org/genomes/GRCh38/alignments/NA12878/NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram",
+      name = "NA12878 Exome"
+    )
+  ),
+  location = "17:43,044,295..43,048,000"
+)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/demo-alignments.png" width="100%" />
+
+View results you computed in R directly on the genome — no files, no web
+server:
+
+``` r
+peaks <- data.frame(
+  chrom = "17",
+  start = seq(43000000, 43120000, by = 12000),
+  end   = seq(43000000, 43120000, by = 12000) + 4000,
+  name  = paste0("peak", 1:11),
+  score = round(runif(11, 5, 100))
+)
+
+JBrowseR(
+  "hg38",
+  tracks = list(track_data_frame(peaks, "R_peaks")),
+  location = "17:43,000,000..43,125,000"
+)
+```
+
+<img src="man/figures/demo-dataframe.png" width="100%" />
 
 ## Getting started
 
-In order to get started with JBrowseR, please refer to the vignette that best
-suits your needs:
+See the vignettes:
 
 - [Introduction](https://gmod.github.io/JBrowseR/articles/JBrowseR.html)
-- [Custom browser tutorial](https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html)
-- [JSON configuration tutorial](https://gmod.github.io/JBrowseR/articles/json-tutorial.html)
-- [Creating URLS](https://gmod.github.io/JBrowseR/articles/creating-urls.html)
-
-## Live demos
-
-### Basic usage including text search index
-
-Allows you to search by gene name
-
-- Link demo: https://gmod.shinyapps.io/basic_usage_with_text_index
-- Source code:
-  https://github.com/GMOD/JBrowseR/blob/main/example_apps/basic_usage_with_text_index/app.R
-
-### Multi purpose demo app
-
-Shows a "bookmark" type feature, loading data from data frame, and buttons to
-navigate to genes of interest
-
-- Live link: https://gmod.shinyapps.io/bookmarks_demo
-- Source code:
-  https://github.com/GMOD/JBrowseR/blob/main/example_apps/bookmarks_demo/app.R
-
-### Load config.json file
-
-Shows loading a config.json file
-
-- Live link: https://gmod.shinyapps.io/load_config_json
-- Source code:
-  https://github.com/GMOD/JBrowseR/blob/main/example_apps/load_config_json/app.R
-
-### Load data frame
-
-Simple example showing a data frame as a track
-
-- Live link: https://gmod.shinyapps.io/load_data_frame
-- Source code:
-  https://github.com/GMOD/JBrowseR/blob/main/example_apps/load_data_frame/app.R
-
-### Gene fusion example
-
-Shows putative gene fusions in the SKBR3 breast cancer cell line
-
-- Live link: https://gmod.shinyapps.io/skbr3_gene_fusions
-- Source code:
-  https://github.com/GMOD/JBrowseR/blob/main/example_apps/skbr3_gene_fusions/app.R
-
-### Using plugins
-
-Uses the config.json loading method
-
-- Live link: not yet online
-- Source code:
-  https://github.com/GMOD/JBrowseR/blob/main/example_apps/using_plugins/app.R
+  — the declarative API and a gallery of demos
+- [Custom browser
+  tutorial](https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html)
+  — build a browser for your own assembly and data
+- [Serving local
+  data](https://gmod.github.io/JBrowseR/articles/creating-urls.html) —
+  view files on your machine
+- [Full JSON
+  config](https://gmod.github.io/JBrowseR/articles/json-tutorial.html) —
+  the escape hatch for complete control
 
 ## Citation
 
-If you use JBrowseR in your research, please cite the following publication:
+If you use JBrowseR in your research, please cite:
 
-[Hershberg et al., 2021. JBrowseR: An R Interface to the JBrowse 2 Genome Browser](https://doi.org/10.1093/bioinformatics/btab459)
+[Hershberg et al., 2021. JBrowseR: An R Interface to the JBrowse 2
+Genome Browser](https://doi.org/10.1093/bioinformatics/btab459)
 
-```
-@article{hershberg2021jbrowser,
-  title={JBrowseR: An R Interface to the JBrowse 2 Genome Browser},
-  author={Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},
-  journal={Bioinformatics}
-}
-```
+    @article{hershberg2021jbrowser,
+      title={JBrowseR: An R Interface to the JBrowse 2 Genome Browser},
+      author={Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},
+      journal={Bioinformatics}
+    }
+
+## For developers
+
+The R package ships a prebuilt JavaScript bundle in `inst/htmlwidgets/`.
+To rebuild it against a local checkout of
+[jbrowse-components](https://github.com/GMOD/jbrowse-components)
+(expected as a sibling directory), install [pnpm](https://pnpm.io) and
+run:
+
+    git clone https://github.com/GMOD/JBrowseR
+    cd JBrowseR
+    pnpm install
+    pnpm build       # writes inst/htmlwidgets/JBrowseR.js and .css
+    R -e 'devtools::install()'

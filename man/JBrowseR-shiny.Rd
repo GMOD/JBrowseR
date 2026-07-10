@@ -4,14 +4,11 @@
 \alias{JBrowseR-shiny}
 \alias{JBrowseROutput}
 \alias{renderJBrowseR}
-\alias{JBrowseR_html}
 \title{Shiny bindings for JBrowseR}
 \usage{
 JBrowseROutput(outputId, width = "100\%", height = "400px")
 
 renderJBrowseR(expr, env = parent.frame(), quoted = FALSE)
-
-JBrowseR_html(id, style, class, ...)
 }
 \arguments{
 \item{outputId}{output variable to read from}
@@ -26,21 +23,11 @@ JBrowseR_html(id, style, class, ...)
 
 \item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
 is useful if you want to save an expression in a variable.}
-
-\item{id}{htmltools id}
-
-\item{style}{htmltools style}
-
-\item{class}{htmltools class}
-
-\item{...}{Additional arguments passed on}
 }
 \value{
 the Shiny UI bindings for a JBrowseR htmlwidget
 
 the Shiny server bindings for a JBrowseR htmlwidget
-
-the root HTML element to render the React component in
 }
 \description{
 Output and render functions for using JBrowseR within Shiny

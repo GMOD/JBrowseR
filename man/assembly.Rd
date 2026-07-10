@@ -2,57 +2,47 @@
 % Please edit documentation in R/assembly.R
 \name{assembly}
 \alias{assembly}
-\title{Create an assembly for a custom JBrowse view}
+\title{Describe a genome assembly from a FASTA URL}
 \usage{
-assembly(assembly_data, bgzip = FALSE, aliases = NULL, refname_aliases = NULL)
+assembly(
+  fasta,
+  name = NULL,
+  aliases = NULL,
+  refname_aliases = NULL,
+  bgzip = NULL
+)
 }
 \arguments{
-\item{assembly_data}{the URL to your fasta file}
+\item{fasta}{URL to the FASTA. A \code{.gz} file is treated as bgzip-compressed
+(\code{BgzipFastaAdapter}), otherwise as plain indexed FASTA
+(\code{IndexedFastaAdapter}).}
 
-\item{bgzip}{whether or not your fasta is bgzip compressed}
+\item{name}{Assembly name. Defaults to the FASTA file's base name.}
 
-\item{aliases}{a vector of strings of the aliases for the assembly}
+\item{aliases}{Reference-name aliases for the assembly (e.g. \code{"GRCh37"}).}
 
-\item{refname_aliases}{the URL to a file containing reference
-name aliases. For more info see
-\url{https://jbrowse.org/jb2/docs/config_guide#configuring-reference-name-aliasing}}
+\item{refname_aliases}{URL to a reference-name alias table mapping e.g. \code{1}
+to \code{chr1}.}
+
+\item{bgzip}{Force bgzip vs indexed FASTA. Defaults to autodetection from the
+\code{.gz} extension.}
 }
 \value{
-a character vector of JBrowseR assembly configuration
+an assembly config list for \code{\link[=JBrowseR]{JBrowseR()}}
 }
 \description{
-Creates the necessary configuration string for an
-indexed fasta or bgzip fasta so that it can be used
-as the assembly in a JBrowse custom linear genome view.
+Builds an assembly config for a custom genome. JBrowse derives the index
+locations (\code{.fai}, and \code{.gzi} for bgzip) from the FASTA URL automatically, so
+only the FASTA is required.
 }
 \details{
-The string returned by \code{assembly} is stringified JSON.
-JBrowseR is an interface to JBrowse 2, which receives its
-configuration in JSON format. The stringified JSON returned
-by \code{assembly} is parsed into a JavaScript object in the
-browser, and is used to configure the genome browser.
-
-It is important to note that while only the fasta file is
-passed as an argument, \code{assembly} assumes that a fasta
-index of the same name is located with the fasta file (as
-well as a gzi file in the case of a bgzip fasta).
-
-For example:
-
-\code{assembly("data/hg38.fa")}
-
-Assumes that \code{data/hg38.fa.fai} also exists.
-
-\code{assembly("data/hg38.fa", bgzip = TRUE)}
-
-Assumes that \code{data/hg38.fa.fai} and \code{data/hg38.fa.gzi} both exist.
-
-This is a JBrowse 2 convention, and the default naming output of samtools
-and bgzip.
-
-For more information on creating these files, visit
-\url{https://jbrowse.org/jb2/docs/quickstart_web#adding-a-genome-assembly}
+For common human/model genomes you do not need this at all — pass a hub name
+straight to \code{\link[=JBrowseR]{JBrowseR()}} (e.g. \code{JBrowseR("hg38")}) and the assembly, reference
+name aliases, cytobands, and gene-name search all come preconfigured.
 }
 \examples{
-assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE)
+assembly(
+  "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+  aliases = "GRCh37"
+)
 }

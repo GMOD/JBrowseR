@@ -33,7 +33,17 @@ data_server <- serve_data("~/path/to/my-data")
 
 This function creates and starts the server.
 It also logs information such as the URLs for any genomic data files that it detects.
-While this server is running in your R session, any of the URLs can be used as arguments to JBrowseR functions.
+While this server is running in your R session, any of the URLs can be used with `assembly()` and `track()`:
+
+```{r}
+data_server <- serve_data("~/path/to/my-data")
+
+JBrowseR(
+  assembly = assembly("http://127.0.0.1:5000/genome.fa.gz"),
+  tracks = tracks(track("http://127.0.0.1:5000/genes.gff.gz", name = "Genes")),
+  location = "chr1:1-10000"
+)
+```
 
 To stop the server, simply run:
 

@@ -11,96 +11,67 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-The main interface of JBrowseR involves using the `View` component.
-An introduction to using this interface can be found [here](https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html).
-JBrowseR has several R functions for generating configuration to pass to the `View` component.
-Under the hood, these functions are returning strings of JBrowse 2 JSON configuration.
+The [introduction](JBrowseR.html) and
+[custom browser tutorial](custom-browser-tutorial.html) cover the declarative
+API, which is enough for most browsers. This tutorial covers the escape hatch:
+handing `JBrowseR()` a whole JBrowse 2 configuration through the `config`
+argument, for full control over every option.
 
-While JBrowseR supports the majority of JBrowse 2 configuration and greatly simplifies usage, it does not support the entire configuration API.
-If you find yourself wanting to do something unique or custom that JBrowse 2 supports but isn't provided by the `View` component, you can use the `JsonView` component.
-This component can be passed a full JSON configuration as an argument.
-
-## Example JSON configuration
-
-This is what the JSON configuration for an assembly looks like:
-
-```{js}
-{
-  "assembly": {
-    "name": "Sars-Cov2",
-    "sequence": {
-      "type": "ReferenceSequenceTrack",
-      "trackId": "Sars-Cov2-ReferenceSequenceTrack",
-      "adapter": {
-        "type": "BgzipFastaAdapter",
-        "fastaLocation": {
-          "uri": "https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz"
-        },
-        "faiLocation": {
-          "uri": "https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.fai"
-        },
-        "gziLocation": {
-          "uri": "https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz.gzi"
-        }
-      }
-    }
-  }
-}
-```
-
-Let's see how this compares to the configuration generated JBrowseR:
-
-```{r eval = TRUE}
+```{r setup}
 library(JBrowseR)
-
-assembly(
-  "https://jbrowse.org/genomes/sars-cov2/fasta/sars-cov2.fa.gz",
-  bgzip = TRUE
-)
 ```
 
-JBrowseR generates equivalent JSON for the same assembly.
-This gives a better understanding of what is happening when generating JBrowse 2 configuration using JBrowseR.
+## When to use it
 
-## Using the `JsonView`
+Reach for `config` when you need something the helpers don't expose — a saved
+`defaultSession`, per-track display options, internet accounts for authenticated
+data, or runtime plugins. A JBrowse `config` mirrors the format documented in
+the [JBrowse config guide](https://jbrowse.org/jb2/docs/config_guide) and may
+contain `assembly`, `tracks`, `defaultSession`, `aggregateTextSearchAdapters`,
+`theme`, and `plugins`.
 
-Now, if we have a JSON file `config.json` containing the configuration above, we can parse it and use it to configure a browser.
-Here is what this looks like:
+## From a config file
+
+`json_config()` reads a `config.json` (a local path or a URL) into the string
+`config` expects. A config file is portable — the same file works in the
+JBrowse web app and desktop.
 
 ```{r}
-library(shiny)
-library(JBrowseR)
-
-ui <- fluidPage(
-  titlePanel("JSON JBrowseR Example"),
-  JBrowseROutput("browserOutput")
-)
-
-server <- function(input, output, session) {
-  # using JBrowseR helper function to parse the config
-  config <- json_config("./config.json")
-
-  output$browserOutput <- renderJBrowseR(
-    JBrowseR("JsonView",
-            config = config,
-            location = "NC_045512.2:1..2,000"
-    )
-  )
-}
-
-shinyApp(ui, server)
+JBrowseR(config = json_config("https://jbrowse.org/genomes/hg19/config.json"))
 ```
 
-## Resources
+## From an R list
 
-Here are some great resources for learning more about JBrowse 2 configuration:
+Because htmlwidgets serializes R lists to JSON, you can also assemble the config
+inline. Mix in the declarative helpers wherever they are convenient — they
+return plain lists.
 
-- [JBrowse 2 config guide](https://jbrowse.org/jb2/docs/config_guide)
-- [JBrowse 2 React component example](https://github.com/GMOD/jbrowse-components/blob/master/products/jbrowse-react-linear-genome-view/docs/example.md)
-- [JBrowse 2 CLI quickstart](https://jbrowse.org/jb2/docs/quickstart_web)
-- [JBrowse 2 graphical config editing quickstart](https://jbrowse.org/jb2/docs/tutorials/config_gui/)
-- [JBrowse 2 test data](https://github.com/GMOD/jbrowse-components/tree/master/test_data)
+```{r}
+cfg <- list(
+  assembly = assembly(
+    "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+    aliases = "GRCh37"
+  ),
+  tracks = tracks(
+    track(
+      "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
+      name = "NCBI RefSeq Genes"
+    )
+  ),
+  defaultSession = list(
+    name = "My session",
+    view = list(
+      type = "LinearGenomeView",
+      tracks = list(list(
+        type = "FeatureTrack",
+        configuration = "NCBI RefSeq Genes"
+      ))
+    )
+  )
+)
 
-One important point when looking at JB2 config files is that the main app accepts an array of assembly objects.
-On the other hand, the React LGV component only accepts one assembly object, since it is a single linear genome view.
-Since JBrowseR is powered by the LGV component, it also only accepts a single assembly.
+JBrowseR(config = cfg, location = "10:29,838,737..29,838,819")
+```
+
+`location` still applies alongside a `config`, unless the config's
+`defaultSession` already positions the view.

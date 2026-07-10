@@ -1,25 +1,22 @@
-# all of the strings tested against are valid JBrowse 2 JSON config as strings
-
-test_that("url assemblies return correct string", {
-  expect_type(assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"), "character")
-  expect_equal(assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"), "{ \"name\": \"hg19\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"hg19-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"IndexedFastaAdapter\", \"fastaLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz\" }, \"faiLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai\" } } } }")
-  expect_equal(assembly("https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz", bgzip = TRUE), "{ \"name\": \"hg19\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"hg19-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"BgzipFastaAdapter\", \"fastaLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz\" }, \"faiLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai\" }, \"gziLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi\" } } } }")
+test_that("assembly() builds a uri-shorthand config with autodetected adapter", {
+  a <- assembly("https://example.com/hg19.fa.gz", aliases = "GRCh37")
+  expect_equal(a$name, "hg19")
+  expect_equal(a$sequence$trackId, "hg19-ReferenceSequenceTrack")
+  expect_equal(a$sequence$adapter$type, "BgzipFastaAdapter")
+  expect_equal(a$sequence$adapter$uri, "https://example.com/hg19.fa.gz")
+  # aliases stays a JSON array even at length 1
+  expect_type(a$aliases, "list")
+  expect_equal(a$aliases[[1]], "GRCh37")
 })
 
-test_that("file assemblies return correct string", {
-  expect_type(assembly("data/hg38.fa"), "character")
-  expect_equal(assembly("data/hg38.fa"), "{ \"name\": \"hg38\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"hg38-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"IndexedFastaAdapter\", \"fastaLocation\": { \"uri\": \"data/hg38.fa\" }, \"faiLocation\": { \"uri\": \"data/hg38.fa.fai\" } } } }")
-  expect_equal(assembly("data/hg38.fa", bgzip = TRUE), "{ \"name\": \"hg38\", \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"hg38-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"BgzipFastaAdapter\", \"fastaLocation\": { \"uri\": \"data/hg38.fa\" }, \"faiLocation\": { \"uri\": \"data/hg38.fa.fai\" }, \"gziLocation\": { \"uri\": \"data/hg38.fa.gzi\" } } } }")
+test_that("assembly() uses IndexedFastaAdapter for plain fasta", {
+  a <- assembly("https://example.com/genome.fa")
+  expect_equal(a$sequence$adapter$type, "IndexedFastaAdapter")
+  expect_null(a$aliases)
 })
 
-test_that("assembly aliasing works", {
-  expect_equal(
-    assembly <- assembly(
-      "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
-      bgzip = TRUE,
-      aliases = c("GRCh37"),
-      refname_aliases = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"
-    ),
-    "{ \"name\": \"hg19\", \"aliases\": [\"GRCh37\"], \"sequence\": { \"type\": \"ReferenceSequenceTrack\", \"trackId\": \"hg19-ReferenceSequenceTrack\", \"adapter\": { \"type\": \"BgzipFastaAdapter\", \"fastaLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz\" }, \"faiLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.fai\" }, \"gziLocation\": { \"uri\": \"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz.gzi\" } } } , \"refNameAliases\": { \"adapter\": { \"type\": \"RefNameAliasAdapter\", \"location\": { \"uri\": \"https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt\" } } } }"
-  )
+test_that("assembly() attaches refNameAliases when given", {
+  a <- assembly("g.fa", refname_aliases = "https://example.com/aliases.txt")
+  expect_equal(a$refNameAliases$adapter$type, "RefNameAliasAdapter")
+  expect_equal(a$refNameAliases$adapter$uri, "https://example.com/aliases.txt")
 })

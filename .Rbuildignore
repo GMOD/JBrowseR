@@ -3,8 +3,10 @@
 ^node_modules$
 ^srcjs$
 ^package\.json$
-^webpack\.config\.js$
-^yarn\.lock$
+^vite\.config\.js$
+^pnpm-lock\.yaml$
+^pnpm-workspace\.yaml$
+^examples$
 ^LICENSE\.md$
 ^inst/htmlwidgets/JBrowseR\.js\.map$
 ^README\.Rmd$

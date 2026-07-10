@@ -2,33 +2,27 @@
 % Please edit documentation in R/theme.R
 \name{theme}
 \alias{theme}
-\title{Create a theme for a custom JBrowse 2 view}
+\title{Build a custom color theme}
 \usage{
 theme(primary, secondary = NULL, tertiary = NULL, quaternary = NULL)
 }
 \arguments{
-\item{primary}{the primary color of your custom palette}
+\item{primary}{the primary palette color (hex)}
 
-\item{secondary}{the secondary color of your custom palette}
+\item{secondary}{the secondary palette color (hex)}
 
-\item{tertiary}{the tertiary color of your custom palette}
+\item{tertiary}{the tertiary palette color (hex)}
 
-\item{quaternary}{the quaternary color of your custom palette}
+\item{quaternary}{the quaternary palette color (hex)}
 }
 \value{
-a character vector of stringified theme JSON configuration
-to configure a custom color palette for the browser
+a theme config list
 }
 \description{
-Creates the necessary configuration string
-for a custom theme palette for your browser.
-Accepts up to four hexadecimal colors. For more
-information on how JBrowse 2 custom themes work,
-visit \url{https://jbrowse.org/jb2/docs/config_guide#configuring-the-theme}
+Creates a theme config with up to four palette colors. Pass the result as
+\code{theme} to \code{\link[=JBrowseR]{JBrowseR()}}. See
+\url{https://jbrowse.org/jb2/docs/config_guide#configuring-the-theme}.
 }
 \examples{
-theme("#311b92")
 theme("#311b92", "#0097a7")
-theme("#311b92", "#0097a7", "#f57c00")
-theme("#311b92", "#0097a7", "#f57c00", "#d50000")
 }

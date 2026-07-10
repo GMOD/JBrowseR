@@ -2,52 +2,34 @@ library(shiny)
 library(JBrowseR)
 library(bslib)
 
+# View features you build in R (here a small data frame) directly on the genome,
+# with no files and no web server. Click a feature to read it back in Shiny.
+
 ui <- fluidPage(
-  # Overriding the default bootstrap theme is needed to get proper font size
   theme = bs_theme(version = 5),
-  titlePanel("JBrowseR Example"),
-  JBrowseROutput("widgetOutput")
+  titlePanel("JBrowseR: a track from an R data frame"),
+  JBrowseROutput("widgetOutput"),
+  verbatimTextOutput("selected")
 )
 
 server <- function(input, output, session) {
-  # create the assembly configuration
-  assembly <- assembly(
-    "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
-    bgzip = TRUE,
-    aliases = c("GRCh37"),
-    refname_aliases = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"
-  )
-
   df <- data.frame(
-    chrom = c('1', '2'),
+    chrom = c("1", "2"),
     start = c(123, 456),
     end = c(789, 101112),
-    name = c('feature1', 'feature2')
+    name = c("feature1", "feature2")
   )
 
-  df_track <- track_data_frame(df, "foo", assembly)
+  output$widgetOutput <- renderJBrowseR(JBrowseR(
+    "hg19",
+    tracks = list(track_data_frame(df, "my_features")),
+    location = "2:1..101200"
+  ))
 
-  # set up the final tracks object to be used
-  tracks <- tracks(
-    df_track
-  )
-
-  # determine what the browser displays by default
-  default_session <- default_session(
-    assembly,
-    c(df_track),
-    display_assembly = FALSE
-  )
-
-
-  output$widgetOutput <- renderJBrowseR(
-    JBrowseR("View",
-             assembly = assembly,
-             tracks = tracks,
-             location = "2:456",
-             defaultSession = default_session
-    )
-  )
+  output$selected <- renderPrint({
+    req(input$selectedFeature)
+    input$selectedFeature$name
+  })
 }
 
 shinyApp(ui, server)

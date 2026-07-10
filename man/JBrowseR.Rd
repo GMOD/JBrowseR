@@ -2,25 +2,63 @@
 % Please edit documentation in R/JBrowseR.R
 \name{JBrowseR}
 \alias{JBrowseR}
-\title{R interface to JBrowse 2 genome browser}
+\title{Embed a JBrowse 2 linear genome view}
 \usage{
-JBrowseR(view, ..., width = NULL, height = NULL, elementId = NULL)
+JBrowseR(
+  assembly,
+  tracks = NULL,
+  location = NULL,
+  default_session = NULL,
+  text_search = NULL,
+  theme = NULL,
+  plugins = NULL,
+  config = NULL,
+  width = NULL,
+  height = NULL,
+  elementId = NULL
+)
 }
 \arguments{
-\item{view}{Which JBrowse 2 view to use. View, JsonView, ViewHg19, ViewHg38}
+\item{assembly}{Either a hub name understood by jbrowse.org (e.g. \code{"hg38"},
+\code{"hg19"}, or a GenArk accession like \code{"GCF_000001405.40"}) or an assembly
+config list from \code{\link[=assembly]{assembly()}}.}
 
-\item{...}{The parameters passed on to the view}
+\item{tracks}{A list of track configs, e.g. from \code{\link[=tracks]{tracks()}} / \code{\link[=track]{track()}}.
+Tracks missing \code{assemblyNames} are backfilled with the assembly's name.}
 
-\item{width}{The width of the htmlwidget}
+\item{location}{A region string (\code{"chr1:1-1000"}) or, when the assembly hub
+provides a gene-name search index, a gene name (\code{"BRCA1"}).}
 
-\item{height}{The height of the htmlwidget}
+\item{default_session}{An optional serialized session (advanced); when given
+it owns the initial track layout instead of \code{tracks}.}
 
-\item{elementId}{The elementId of the htmlwidget}
+\item{text_search}{One or more aggregate text-search adapters from
+\code{\link[=text_index]{text_index()}}, enabling gene-name search.}
+
+\item{theme}{A theme config from \code{\link[=theme]{theme()}}.}
+
+\item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
+
+\item{config}{Escape hatch: a whole JBrowse config (a list, or a JSON string
+from \code{\link[=json_config]{json_config()}}). When supplied it takes precedence over the
+individual fields above.}
+
+\item{width, height, elementId}{Standard htmlwidget sizing arguments.}
 }
 \value{
-an htmlwidget of the JBrowse 2 linear genome view.
+an htmlwidget of the JBrowse 2 linear genome view
 }
 \description{
-Embed a JBrowse 2 linear genome view in your Shiny app,
-Rmd document, or interactive R console.
+Renders an interactive, GPU-accelerated JBrowse 2 linear genome view as an
+htmlwidget for use in R Markdown documents, Shiny apps, or the interactive R
+console.
+}
+\details{
+The API is declarative: describe the browser with plain values and the
+helper constructors (\code{\link[=assembly]{assembly()}}, \code{\link[=track]{track()}}, \code{\link[=tracks]{tracks()}}, \code{\link[=text_index]{text_index()}},
+\code{\link[=theme]{theme()}}). Nothing is imperative and no JSON strings are assembled by hand.
+}
+\examples{
+# a whole human genome browser in one line (gene search included)
+JBrowseR("hg38", location = "BRCA1")
 }

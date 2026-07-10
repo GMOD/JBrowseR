@@ -2,32 +2,27 @@
 % Please edit documentation in R/json.R
 \name{json_config}
 \alias{json_config}
-\title{Read in a JBrowse 2 JSON configuration file}
+\title{Load a whole JBrowse 2 config file}
 \usage{
 json_config(file)
 }
 \arguments{
-\item{file}{the file path or URL to a JBrowse 2 configuration}
+\item{file}{path or URL to a JBrowse 2 configuration file}
 }
 \value{
-a character vector of JSON configuration from a JBrowse 2
-configuration file
+the config file contents as a JSON string
 }
 \description{
-Reads in a JSON file with values for configuring
-your browser. Looks for assembly, tracks, defaultSession,
-and theme. Only assembly is explicitly required for a
-working browser.
+Reads a JBrowse 2 JSON config file (or URL) into a string to pass as the
+\code{config} argument of \code{\link[=JBrowseR]{JBrowseR()}}. This is the escape hatch for full control
+— assembly, tracks, defaultSession, theme, plugins — matching the shape of a
+JBrowse config.json.
 }
 \details{
-Note: this is the most advanced API. It offers full control
-to do anything possible in JavaScript with an embedded JBrowse 2
-React component, but comes with a steeper learning curve. For
-more details on JBrowse 2 configuration, visit:
-\url{https://jbrowse.org/jb2/docs/config_guide}
-
-An example JSON config is provided with this package
+See \url{https://jbrowse.org/jb2/docs/config_guide}.
 }
 \examples{
-\dontrun{json_config("./config.json")}
+\dontrun{
+JBrowseR(config = json_config("./config.json"))
+}
 }

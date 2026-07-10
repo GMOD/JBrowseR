@@ -1,31 +1,21 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "webpack",
-    "lint": "eslint srcjs"
+    "build": "vite build",
+    "dev": "vite build --watch"
   },
   "dependencies": {
-    "@jbrowse/react-linear-genome-view": "^2.10.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@fontsource/roboto": "^5.1.0",
+    "@jbrowse/embedded-linear-genome-view": "link:../jbrowse-components/products/jbrowse-embedded-linear-genome-view",
+    "@jbrowse/react-linear-genome-view2": "link:../jbrowse-components/products/jbrowse-react-linear-genome-view",
+    "mobx": "^6.16.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
-    "@babel/preset-env": "^7.24.0",
-    "@babel/preset-react": "^7.22.3",
-    "@babel/preset-typescript": "^7.23.0",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
-    "babel-loader": "^9.1.2",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "eslint-plugin-unicorn": "^51.0.1",
-    "node-polyfill-webpack-plugin": "^3.0.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.2.2",
-    "webpack": "^5.90.3",
-    "webpack-cli": "^5.1.1"
+    "@vitejs/plugin-react": "^4.5.1",
+    "vite": "^6.3.5",
+    "vite-plugin-node-polyfills": "0.22.0"
   }
 }

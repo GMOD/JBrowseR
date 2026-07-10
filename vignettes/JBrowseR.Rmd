@@ -11,73 +11,198 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-JBrowseR provides an R interface to the [JBrowse 2](https://jbrowse.org/jb2/) genome browser.
+JBrowseR renders the [JBrowse 2](https://jbrowse.org/jb2/) linear genome view as
+an htmlwidget. JBrowse 2 is a fast, GPU-accelerated genome browser; JBrowseR
+lets you drive it entirely from R and embed it in R Markdown documents, Shiny
+apps, or the interactive console.
 
-JBrowse 2 is "a pluggable open-source platform for visualizing and integrating biological data".
-It is a fast and flexible tool that can visualize a wide variety of data.
-JBrowse 2 was built using powerful modern web technologies such as [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/).
-One of the core products of JBrowse 2 is a React component that makes it possible to embed a custom genome browser in a web page.
+The API is *declarative*. You describe the browser with plain values — a genome,
+a list of tracks, a location — and helper constructors assemble the config. You
+never build JSON by hand.
 
-While the JBrowse 2 component is an incredible tool, the main way for developers to use it has been to add it to a React app, which comes with a steep learning curve. 
-That is where JBrowseR comes in!
-Using JBrowseR, it is now possible to:
-
-- Embed the JBrowse 2 Linear Genome View into **Shiny** applications
-- Create interactive **R Markdown** documents with a genome browser displaying your data.
-- Launch a custom genome browser from an interactive R console
-
-And it is possible to do this writing only a small amount of R code.
-
-## The main function
-
-The core function of the package is `JBrowseR()`. There are two key arguments:
-
-- **view**: This selects which React component to render. The four options are:
-  1. ViewHg19
-  2. ViewHg38
-  3. View
-  4. JsonView
-- **...** : Optional arguments to be passed to the browser. The values the browser can use are:
-  1. assembly
-  2. tracks
-  3. location
-  4. defaultSession
-  5. theme
-  6. config
-
-There are a lot of possibilities with all of these options! 
-So let's start simple. 
-The interface enables a [progressive disclosure](https://en.wikipedia.org/wiki/Progressive_disclosure) of complexity.
-
-The only necessary argument is which view. To launch a hg19 browser from the console run:
-
-```{r}
-JBrowseR("ViewHg19")
+```{r setup}
+library(JBrowseR)
 ```
 
-The `ViewHg19` and `ViewHg38` views are the simplest components of the package.
-They return pre-configured browsers displaying the reference assembly and NCBI RefSeq annotations of the hg19 and hg38 genomes respectively.
+## The one-liner
 
-We can extend the example to see how optional arguments work by setting the location:
+The fastest way in is to name a genome hub hosted at jbrowse.org. This gives you
+the assembly, reference-name aliases, cytobands, and gene-name search with no
+further setup:
 
 ```{r}
-JBrowseR("ViewHg19",
-         location = "10:29,838,737..29,838,819")
+JBrowseR("hg38", location = "BRCA1")
 ```
 
-This will set the starting location of the browser when it is first loaded.
+`location` accepts a region string like `"chr1:1-10000"` or, because the hub
+ships a search index, a gene name like `"BRCA1"`. Other hubs work the same way —
+`"hg19"`, `"mm10"`, or a GenArk accession such as `"GCF_000001405.40"`.
 
-## More configuration
+## Adding tracks
 
-While the hg19 and hg38 views can be great tools for quickly launching a browser, we have already reached the end of the road for what can be done with them. 
-The main interface of this package involves using the more general `View` component.
-For a tutorial showing how to create a small Shiny application with custom data tracks, head to:
+Add tracks by URL with `track()`. The track type and its index files
+(`.bai`/`.crai`/`.tbi`) are inferred from the file extension, so a data URL is
+usually all you need. `tracks()` gathers several together.
 
-[Custom browser tutorial](https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html)
+```{r}
+JBrowseR(
+  "hg38",
+  tracks = tracks(
+    track(
+      "https://jbrowse.org/genomes/GRCh38/alignments/NA12878/NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram",
+      name = "NA12878 Exome"
+    )
+  ),
+  location = "17:43,044,295..43,048,000"
+)
+```
 
-Although the `View` components provides fairly exhaustive access to the customization options of JBrowse 2, it does not expose all of the options available.
-If you find yourself wanting to use advanced features such as coloring features with JavaScript callbacks, or to use more specific rendering functions, it is possible to use the `JsonView` to use a JSON configured browser.
-This provides full access to the configuration API available for JavaScript users of JBrowse 2.
-For a tutorial on what this looks like, visit:
+![NA12878 exome CRAM at BRCA1](../man/figures/demo-alignments.png)
 
-[JSON configuration tutorial](https://gmod.github.io/JBrowseR/articles/json-tutorial.html)
+Recognized extensions cover the common genomics types:
+
+| Extension | Track | Adapter |
+|---|---|---|
+| `.bam`, `.cram` | alignments | `BamAdapter`, `CramAdapter` |
+| `.vcf.gz` | variants | `VcfTabixAdapter` |
+| `.gff.gz`, `.gff3.gz`, `.bed.gz` | features | `Gff3TabixAdapter`, `BedTabixAdapter` |
+| `.bb`, `.bigBed` | features | `BigBedAdapter` |
+| `.bw`, `.bigWig` | quantitative | `BigWigAdapter` |
+
+Anything not covered can be built explicitly with `type=` and `adapter_type=`,
+or by passing a plain config list.
+
+## A gallery
+
+**Genes.** A gene annotation track over the hub assembly, navigated by name.
+
+```{r}
+JBrowseR(
+  "hg38",
+  tracks = tracks(track(
+    "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
+    name = "NCBI RefSeq Genes"
+  )),
+  location = "BRCA1"
+)
+```
+
+![NCBI RefSeq genes at BRCA1](../man/figures/demo-genes.png)
+
+**Variants.** A 1000 Genomes VCF.
+
+```{r}
+JBrowseR(
+  "hg38",
+  tracks = tracks(track(
+    "https://jbrowse.org/genomes/GRCh38/variants/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz",
+    name = "1000 Genomes Variants"
+  )),
+  location = "17:43,045,000..43,046,800"
+)
+```
+
+![1000 Genomes variants](../man/figures/demo-variants.png)
+
+**Quantitative.** A phyloP conservation bigWig.
+
+```{r}
+JBrowseR(
+  "hg38",
+  tracks = tracks(track(
+    "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
+    name = "phyloP100way Conservation"
+  )),
+  location = "17:43,044,295..43,048,000"
+)
+```
+
+![phyloP conservation](../man/figures/demo-conservation.png)
+
+**Your R results.** Turn a data frame of features into a track with
+`track_data_frame()` — no files and no web server. Any `score` column makes it a
+quantitative track.
+
+```{r}
+peaks <- data.frame(
+  chrom = "17",
+  start = seq(43000000, 43120000, by = 12000),
+  end   = seq(43000000, 43120000, by = 12000) + 4000,
+  name  = paste0("peak", 1:11),
+  score = round(runif(11, 5, 100))
+)
+
+JBrowseR(
+  "hg38",
+  tracks = list(track_data_frame(peaks, "R_peaks")),
+  location = "17:43,000,000..43,125,000"
+)
+```
+
+![Data-frame track of R-computed peaks](../man/figures/demo-dataframe.png)
+
+**Cancer structural variants.** The SKBR3 breast-cancer cell line has a heavily
+rearranged genome. PacBio long reads span breakpoints short reads cannot, and
+Sniffles calls the structural variants from them.
+
+```{r}
+JBrowseR(
+  "hg19",
+  tracks = tracks(
+    track(
+      "https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz",
+      name = "Sniffles SV calls"
+    ),
+    track(
+      "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
+      name = "SKBR3 PacBio long reads"
+    )
+  ),
+  location = "17:37,686,000..37,730,000"
+)
+```
+
+![SKBR3 long-read structural variants](../man/figures/demo-skbr3.png)
+
+**A somatic deletion.** HG008-T is a tumor reference sample; its PacBio HiFi reads
+carry a ~1.8 kb somatic deletion in *CUZD1*, visible as a clean drop-out spanning
+many reads.
+
+```{r}
+JBrowseR(
+  "hg38",
+  tracks = tracks(track(
+    "https://jbrowse.org/demos/cgiab/HG008-T_chr10_CUZD1_deletion.bam",
+    name = "HG008-T PacBio HiFi"
+  )),
+  location = "10:122,822,000..122,851,000"
+)
+```
+
+![HG008 tumor somatic deletion at CUZD1](../man/figures/demo-cancer-deletion.png)
+
+**A custom theme.** `theme()` recolors the browser.
+
+```{r}
+JBrowseR(
+  "hg38",
+  tracks = tracks(track(
+    "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
+    name = "NCBI RefSeq Genes"
+  )),
+  theme = theme("#311b92", "#0097a7"),
+  location = "BRCA1"
+)
+```
+
+![Custom-themed browser](../man/figures/demo-theme.png)
+
+## Where to next
+
+- A genome that isn't on a hub? See the
+  [custom browser tutorial](custom-browser-tutorial.html).
+- Files on your own machine? See [serving local data](creating-urls.html).
+- Need full control? Pass a whole JBrowse config with the
+  [`config` escape hatch](json-tutorial.html).
+- Embedding in Shiny? Use `JBrowseROutput()` and `renderJBrowseR()`, and read
+  the selected feature back with `input$selectedFeature`.

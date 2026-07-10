@@ -1,4 +1,4 @@
-url: https://elliothershberg.github.io/JBrowseR
+url: https://gmod.github.io/JBrowseR
 
 template:
   params:
@@ -9,25 +9,23 @@ navbar:
     home: ~
 
 reference:
-  - title: 'Rendering functions'
-    desc: 'Functions for rendering JBrowserR in various contexts'
+  - title: 'Rendering'
+    desc: 'Render a JBrowse 2 linear genome view in the console, R Markdown, or Shiny'
   - contents:
       - JBrowseR
       - renderJBrowseR
       - JBrowseROutput
-      - JBrowseR_html
-  - title: 'Creating JBrowseR configuration'
-    desc: 'Functions for creating JBrowseR configuration strings'
+  - title: 'Describing a browser'
+    desc: 'Declarative constructors for assemblies, tracks, search, and theme'
   - contents:
       - assembly
-      - starts_with("track")
-      - default_session
-  - title: 'Advanced customization'
-    desc: 'More advanced customization options'
-  - contents:
-      - theme
-      - json_config
+      - track
+      - tracks
+      - track_data_frame
       - text_index
-  - title: 'Utilities'
+      - theme
+  - title: 'Advanced'
+    desc: 'Full JBrowse config, and serving local data'
   - contents:
+      - json_config
       - serve_data

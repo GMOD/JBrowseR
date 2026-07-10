@@ -1,32 +1,97 @@
-#' R interface to JBrowse 2 genome browser
+#' Embed a JBrowse 2 linear genome view
 #'
-#' Embed a JBrowse 2 linear genome view in your Shiny app,
-#' Rmd document, or interactive R console.
+#' Renders an interactive, GPU-accelerated JBrowse 2 linear genome view as an
+#' htmlwidget for use in R Markdown documents, Shiny apps, or the interactive R
+#' console.
 #'
-#' @param view Which JBrowse 2 view to use. View, JsonView, ViewHg19, ViewHg38
-#' @param ... The parameters passed on to the view
-#' @param width The width of the htmlwidget
-#' @param height The height of the htmlwidget
-#' @param elementId The elementId of the htmlwidget
+#' The API is declarative: describe the browser with plain values and the
+#' helper constructors ([assembly()], [track()], [tracks()], [text_index()],
+#' [theme()]). Nothing is imperative and no JSON strings are assembled by hand.
 #'
-#' @return an htmlwidget of the JBrowse 2 linear genome view.
+#' @param assembly Either a hub name understood by jbrowse.org (e.g. `"hg38"`,
+#'   `"hg19"`, or a GenArk accession like `"GCF_000001405.40"`) or an assembly
+#'   config list from [assembly()].
+#' @param tracks A list of track configs, e.g. from [tracks()] / [track()].
+#'   Tracks missing `assemblyNames` are backfilled with the assembly's name.
+#' @param location A region string (`"chr1:1-1000"`) or, when the assembly hub
+#'   provides a gene-name search index, a gene name (`"BRCA1"`).
+#' @param default_session An optional serialized session (advanced); when given
+#'   it owns the initial track layout instead of `tracks`.
+#' @param text_search One or more aggregate text-search adapters from
+#'   [text_index()], enabling gene-name search.
+#' @param theme A theme config from [theme()].
+#' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
+#' @param config Escape hatch: a whole JBrowse config (a list, or a JSON string
+#'   from [json_config()]). When supplied it takes precedence over the
+#'   individual fields above.
+#' @param width,height,elementId Standard htmlwidget sizing arguments.
+#'
+#' @return an htmlwidget of the JBrowse 2 linear genome view
 #'
 #' @import htmlwidgets
 #' @export
-JBrowseR <- function(view, ..., width = NULL, height = NULL, elementId = NULL) {
+#'
+#' @examples
+#' # a whole human genome browser in one line (gene search included)
+#' JBrowseR("hg38", location = "BRCA1")
+JBrowseR <- function(assembly, tracks = NULL, location = NULL,
+                     default_session = NULL, text_search = NULL, theme = NULL,
+                     plugins = NULL, config = NULL, width = NULL, height = NULL,
+                     elementId = NULL) {
+  if (is.null(config)) {
+    payload <- drop_null(list(
+      assembly = assembly,
+      tracks = backfill_assembly_names(tracks, assembly_name(assembly)),
+      location = location,
+      defaultSession = default_session,
+      textSearch = text_search,
+      theme = theme,
+      plugins = plugins
+    ))
+  } else {
+    payload <- drop_null(list(config = config, location = location))
+  }
 
-  # describe a React component to send to the browser for rendering.
-  component <- reactR::component(view, list(...))
-
-  # create widget
   htmlwidgets::createWidget(
     name = "JBrowseR",
-    reactR::reactMarkup(component),
+    x = payload,
     width = width,
     height = height,
     package = "JBrowseR",
-    elementId = elementId
+    elementId = elementId,
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      defaultWidth = "100%",
+      viewer.fill = TRUE,
+      browser.fill = TRUE
+    )
   )
+}
+
+# the assembly name, whether the assembly is a hub-name string or a config list
+assembly_name <- function(assembly) {
+  if (is.character(assembly)) {
+    assembly
+  } else {
+    assembly$name
+  }
+}
+
+# tracks default to the loaded assembly; fill assemblyNames when a track omits it
+backfill_assembly_names <- function(tracks, name) {
+  if (is.null(tracks) || is.null(name)) {
+    tracks
+  } else {
+    lapply(tracks, function(track) {
+      if (is.null(track$assemblyNames)) {
+        track$assemblyNames <- list(name)
+      }
+      track
+    })
+  }
+}
+
+drop_null <- function(x) {
+  x[!vapply(x, is.null, logical(1))]
 }
 
 #' Shiny bindings for JBrowseR
@@ -61,24 +126,4 @@ renderJBrowseR <- function(expr, env = parent.frame(), quoted = FALSE) {
     expr <- substitute(expr)
   } # force quoted
   htmlwidgets::shinyRenderWidget(expr, JBrowseROutput, env, quoted = TRUE)
-}
-
-#' Called by HTMLWidgets to produce the widget's root element.
-#'
-#' @param id htmltools id
-#' @param style htmltools style
-#' @param class htmltools class
-#' @param ... Additional arguments passed on
-#'
-#' @return the root HTML element to render the React component in
-#'
-#' @rdname JBrowseR-shiny
-JBrowseR_html <- function(id, style, class, ...) {
-  htmltools::tagList(
-    # Necessary for RStudio viewer version < 1.2
-    reactR::html_dependency_corejs(),
-    reactR::html_dependency_react(),
-    reactR::html_dependency_reacttools(),
-    htmltools::tags$div(id = id, class = class, style = style)
-  )
 }

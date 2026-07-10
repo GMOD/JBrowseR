@@ -1,60 +1,43 @@
 library(shiny)
-library(tibble)
 library(JBrowseR)
 library(bslib)
 
+# SKBR3 is a widely studied HER2+ breast cancer cell line with a heavily
+# rearranged genome. Here we view PacBio long reads aligned to hg19 alongside
+# the structural variants called from them by Sniffles. Long reads span
+# breakpoints that short reads cannot, revealing the cell line's fusions and
+# large deletions. Buttons jump to a few of its known rearrangements.
+
 ui <- fluidPage(
-  # Overriding the default bootstrap theme is needed to get proper font size
   theme = bs_theme(version = 5),
-  titlePanel("SKBR3 Gene Fusions"),
-  dataTableOutput("gene_fusions"),
+  titlePanel("SKBR3 breast cancer: long-read structural variants"),
+  actionButton("klhdc2", "KLHDC2 fusion"),
+  actionButton("tatdn1", "TATDN1/GSDMB region"),
+  actionButton("erbb2", "ERBB2 (HER2)"),
   JBrowseROutput("browserOutput")
 )
 
 server <- function(input, output, session) {
-  hg19 <- assembly(
-    "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
-    bgzip = TRUE,
-    aliases = c("GRCh37"),
-    refname_aliases = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"
-  )
+  loc <- reactiveVal("17:37,686,000..37,730,000")
 
-  pacbio <- track_alignments(
-    "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
-    hg19
-  )
+  observeEvent(input$klhdc2, loc("14:50,230,000..50,255,000"))
+  observeEvent(input$tatdn1, loc("8:125,490,000..125,560,000"))
+  observeEvent(input$erbb2, loc("17:37,686,000..37,730,000"))
 
-  gene_fusions <- as.data.frame(tribble(
-    ~chrom, ~start, ~end, ~name,
-    "chr14", 50234326, 50249909, "KLHDC2",
-    "chr8", 121547985, 121825513, "SNTB1",
-    "chr17", 76670130, 76778379, "CYTH1",
-    "chr8", 117654369, 117779164, "EIF3H",
-    "chr20", 34213953, 34252878, "CPNE1",
-    "chr20", 47240790, 47444420, "PREX1",
-    "chr17", 38060848, 38076107, "GSDMB",
-    "chr8", 125500726, 125551699, "TATDN1",
-    "chr8", 116962736, 117337297, "LINC00536",
-    "chr8", 128806779, 129113499, "PVT1"
+  output$browserOutput <- renderJBrowseR(JBrowseR(
+    "hg19",
+    tracks = tracks(
+      track(
+        "https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz",
+        name = "Sniffles SV calls"
+      ),
+      track(
+        "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
+        name = "SKBR3 PacBio long reads"
+      )
+    ),
+    location = loc()
   ))
-
-  fusion_track <- track_data_frame(gene_fusions, "Gene fusions", hg19)
-
-  track_list <- tracks(pacbio, fusion_track)
-
-  default_session <- default_session(
-    hg19,
-    c(pacbio, fusion_track)
-  )
-
-  output$browserOutput <- renderJBrowseR(
-    JBrowseR("View",
-             assembly = hg19,
-             tracks = track_list,
-             location = "chr14:50,234,326-50,249,909",
-             defaultSession = default_session
-    )
-  )
 }
 
 shinyApp(ui, server)
