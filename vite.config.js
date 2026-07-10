@@ -24,11 +24,17 @@ const shimAliases = ['process', 'global', 'buffer'].map(name => ({
   ),
 }))
 
-// Bundle everything into a single IIFE that htmlwidgets loads as a plain
-// <script>. On load it calls window.HTMLWidgets.widget(...) to register the
-// binding. inlineDynamicImports keeps it to one file so there are no sibling
-// chunks (htmlwidgets only serves inst/htmlwidgets/JBrowseR.js). RPC runs on
-// the main thread (no makeWorkerInstance), matching the anywidget bundle.
+// Two independent IIFE bundles, each an htmlwidget htmlwidgets loads as a plain
+// <script>: the default `JBrowseR` (lean linear-genome-view) and, when
+// JB_TARGET=app, `JBrowseRApp` (the full multi-view app for synteny/dotplot/etc).
+// Each registers its binding via window.HTMLWidgets.widget(...) on load. They are
+// built by separate `vite build` invocations (see the R build note) because
+// inlineDynamicImports — which keeps each to one file, so there are no sibling
+// chunks — forbids multiple entries in one build. RPC runs on the main thread
+// (no makeWorkerInstance) in both.
+const isApp = process.env.JB_TARGET === 'app'
+const widgetName = isApp ? 'JBrowseRApp' : 'JBrowseR'
+
 export default defineConfig({
   plugins: [
     // nodePolyfills adds a `stream` prefix-alias that rewrites `stream/web` to
@@ -60,11 +66,11 @@ export default defineConfig({
     outDir: 'inst/htmlwidgets',
     emptyOutDir: false,
     lib: {
-      entry: 'srcjs/index.jsx',
+      entry: isApp ? 'srcjs/app.jsx' : 'srcjs/index.jsx',
       formats: ['iife'],
-      name: 'JBrowseR',
-      fileName: () => 'JBrowseR.js',
-      cssFileName: 'JBrowseR',
+      name: widgetName,
+      fileName: () => `${widgetName}.js`,
+      cssFileName: widgetName,
     },
     rollupOptions: {
       output: {

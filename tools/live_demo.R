@@ -49,3 +49,25 @@ save_demo(
   ),
   "custom_fasta.html"
 )
+
+# a comparative (synteny) browser via the full-app widget: two assemblies tied
+# together by a PAF track
+local({
+  base <- "https://jbrowse.org/code/jb2/main/test_data/volvox/"
+  save_demo(
+    JBrowseRApp(
+      assemblies = list(
+        assembly(paste0(base, "volvox.2bit"), name = "volvox"),
+        assembly(paste0(base, "volvox_del.fa"), name = "volvox_del")
+      ),
+      tracks = list(
+        synteny_track(paste0(base, "volvox_del.paf"), "volvox", "volvox_del",
+          track_id = "volvox_del_paf")
+      ),
+      views = list(
+        synteny_view(c("volvox", "volvox_del"), tracks = "volvox_del_paf")
+      )
+    ),
+    "synteny.html"
+  )
+})

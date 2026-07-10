@@ -1,5 +1,14 @@
 # JBrowseR 0.11.0
 
+- New `JBrowseRApp()` renders the full JBrowse 2 app — any number of views of any
+  type — from a declarative `views` list. Each entry is a `list(type, init)`
+  spec built with `linear_view()`, `synteny_view()`, or `dotplot_view()`, the
+  same vocabulary JBrowse Web serializes into its `?session=spec-…` URLs, so
+  comparative genomics (linear synteny, dotplots) is now reachable from R.
+  `synteny_track()` builds the PAF track config. It loads a separate widget
+  bundle, so the single-view `JBrowseR()` stays lean.
+- `assembly()` accepts a `.2bit` URL (`TwoBitAdapter`) in addition to FASTA.
+
 - Upgraded to the GPU-accelerated JBrowse 2 v4 linear genome view
   (`@jbrowse/react-linear-genome-view2`), driven through the shared
   framework-agnostic `@jbrowse/embedded-linear-genome-view` controller.

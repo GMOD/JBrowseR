@@ -13,9 +13,9 @@ assembly(
 )
 }
 \arguments{
-\item{fasta}{URL to the FASTA. A \code{.gz} file is treated as bgzip-compressed
-(\code{BgzipFastaAdapter}), otherwise as plain indexed FASTA
-(\code{IndexedFastaAdapter}).}
+\item{fasta}{URL to the sequence. A \verb{.2bit} file uses \code{TwoBitAdapter}; a \code{.gz}
+FASTA is treated as bgzip-compressed (\code{BgzipFastaAdapter}); any other FASTA
+as plain indexed FASTA (\code{IndexedFastaAdapter}).}
 
 \item{name}{Assembly name. Defaults to the FASTA file's base name.}
 

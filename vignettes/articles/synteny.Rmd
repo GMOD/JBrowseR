@@ -1,0 +1,61 @@
+---
+title: "Comparing genomes: synteny and dotplots"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r setup}
+library(JBrowseR)
+```
+
+`JBrowseR()` shows a single linear view. For anything comparative — synteny,
+dotplots, breakpoint-split — `JBrowseRApp()` drives the full JBrowse 2 app, and a
+`views` list describes what to open. Each entry is a `list(type, init)` spec, the
+same vocabulary JBrowse Web serializes into its `?session=spec-…` URLs, built
+with `linear_view()`, `synteny_view()`, or `dotplot_view()`.
+
+The browser below is **live** — drag either genome to pan; the ribbon between
+them follows.
+
+## Linear synteny
+
+Two `volvox` assemblies (one carries a deletion) are tied together by a PAF
+track and shown as a linear synteny view. `assembly()` handles the `.2bit` and
+FASTA sequences; `synteny_track()` builds the PAF track that spans both.
+
+```{r synteny}
+base <- "https://jbrowse.org/code/jb2/main/test_data/volvox/"
+
+JBrowseRApp(
+  assemblies = list(
+    assembly(paste0(base, "volvox.2bit"), name = "volvox"),
+    assembly(paste0(base, "volvox_del.fa"), name = "volvox_del")
+  ),
+  tracks = list(
+    synteny_track(paste0(base, "volvox_del.paf"), "volvox", "volvox_del",
+      track_id = "volvox_del_paf")
+  ),
+  views = list(synteny_view(c("volvox", "volvox_del"), tracks = "volvox_del_paf"))
+)
+```
+
+## Dotplot
+
+The same assemblies and PAF render as a dotplot with one function call
+different — `dotplot_view()` in place of `synteny_view()`:
+
+```{r dotplot, eval = FALSE}
+JBrowseRApp(
+  assemblies = list(
+    assembly(paste0(base, "volvox.2bit"), name = "volvox"),
+    assembly(paste0(base, "volvox_del.fa"), name = "volvox_del")
+  ),
+  tracks = list(
+    synteny_track(paste0(base, "volvox_del.paf"), "volvox", "volvox_del",
+      track_id = "volvox_del_paf")
+  ),
+  views = list(dotplot_view(c("volvox", "volvox_del"), tracks = "volvox_del_paf"))
+)
+```

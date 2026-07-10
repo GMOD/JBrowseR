@@ -11,6 +11,9 @@ importers:
       '@fontsource/roboto':
         specifier: ^5.1.0
         version: 5.2.10
+      '@jbrowse/embedded-app':
+        specifier: link:../jbrowse-components/products/jbrowse-embedded-app
+        version: link:../jbrowse-components/products/jbrowse-embedded-app
       '@jbrowse/embedded-linear-genome-view':
         specifier: link:../jbrowse-components/products/jbrowse-embedded-linear-genome-view
         version: link:../jbrowse-components/products/jbrowse-embedded-linear-genome-view

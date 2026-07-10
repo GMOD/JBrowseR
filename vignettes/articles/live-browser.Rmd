@@ -74,3 +74,6 @@ JBrowseR(
   location = "17:43,000,000..43,125,000"
 )
 ```
+
+For comparative genomics — synteny and dotplots across two assemblies — see the
+[comparing genomes](synteny.html) article, which uses `JBrowseRApp()`.

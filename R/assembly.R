@@ -8,9 +8,9 @@
 #' straight to [JBrowseR()] (e.g. `JBrowseR("hg38")`) and the assembly, reference
 #' name aliases, cytobands, and gene-name search all come preconfigured.
 #'
-#' @param fasta URL to the FASTA. A `.gz` file is treated as bgzip-compressed
-#'   (`BgzipFastaAdapter`), otherwise as plain indexed FASTA
-#'   (`IndexedFastaAdapter`).
+#' @param fasta URL to the sequence. A `.2bit` file uses `TwoBitAdapter`; a `.gz`
+#'   FASTA is treated as bgzip-compressed (`BgzipFastaAdapter`); any other FASTA
+#'   as plain indexed FASTA (`IndexedFastaAdapter`).
 #' @param name Assembly name. Defaults to the FASTA file's base name.
 #' @param aliases Reference-name aliases for the assembly (e.g. `"GRCh37"`).
 #' @param refname_aliases URL to a reference-name alias table mapping e.g. `1`
@@ -29,17 +29,23 @@
 assembly <- function(fasta, name = NULL, aliases = NULL, refname_aliases = NULL,
                      bgzip = NULL) {
   name <- name %||% base_name(fasta)
-  bgzip <- bgzip %||% endsWith(fasta, ".gz")
+  clean <- sub("[?#].*$", "", fasta)
+  bgzip <- bgzip %||% endsWith(clean, ".gz")
+  adapter <- if (grepl("[.]2bit$", clean, ignore.case = TRUE)) {
+    list(type = "TwoBitAdapter", uri = fasta)
+  } else {
+    list(
+      type = if (bgzip) "BgzipFastaAdapter" else "IndexedFastaAdapter",
+      uri = fasta
+    )
+  }
 
   out <- list(
     name = name,
     sequence = list(
       type = "ReferenceSequenceTrack",
       trackId = paste0(name, "-ReferenceSequenceTrack"),
-      adapter = list(
-        type = if (bgzip) "BgzipFastaAdapter" else "IndexedFastaAdapter",
-        uri = fasta
-      )
+      adapter = adapter
     )
   )
   if (!is.null(aliases)) {

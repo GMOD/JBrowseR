@@ -2,11 +2,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && JB_TARGET=app vite build",
     "dev": "vite build --watch"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.1.0",
+    "@jbrowse/embedded-app": "link:../jbrowse-components/products/jbrowse-embedded-app",
     "@jbrowse/embedded-linear-genome-view": "link:../jbrowse-components/products/jbrowse-embedded-linear-genome-view",
     "@jbrowse/react-linear-genome-view2": "link:../jbrowse-components/products/jbrowse-react-linear-genome-view",
     "mobx": "^6.16.1",
