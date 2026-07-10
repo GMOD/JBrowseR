@@ -75,5 +75,40 @@ JBrowseR(
 )
 ```
 
+## A statistical plot (GWAS Manhattan)
+
+A track isn't only features and coverage — a display can plot data. Point a
+`GWASTrack` at genome-wide summary statistics and give it a
+`LinearManhattanDisplay`, and the same linear view becomes a Manhattan plot:
+the `displays` block picks the plot; no special widget needed.
+
+```{r manhattan}
+JBrowseR(
+  "hg19",
+  tracks = list(list(
+    type = "GWASTrack",
+    trackId = "gwas_track",
+    name = "GWAS",
+    assemblyNames = list("hg19"),
+    adapter = list(
+      type = "GWASAdapter",
+      scoreColumn = "neg_log_pvalue",
+      bedGzLocation = list(
+        uri = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"
+      ),
+      index = list(location = list(
+        uri = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz.tbi"
+      ))
+    ),
+    displays = list(list(
+      type = "LinearManhattanDisplay",
+      displayId = "gwas_track-manhattan",
+      height = 250
+    ))
+  )),
+  location = "2"
+)
+```
+
 For comparative genomics — synteny and dotplots across two assemblies — see the
 [comparing genomes](synteny.html) article, which uses `JBrowseRApp()`.
