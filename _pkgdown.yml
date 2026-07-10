@@ -24,6 +24,14 @@ reference:
       - track_data_frame
       - text_index
       - theme
+  - title: 'Multiple views (synteny, dotplots)'
+    desc: 'Render the full app with several views of any type'
+  - contents:
+      - JBrowseRApp
+      - linear_view
+      - synteny_view
+      - dotplot_view
+      - synteny_track
   - title: 'Advanced'
     desc: 'Full JBrowse config, and serving local data'
   - contents:
