@@ -12,6 +12,8 @@
   not just a `track()` config, so a whole browser can skip the constructor.
 - `track(url, index = ...)` names a non-sibling index (a `.csi` index is
   detected by extension); `.hic` (Hi-C) and bgzipped `.gtf.gz` are now inferred.
+  A bgzipped `.gff`/`.gtf`/`.bed`/`.vcf` resolves to its indexed tabix adapter,
+  a plain uncompressed one to the whole-file adapter.
 - The old string-building helpers (`track_alignments()`, `track_variant()`,
   `track_wiggle()`, `track_feature()`, `default_session()`) and the `view=`
   first argument (`"View"`/`"JsonView"`/`"ViewHg19"`/`"ViewHg38"`) are removed.

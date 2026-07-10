@@ -42,6 +42,17 @@ test_that("track() rejects an index on an unindexed format", {
   expect_error(track("x/peaks.bw", index = "x/peaks.bw.idx"), "no index file")
 })
 
+test_that("track() picks the tabix adapter when bgzipped, plain otherwise", {
+  expect_equal(track("x/g.gff.gz")$adapter$type, "Gff3TabixAdapter")
+  expect_equal(track("x/g.gff")$adapter$type, "Gff3Adapter")
+  expect_equal(track("x/g.gtf.gz")$adapter$type, "GtfTabixAdapter")
+  expect_equal(track("x/g.gtf")$adapter$type, "GtfAdapter")
+  expect_equal(track("x/r.bed.gz")$adapter$type, "BedTabixAdapter")
+  expect_equal(track("x/r.bed")$adapter$type, "BedAdapter")
+  expect_equal(track("x/v.vcf.gz")$adapter$type, "VcfTabixAdapter")
+  expect_equal(track("x/v.vcf")$adapter$type, "VcfAdapter")
+})
+
 test_that("track() defaults name/trackId to the base name and keeps uri", {
   t <- track("https://example.com/data/reads.bam")
   expect_equal(t$name, "reads")

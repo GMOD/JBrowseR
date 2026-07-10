@@ -87,33 +87,48 @@ tracks <- function(...) {
 # extension -> track type, adapter type, longhand location slot, and how an
 # explicit index attaches: "BAI"/"TBI" fill an `index` slot (default type,
 # "CSI" for a .csi file), "crai" fills craiLocation, NA means no index file.
+# The tabix formats (gff/gtf/bed/vcf) resolve to their indexed adapter when the
+# url is bgzipped and to the plain whole-file adapter otherwise.
 detect_track <- function(url) {
-  ext <- url |> sub("[?#].*$", "", x = _) |> sub("[.]gz$", "", x = _)
-  ext <- tolower(sub(".*[.]", "", ext))
+  clean <- sub("[?#].*$", "", url)
+  bgzipped <- grepl("[.]gz$", clean, ignore.case = TRUE)
+  ext <- tolower(sub(".*[.]", "", sub("[.]gz$", "", clean)))
   spec <- function(track, adapter, location, index) {
     list(track = track, adapter = adapter, location = location, index = index)
   }
-  switch(ext,
-    bam = spec("AlignmentsTrack", "BamAdapter", "bamLocation", "BAI"),
-    cram = spec("AlignmentsTrack", "CramAdapter", "cramLocation", "crai"),
-    vcf = spec("VariantTrack", "VcfTabixAdapter", "vcfGzLocation", "TBI"),
-    gff = spec("FeatureTrack", "Gff3TabixAdapter", "gffGzLocation", "TBI"),
-    gff3 = spec("FeatureTrack", "Gff3TabixAdapter", "gffGzLocation", "TBI"),
-    gtf = spec("FeatureTrack", "GtfTabixAdapter", "gtfGzLocation", "TBI"),
-    bed = spec("FeatureTrack", "BedTabixAdapter", "bedGzLocation", "TBI"),
-    bb = spec("FeatureTrack", "BigBedAdapter", "bigBedLocation", NA),
-    bigbed = spec("FeatureTrack", "BigBedAdapter", "bigBedLocation", NA),
-    bw = spec("QuantitativeTrack", "BigWigAdapter", "bigWigLocation", NA),
-    bigwig = spec("QuantitativeTrack", "BigWigAdapter", "bigWigLocation", NA),
-    hic = spec("HicTrack", "HicAdapter", "hicLocation", NA),
-    stop(
-      sprintf(
-        "could not infer a track type from '%s'; pass type= and adapter_type=",
-        url
-      ),
-      call. = FALSE
-    )
+  plain <- switch(ext,
+    vcf = spec("VariantTrack", "VcfAdapter", "vcfLocation", NA),
+    gff = spec("FeatureTrack", "Gff3Adapter", "gffLocation", NA),
+    gff3 = spec("FeatureTrack", "Gff3Adapter", "gffLocation", NA),
+    gtf = spec("FeatureTrack", "GtfAdapter", "gtfLocation", NA),
+    bed = spec("FeatureTrack", "BedAdapter", "bedLocation", NA),
+    NULL
   )
+  if (!bgzipped && !is.null(plain)) {
+    plain
+  } else {
+    switch(ext,
+      bam = spec("AlignmentsTrack", "BamAdapter", "bamLocation", "BAI"),
+      cram = spec("AlignmentsTrack", "CramAdapter", "cramLocation", "crai"),
+      vcf = spec("VariantTrack", "VcfTabixAdapter", "vcfGzLocation", "TBI"),
+      gff = spec("FeatureTrack", "Gff3TabixAdapter", "gffGzLocation", "TBI"),
+      gff3 = spec("FeatureTrack", "Gff3TabixAdapter", "gffGzLocation", "TBI"),
+      gtf = spec("FeatureTrack", "GtfTabixAdapter", "gtfGzLocation", "TBI"),
+      bed = spec("FeatureTrack", "BedTabixAdapter", "bedGzLocation", "TBI"),
+      bb = spec("FeatureTrack", "BigBedAdapter", "bigBedLocation", NA),
+      bigbed = spec("FeatureTrack", "BigBedAdapter", "bigBedLocation", NA),
+      bw = spec("QuantitativeTrack", "BigWigAdapter", "bigWigLocation", NA),
+      bigwig = spec("QuantitativeTrack", "BigWigAdapter", "bigWigLocation", NA),
+      hic = spec("HicTrack", "HicAdapter", "hicLocation", NA),
+      stop(
+        sprintf(
+          "could not infer a track type from '%s'; pass type= and adapter_type=",
+          url
+        ),
+        call. = FALSE
+      )
+    )
+  }
 }
 
 # (url + optional index) -> adapter config. With no index, JBrowse's own `uri`
