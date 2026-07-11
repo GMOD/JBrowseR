@@ -27,12 +27,8 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.1.0)
 Imports:
-    htmlwidgets,
-    stringr,
-    httpuv,
-    mime,
-    cli
-Suggests: 
+    htmlwidgets
+Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown

@@ -102,8 +102,8 @@ See the vignettes:
   declarative API and a gallery of demos
 - [Custom browser tutorial](https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html)
   — build a browser for your own assembly and data
-- [Serving local data](https://gmod.github.io/JBrowseR/articles/creating-urls.html)
-  — view files on your machine
+- [Hosting data](https://gmod.github.io/JBrowseR/articles/creating-urls.html)
+  — CORS + range-request requirements, and viewing local files
 - [Full JSON config](https://gmod.github.io/JBrowseR/articles/json-tutorial.html)
   — the escape hatch for complete control
 

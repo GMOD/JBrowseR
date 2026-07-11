@@ -21,9 +21,5 @@
 ^CRAN-RELEASE$
 ^example_apps$
 ^CRAN-SUBMISSION$
-^\.prettierrc.json$
-^\.prettierignore$
 ^CONTRIBUTING\.md$
-^.eslintrc.cjs
-^PUBLISHING.md
-^tsconfig.json
+^PUBLISHING\.md$

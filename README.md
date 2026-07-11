@@ -96,9 +96,9 @@ See the vignettes:
 - [Custom browser
   tutorial](https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html)
   — build a browser for your own assembly and data
-- [Serving local
+- [Hosting
   data](https://gmod.github.io/JBrowseR/articles/creating-urls.html) —
-  view files on your machine
+  CORS + range-request requirements, and viewing local files
 - [Full JSON
   config](https://gmod.github.io/JBrowseR/articles/json-tutorial.html) —
   the escape hatch for complete control

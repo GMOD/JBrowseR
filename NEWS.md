@@ -1,5 +1,10 @@
 # JBrowseR 0.11.0
 
+- Removed `serve_data()` and its hand-rolled HTTP server. Serve local files with
+  any static server that supports CORS and range requests (e.g.
+  `npx http-server --cors`); see the "Hosting data" vignette. This drops the
+  `httpuv`, `mime`, `cli`, and `stringr` dependencies, leaving `htmlwidgets` as
+  the package's only import.
 - New `JBrowseRApp()` renders the full JBrowse 2 app — any number of views of any
   type — from a declarative `views` list. Each entry is a `list(type, init)`
   spec built with `linear_view()`, `synteny_view()`, or `dotplot_view()`, the

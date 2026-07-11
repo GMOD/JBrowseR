@@ -33,7 +33,6 @@ reference:
       - dotplot_view
       - synteny_track
   - title: 'Advanced'
-    desc: 'Full JBrowse config, and serving local data'
+    desc: 'Full JBrowse config escape hatch'
   - contents:
       - json_config
-      - serve_data
