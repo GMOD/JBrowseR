@@ -1,87 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/404.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/PUBLISHING.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/JBrowseR.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/creating-urls.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/custom-browser-tutorial.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/articles/json-tutorial.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/index.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/JBrowseR-shiny.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/JBrowseR.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/assembly.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/default_session.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/json_config.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/serve_data.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/text_index.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/theme.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_alignments.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_data_frame.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_feature.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_variant.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/track_wiggle.html</loc>
-  </url>
-  <url>
-    <loc>https://elliothershberg.github.io/JBrowseR/reference/tracks.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://gmod.github.io/JBrowseR/404.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/CONTRIBUTING.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/LICENSE.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/PUBLISHING.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/articles/JBrowseR.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/articles/creating-urls.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/articles/custom-browser-tutorial.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/articles/index.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/articles/json-tutorial.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/articles/live-browser.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/articles/synteny.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/authors.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/index.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/news/index.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/JBrowseR-shiny.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/JBrowseR.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/JBrowseRApp.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/assembly.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/dotplot_view.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/index.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/json_config.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/linear_view.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/synteny_track.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/synteny_view.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/text_index.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/theme.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/track.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/track_data_frame.html</loc></url>
+<url><loc>https://gmod.github.io/JBrowseR/reference/tracks.html</loc></url>
 </urlset>
+
