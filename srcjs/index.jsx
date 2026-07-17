@@ -1,7 +1,9 @@
 import '@fontsource/roboto'
 
-import { createLinearGenomeView } from '@jbrowse/embedded-linear-genome-view'
-import { loadPlugins } from '@jbrowse/react-linear-genome-view2'
+import {
+  createLinearGenomeView,
+  loadPlugins,
+} from '@jbrowse/react-linear-genome-view2'
 
 // The R helpers emit plain objects/arrays (htmlwidgets serializes R lists to
 // JSON), but json_config() passes a raw JSON string read from a file, so parse

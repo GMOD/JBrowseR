@@ -1,6 +1,7 @@
 import '@fontsource/roboto'
+import '@jbrowse/react-app2/styles.css'
 
-import { createApp, loadPlugins } from '@jbrowse/embedded-app'
+import { createApp, loadPlugins } from '@jbrowse/react-app2'
 
 // The R helpers emit plain lists (htmlwidgets serializes them to JSON), but
 // config = json_config() passes a raw JSON string, so parse when a string

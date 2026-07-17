@@ -7,8 +7,7 @@
   },
   "dependencies": {
     "@fontsource/roboto": "^5.1.0",
-    "@jbrowse/embedded-app": "link:../jbrowse-components/products/jbrowse-embedded-app",
-    "@jbrowse/embedded-linear-genome-view": "link:../jbrowse-components/products/jbrowse-embedded-linear-genome-view",
+    "@jbrowse/react-app2": "link:../jbrowse-components/products/jbrowse-react-app",
     "@jbrowse/react-linear-genome-view2": "link:../jbrowse-components/products/jbrowse-react-linear-genome-view",
     "mobx": "^6.16.1",
     "react": "^19.1.0",
