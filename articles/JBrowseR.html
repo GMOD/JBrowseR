@@ -57,6 +57,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/comparative-synteny.html">Comparing genomes: linear synteny and dotplots</a>
+    </li>
+    <li>
       <a href="../articles/creating-urls.html">Hosting data for JBrowseR</a>
     </li>
     <li>
@@ -305,7 +308,9 @@ Any <code>score</code> column makes it a quantitative track.</p>
 <p><strong>Cancer structural variants.</strong> The SKBR3 breast-cancer
 cell line has a heavily rearranged genome. PacBio long reads span
 breakpoints short reads cannot, and Sniffles calls the structural
-variants from them.</p>
+variants from them. This view lands on a translocation from chr17 to
+chr20 (<code>&lt;TRA&gt; 20:61,039,934</code>): the call sits in the
+Sniffles track and the long reads carry it below.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg19"</span>,</span>
@@ -319,7 +324,7 @@ variants from them.</p>
 <span>      name <span class="op">=</span> <span class="st">"SKBR3 PacBio long reads"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  location <span class="op">=</span> <span class="st">"17:37,686,000..37,730,000"</span></span>
+<span>  location <span class="op">=</span> <span class="st">"17:65,440,000..65,451,000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="../reference/figures/demo-skbr3.png" alt="SKBR3 long-read structural variants"><div class="figcaption">SKBR3 long-read structural variants</div>

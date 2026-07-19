@@ -2,13 +2,14 @@ pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
+  comparative-synteny: comparative-synteny.html
   creating-urls: creating-urls.html
   custom-browser-tutorial: custom-browser-tutorial.html
   JBrowseR: JBrowseR.html
   json-tutorial: json-tutorial.html
   articles/live-browser: live-browser.html
   articles/synteny: synteny.html
-last_built: 2026-07-11T00:19Z
+last_built: 2026-07-19T06:13Z
 urls:
   reference: https://gmod.github.io/JBrowseR/reference
   article: https://gmod.github.io/JBrowseR/articles
