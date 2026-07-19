@@ -1,24 +1,21 @@
-# Build example widgets with the real JBrowseR API and dump each htmlwidget's
-# payload (w$x) to tools/screenshot_specs.json, for tools/screenshot_examples.mjs
-# to render headless. Using the actual helpers keeps the README screenshots
-# faithful to what users type. Run:  Rscript tools/gen_screenshot_specs.R
+# Build every example widget with the real JBrowseR API and dump each
+# htmlwidget's payload (w$x) to tools/screenshot_specs.json, for
+# tools/screenshot_examples.mjs to render headless. Names match the figures the
+# README and the intro vignette reference, so a regen refreshes all of them from
+# the current bundle. Run:  Rscript tools/gen_screenshot_specs.R
 suppressMessages(library(JBrowseR))
 library(jsonlite)
 
 spec <- function(bundle, caption, x) list(bundle = bundle, caption = caption, x = x)
+# the common single-view case: name the figure, build a JBrowseR() widget, keep $x
+lgv <- function(caption, ...) spec("JBrowseR.js", caption, JBrowseR(...)$x)
 
-# 1. alignments — the README hero: 1000G NA12878 exome CRAM on the hg38 hub
-cram <- paste0(
-  "https://jbrowse.org/genomes/GRCh38/alignments/NA12878/",
-  "NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram"
+refseq_gff <- paste0(
+  "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/",
+  "GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
 )
-aln <- JBrowseR(
-  "hg38",
-  tracks = tracks(track(cram, name = "NA12878 Exome")),
-  location = "17:43,044,295..43,048,000"
-)
+phylop_bw <- "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw"
 
-# 2. data.frame -> track — results computed in R, no file written
 set.seed(1)
 peaks <- data.frame(
   chrom = "17",
@@ -27,13 +24,90 @@ peaks <- data.frame(
   name = paste0("peak", 1:11),
   score = round(runif(11, 5, 100))
 )
-df <- JBrowseR(
-  "hg38",
-  tracks = list(track_data_frame(peaks, "R_peaks")),
-  location = "17:43,000,000..43,125,000"
+
+specs <- list(
+  "demo-alignments" = lgv(
+    "NA12878 exome CRAM on hg38",
+    "hg38",
+    tracks = tracks(track(
+      paste0(
+        "https://jbrowse.org/genomes/GRCh38/alignments/NA12878/",
+        "NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram"
+      ),
+      name = "NA12878 Exome"
+    )),
+    location = "17:43,044,295..43,048,000"
+  ),
+  "demo-genes" = lgv(
+    "NCBI RefSeq genes at BRCA1",
+    "hg38",
+    tracks = tracks(track(refseq_gff, name = "NCBI RefSeq Genes")),
+    location = "BRCA1"
+  ),
+  "demo-variants" = lgv(
+    "1000 Genomes variants",
+    "hg38",
+    tracks = tracks(track(
+      paste0(
+        "https://jbrowse.org/genomes/GRCh38/variants/",
+        "ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz"
+      ),
+      name = "1000 Genomes Variants"
+    )),
+    location = "17:43,045,000..43,046,800"
+  ),
+  "demo-conservation" = lgv(
+    "phyloP100way conservation bigWig",
+    "hg38",
+    tracks = tracks(track(phylop_bw, name = "phyloP100way Conservation")),
+    location = "17:43,044,295..43,048,000"
+  ),
+  "demo-dataframe" = lgv(
+    "R data.frame of peaks -> track",
+    "hg38",
+    tracks = list(track_data_frame(peaks, "R_peaks")),
+    location = "17:43,000,000..43,125,000"
+  ),
+  "demo-skbr3" = lgv(
+    "SKBR3 long-read structural variants",
+    "hg19",
+    tracks = tracks(
+      track(
+        paste0(
+          "https://jbrowse.org/genomes/hg19/SKBR3/",
+          "reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz"
+        ),
+        name = "Sniffles SV calls"
+      ),
+      track(
+        paste0(
+          "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/skbr3/",
+          "reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam"
+        ),
+        name = "SKBR3 PacBio long reads"
+      )
+    ),
+    location = "17:37,686,000..37,730,000"
+  ),
+  "demo-cancer-deletion" = lgv(
+    "HG008-T PacBio HiFi somatic deletion at CUZD1",
+    "hg38",
+    tracks = tracks(track(
+      "https://jbrowse.org/demos/cgiab/HG008-T_chr10_CUZD1_deletion.bam",
+      name = "HG008-T PacBio HiFi"
+    )),
+    location = "10:122,822,000..122,851,000"
+  ),
+  "demo-theme" = lgv(
+    "custom-themed browser",
+    "hg38",
+    tracks = tracks(track(refseq_gff, name = "NCBI RefSeq Genes")),
+    theme = theme("#311b92", "#0097a7"),
+    location = "BRCA1"
+  )
 )
 
-# 3. synteny — four E. coli strains via JBrowseRApp (comparative-synteny.Rmd)
+# comparative synteny uses the full app (JBrowseRApp / app.jsx bundle)
 base <- "https://jbrowse.org/demos/ecoli_pangenome"
 strains <- c("K12", "Sakai", "CFT073", "NCTC86")
 assemblies <- lapply(strains, function(s) {
@@ -50,24 +124,23 @@ ecoli_ava <- list(
     pafLocation = list(uri = paste0(base, "/all_vs_all.paf.gz"))
   )
 )
-syn <- JBrowseRApp(
-  assemblies = assemblies,
-  tracks = list(ecoli_ava),
-  views = list(
-    synteny_view(
-      as.list(strains),
-      tracks = list(list("ecoli_ava"), list("ecoli_ava"), list("ecoli_ava")),
-      drawCurves = FALSE,
-      minAlignmentLength = 10000
+specs[["demo-synteny"]] <- spec(
+  "JBrowseRApp.js",
+  "four E. coli strains (synteny)",
+  JBrowseRApp(
+    assemblies = assemblies,
+    tracks = list(ecoli_ava),
+    views = list(
+      synteny_view(
+        as.list(strains),
+        tracks = list(list("ecoli_ava"), list("ecoli_ava"), list("ecoli_ava")),
+        drawCurves = FALSE,
+        minAlignmentLength = 10000
+      )
     )
-  )
+  )$x
 )
 
-specs <- list(
-  "demo-alignments" = spec("JBrowseR.js", "NA12878 exome CRAM on hg38", aln$x),
-  "demo-dataframe" = spec("JBrowseR.js", "R data.frame of peaks -> track", df$x),
-  "demo-synteny" = spec("JBrowseRApp.js", "four E. coli strains (synteny)", syn$x)
-)
 writeLines(
   toJSON(specs, auto_unbox = TRUE, null = "null", pretty = TRUE),
   "tools/screenshot_specs.json"
