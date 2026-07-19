@@ -171,7 +171,9 @@ JBrowseR(
 
 **Cancer structural variants.** The SKBR3 breast-cancer cell line has a heavily
 rearranged genome. PacBio long reads span breakpoints short reads cannot, and
-Sniffles calls the structural variants from them.
+Sniffles calls the structural variants from them. This view lands on a
+translocation from chr17 to chr20 (`<TRA> 20:61,039,934`): the call sits in the
+Sniffles track and the long reads carry it below.
 
 ```{r}
 JBrowseR(
@@ -186,7 +188,7 @@ JBrowseR(
       name = "SKBR3 PacBio long reads"
     )
   ),
-  location = "17:37,686,000..37,730,000"
+  location = "17:65,440,000..65,451,000"
 )
 ```
 

@@ -87,7 +87,9 @@ specs <- list(
         name = "SKBR3 PacBio long reads"
       )
     ),
-    location = "17:37,686,000..37,730,000"
+    # the one Sniffles call on chr17: a translocation to chr20 at 65,445,795;
+    # a tight window here shows the reads clipping at the breakpoint
+    location = "17:65,440,000..65,451,000"
   ),
   "demo-cancer-deletion" = lgv(
     "HG008-T PacBio HiFi somatic deletion at CUZD1",
