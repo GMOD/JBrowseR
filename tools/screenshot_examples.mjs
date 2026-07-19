@@ -96,6 +96,13 @@ for (const [name, spec] of Object.entries(specs)) {
     await page.close()
     continue
   }
+  // wait out any in-progress download (a forceLoad'd dense region can take a
+  // while), then settle so the GPU/canvas paint lands
+  await page
+    .waitForFunction(() => !document.body.innerText.includes('Downloading'), {
+      timeout: 90000,
+    })
+    .catch(() => {})
   await new Promise(r => setTimeout(r, 6000))
   await page.screenshot({ path: join(REPO, 'man/figures', `${name}.png`) })
   console.log(`✓ ${name} -> man/figures/${name}.png${errors.length ? `  (${errors.length} page errors)` : ''}`)
