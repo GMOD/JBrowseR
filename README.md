@@ -87,6 +87,14 @@ JBrowseR(
 
 <img src="man/figures/demo-dataframe.png" width="100%" />
 
+Compare whole genomes with `JBrowseRApp()` — several assemblies stacked,
+the blocks each pair shares drawn between the rows (here four *E. coli*
+strains tied by one all-vs-all alignment). See the [comparative
+synteny](https://gmod.github.io/JBrowseR/articles/comparative-synteny.html)
+vignette.
+
+<img src="man/figures/demo-synteny.png" width="100%" />
+
 ## Getting started
 
 See the vignettes:
