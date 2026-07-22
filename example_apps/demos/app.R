@@ -37,6 +37,7 @@ call_peaks <- function(z_threshold) {
 }
 
 ui <- page_navbar(
+  id = "tab",
   theme = bs_theme(version = 5),
   title = "JBrowseR demos",
   header = tags$p(
@@ -113,6 +114,18 @@ ui <- page_navbar(
 )
 
 server <- function(input, output, session) {
+  # The open tab lives in ?tab=, so a link to a demo opens on that demo.
+  isolate({
+    requested <- parseQueryString(session$clientData$url_search)$tab
+    if (!is.null(requested)) nav_select("tab", requested)
+  })
+  observeEvent(input$tab, {
+    updateQueryString(
+      paste0("?tab=", URLencode(input$tab, reserved = TRUE)),
+      mode = "replace"
+    )
+  })
+
   output$search <- renderJBrowseR(JBrowseR(
     "hg38",
     tracks = tracks(track(refseq_hg38, name = "NCBI RefSeq Genes")),
