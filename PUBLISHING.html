@@ -104,7 +104,20 @@ R
 <p>Redeploy the hosted Shiny apps so they match the release:</p>
 <pre><code>R -e 'remotes::install_github("GMOD/JBrowseR")'   # see the note in example_apps/deploy.R
 Rscript example_apps/deploy.R</code></pre>
-<p>A server-free option becomes available at the same moment: <a href="https://posit-dev.github.io/r-shinylive/" class="external-link">shinylive</a> compiles a Shiny app to WebAssembly, so the example apps could be served straight from the pkgdown site with no shinyapps.io account and nothing to keep running. It installs packages from the webR binary repo, which mirrors CRAN — JBrowseR, shiny and htmlwidgets are all there — so a shinylive demo tracks the CRAN version, not this checkout.</p>
+</div>
+<div class="section level2">
+<h2 id="a-server-free-alternative-shinylive">A server-free alternative (shinylive)<a class="anchor" aria-label="anchor" href="#a-server-free-alternative-shinylive"></a></h2>
+<p><a href="https://posit-dev.github.io/r-shinylive/" class="external-link">shinylive</a> compiles a Shiny app to WebAssembly, so the example apps could be served straight from the pkgdown site with no shinyapps.io account and nothing to keep running.</p>
+<p>webR cannot install from source, so <code>remotes::install_github()</code> does not work there — packages have to be pre-compiled Wasm binaries. <code>shinylive::export()</code> takes them from <a href="https://repo.r-wasm.org" class="external-link uri">https://repo.r-wasm.org</a>, which mirrors CRAN (JBrowseR, shiny and htmlwidgets are all present), so out of the box a shinylive demo runs the CRAN release rather than this checkout.</p>
+<p>That is not a hard limit, just a build step. <a href="https://r-wasm.github.io/rwasm/" class="external-link">rwasm</a> compiles Wasm binaries from any <a href="https://r-lib.github.io/pkgdepends/reference/pkg_refs.html" class="external-link">pkgdepends reference</a>, GitHub included:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">rwasm</span><span class="fu">::</span><span class="fu">add_pkg</span><span class="op">(</span><span class="st">"GMOD/JBrowseR"</span><span class="op">)</span>   <span class="co"># or "GMOD/JBrowseR@branch", "GMOD/JBrowseR#42"</span></span>
+<span><span class="fu">rwasm</span><span class="fu">::</span><span class="fu">write_packages</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>It needs the Emscripten toolchain, which the webR project ships as a Docker container. Host the resulting CRAN-like directory (GitHub Pages will do) and the app installs from it before loading the library:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">webr</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"JBrowseR"</span>, repos <span class="op">=</span> <span class="st">"https://&lt;your-wasm-repo&gt;/"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span></span></code></pre></div>
+<p><code>shinylive::export()</code> has no argument for a custom repository, so that <code>webr::install()</code> call in the app is the documented way in.</p>
 </div>
 
 
