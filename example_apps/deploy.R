@@ -33,20 +33,21 @@ if (nzchar(token) && nzchar(secret)) {
   setAccountInfo(name = account, token = token, secret = secret)
 }
 
-all_apps <- c(
+# shinyapps.io's free plan hosts five applications — a sixth returns HTTP 402 —
+# so these five are the hosted demos, picked for what they show off. The other
+# two run locally (see examples/README.md) and can be named on the command line
+# to deploy them on a plan with room.
+hosted <- c(
   "basic_usage_with_text_index",
   "bookmarks_demo",
   "interactive_peak_calling",
-  "load_config_json",
   "load_data_frame",
-  "skbr3_gene_fusions",
-  "using_plugins"
+  "skbr3_gene_fusions"
 )
+all_apps <- c(hosted, "load_config_json", "using_plugins")
 
-# name apps on the command line to deploy a subset — shinyapps.io plans cap how
-# many apps an account may host, so all seven is not always what you want
 args <- setdiff(commandArgs(trailingOnly = TRUE), "all")
-apps <- if (length(args) > 0) args else all_apps
+apps <- if (length(args) > 0) args else hosted
 unknown <- setdiff(apps, all_apps)
 if (length(unknown) > 0) {
   stop("no such app: ", paste(unknown, collapse = ", "), call. = FALSE)

@@ -23,23 +23,25 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      # Deliberately NOT use-public-rspm: R records the *name* of the repo a
-      # package came from in its DESCRIPTION, rsconnect copies that into the
-      # manifest, and shinyapps.io's builder cannot fetch "RSPM/src/contrib/...".
-      # Installing from a CRAN-named repo is what makes the manifest resolvable;
-      # overriding `repos` at deploy time is too late to change it.
       - uses: r-lib/actions/setup-r@v2
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rsconnect, any::remotes, any::shiny, any::bslib, any::DT, any::crosstalk
-
-      # rsconnect reinstalls each dependency on the server from where the local
-      # copy came, so install JBrowseR from this exact commit rather than the
-      # checkout: a local build records no remote and silently falls back to the
-      # CRAN release.
-      - name: Install JBrowseR from this commit
-        run: remotes::install_github(paste0("GMOD/JBrowseR@", Sys.getenv("GITHUB_SHA")))
+      # Plain install.packages from cloud CRAN, not setup-r-dependencies: R
+      # stores the *name* of the repo a package came from in its DESCRIPTION,
+      # rsconnect copies that into the manifest, and shinyapps.io's builder then
+      # fails on "Unsupported url scheme: RSPM/src/contrib/shiny_1.14.0.tar.gz".
+      # pak reaches for Posit Package Manager on Linux whatever use-public-rspm
+      # says, so the repo has to be pinned here, at install time — setting
+      # `repos` at deploy time is too late to relabel installed packages.
+      - name: Install dependencies from CRAN
+        run: |
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
+          install.packages(c(
+            "rsconnect", "remotes", "shiny", "bslib", "DT", "crosstalk"
+          ))
+          # this checkout's JBrowseR, not the CRAN release: rsconnect reinstalls
+          # each dependency on the server from wherever the local copy came, and
+          # a local build records no remote for it to fetch
+          remotes::install_github(paste0("GMOD/JBrowseR@", Sys.getenv("GITHUB_SHA")))
         shell: Rscript {0}
 
       - name: Deploy
