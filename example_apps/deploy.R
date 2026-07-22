@@ -19,10 +19,11 @@
 
 library(rsconnect)
 
-# rsconnect writes the current `repos` into the manifest and the shinyapps build
-# server fetches sources from it, so it has to be a URL that server understands.
-# CI installs from Posit Package Manager for speed, which records the bare word
-# "RSPM" and fails there with `Unsupported url scheme: RSPM/src/contrib/...`.
+# The manifest rsconnect uploads names, per package, the repo it came from, and
+# the shinyapps build server fetches sources from there — so every dependency has
+# to have been installed from a repo that server can reach. A session configured
+# for Posit Package Manager under the name RSPM fails on the server with
+# `Unsupported url scheme: RSPM/src/contrib/...`; the name has to resolve here.
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 account <- Sys.getenv("SHINYAPPS_NAME", "jbrowse")
