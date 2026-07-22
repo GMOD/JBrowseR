@@ -16,7 +16,8 @@
 #' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
 #' @param theme A theme config from [theme()].
 #' @param config Escape hatch: a whole JBrowse config (a list, or a JSON string
-#'   from [json_config()]). When supplied it takes precedence over the fields above.
+#'   from [json_config()]) forming the payload base that explicit arguments
+#'   override.
 #' @param width,height,elementId Standard htmlwidget sizing arguments.
 #'
 #' @return an htmlwidget of the JBrowse 2 app
@@ -32,34 +33,42 @@
 #'   views = list(synteny_view(c("hg38", "mm39"), tracks = "hg38-mm39"))
 #' )
 #' }
-JBrowseRApp <- function(assemblies, tracks = NULL, views = NULL, plugins = NULL,
-                        theme = NULL, config = NULL, width = NULL, height = NULL,
-                        elementId = NULL) {
-  if (is.null(config)) {
-    payload <- drop_null(list(
-      assemblies = assemblies,
-      tracks = tracks,
-      views = views,
-      plugins = plugins,
-      theme = theme
-    ))
-  } else {
-    payload <- drop_null(list(config = config))
+JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
+                        plugins = NULL, theme = NULL, config = NULL,
+                        width = NULL, height = NULL, elementId = NULL) {
+  if (is.null(assemblies) && is.null(config)) {
+    stop("provide `assemblies` (or a whole `config`)", call. = FALSE)
   }
+  create_widget("JBrowseRApp", config, list(
+    assemblies = assemblies,
+    tracks = tracks,
+    views = views,
+    plugins = plugins,
+    configuration = configuration_from_theme(theme)
+  ), width, height, elementId)
+}
 
-  htmlwidgets::createWidget(
-    name = "JBrowseRApp",
-    x = payload,
-    width = width,
-    height = height,
-    package = "JBrowseR",
-    elementId = elementId,
-    sizingPolicy = htmlwidgets::sizingPolicy(
-      defaultWidth = "100%",
-      viewer.fill = TRUE,
-      browser.fill = TRUE
-    )
-  )
+#' Describe a view for `JBrowseRApp(views = ...)`
+#'
+#' The general form behind [linear_view()], [synteny_view()], and
+#' [dotplot_view()]: builds the `list(type = ..., init = ...)` spec any view type
+#' understands, where `init` is the declarative
+#' [session-spec init](https://jbrowse.org/jb2/docs/urlparams/#session-spec) for
+#' that type. Use it for view types those helpers don't cover — a plugin's, say a
+#' 3D protein structure:
+#'
+#' \preformatted{view("ProteinView", uniprotId = "P04637",
+#'      transcriptId = "NM_000546.6",
+#'      connectedView = list(assembly = "hg38", loc = "TP53"))}
+#'
+#' @param type The view type (e.g. `"LinearGenomeView"`, `"LinearSyntenyView"`,
+#'   `"ProteinView"`).
+#' @param ... Fields of the view's init blob; `NULL` fields are dropped.
+#'
+#' @return a view spec list
+#' @export
+view <- function(type, ...) {
+  list(type = type, init = drop_null(list(...)))
 }
 
 # comparative-view panels: {assembly, loc?} per side; accept bare assembly names
@@ -78,14 +87,9 @@ comparative_panels <- function(assemblies) {
 #' @return a view spec list
 #' @export
 linear_view <- function(assembly, loc = NULL, tracks = NULL, ...) {
-  init <- utils::modifyList(list(assembly = assembly), list(...))
-  if (!is.null(loc)) {
-    init$loc <- loc
-  }
-  if (!is.null(tracks)) {
-    init$tracks <- as.list(tracks)
-  }
-  list(type = "LinearGenomeView", init = init)
+  view("LinearGenomeView",
+    assembly = assembly, loc = loc, tracks = as_json_array(tracks), ...
+  )
 }
 
 #' Describe a linear synteny view comparing two (or more) assemblies
@@ -99,14 +103,10 @@ linear_view <- function(assembly, loc = NULL, tracks = NULL, ...) {
 #' @return a view spec list
 #' @export
 synteny_view <- function(assemblies, tracks = NULL, cigar_mode = NULL, ...) {
-  init <- utils::modifyList(list(views = comparative_panels(assemblies)), list(...))
-  if (!is.null(tracks)) {
-    init$tracks <- as.list(tracks)
-  }
-  if (!is.null(cigar_mode)) {
-    init$cigarMode <- cigar_mode
-  }
-  list(type = "LinearSyntenyView", init = init)
+  view("LinearSyntenyView",
+    views = comparative_panels(assemblies), tracks = as_json_array(tracks),
+    cigarMode = cigar_mode, ...
+  )
 }
 
 #' Describe a dotplot view comparing two assemblies
@@ -118,11 +118,9 @@ synteny_view <- function(assemblies, tracks = NULL, cigar_mode = NULL, ...) {
 #' @return a view spec list
 #' @export
 dotplot_view <- function(assemblies, tracks = NULL, ...) {
-  init <- utils::modifyList(list(views = comparative_panels(assemblies)), list(...))
-  if (!is.null(tracks)) {
-    init$tracks <- as.list(tracks)
-  }
-  list(type = "DotplotView", init = init)
+  view("DotplotView",
+    views = comparative_panels(assemblies), tracks = as_json_array(tracks), ...
+  )
 }
 
 #' Build a synteny (PAF) track config spanning two assemblies

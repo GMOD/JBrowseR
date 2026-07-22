@@ -16,15 +16,11 @@
 #' theme("#311b92", "#0097a7")
 theme <- function(primary, secondary = NULL, tertiary = NULL,
                   quaternary = NULL) {
-  palette <- list(primary = list(main = primary))
-  if (!is.null(secondary)) {
-    palette$secondary <- list(main = secondary)
-  }
-  if (!is.null(tertiary)) {
-    palette$tertiary <- list(main = tertiary)
-  }
-  if (!is.null(quaternary)) {
-    palette$quaternary <- list(main = quaternary)
-  }
-  list(palette = palette)
+  colors <- drop_null(list(
+    primary = primary,
+    secondary = secondary,
+    tertiary = tertiary,
+    quaternary = quaternary
+  ))
+  list(palette = lapply(colors, \(color) list(main = color)))
 }

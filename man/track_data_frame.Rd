@@ -8,8 +8,8 @@ track_data_frame(data, name, assembly_name = NULL, ...)
 }
 \arguments{
 \item{data}{A data frame with columns \code{chrom}, \code{start}, \code{end}, \code{name}. An
-optional \code{score} column makes it a quantitative track; any \code{additional}
-column is attached to each feature.}
+optional \code{score} column makes it a quantitative track; every other column
+rides along as a feature attribute, shown in the feature details.}
 
 \item{name}{Track display name.}
 

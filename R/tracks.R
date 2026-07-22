@@ -31,36 +31,14 @@
 #' track("https://jbrowse.org/genomes/hg19/gencode.v19.sorted.gff.gz", name = "Genes")
 track <- function(url, name = NULL, track_id = NULL, assembly_names = NULL,
                   index = NULL, ...) {
-  spec <- utils::modifyList(list(uri = url), list(...))
-  if (!is.null(name)) {
-    spec$name <- name
-  }
-  if (!is.null(track_id)) {
-    spec$trackId <- track_id
-  }
-  if (!is.null(index)) {
-    spec$index <- index
-  }
-  if (!is.null(assembly_names)) {
-    spec$assemblyNames <- as.list(assembly_names)
-  }
-  spec
-}
-
-# Expand a JBrowseR() tracks entry into a loose spec the view can consume. A
-# bare URL string becomes list(uri = ...); a c(url, index) pair names a
-# non-sibling index; a list (a spec from track() or a full config written by
-# hand) passes through untouched.
-normalize_track <- function(entry) {
-  if (is.character(entry)) {
-    if (length(entry) == 2) {
-      list(uri = entry[[1]], index = entry[[2]])
-    } else {
-      list(uri = entry[[1]])
-    }
-  } else {
-    entry
-  }
+  spec <- drop_null(list(
+    uri = url,
+    name = name,
+    trackId = track_id,
+    index = index,
+    assemblyNames = as_json_array(assembly_names)
+  ))
+  utils::modifyList(spec, list(...))
 }
 
 #' Collect tracks into a list for JBrowseR

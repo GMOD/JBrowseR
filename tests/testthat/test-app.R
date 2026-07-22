@@ -34,6 +34,13 @@ test_that("dotplot_view builds a dotplot spec", {
   expect_equal(dotplot_view(c("a", "b"), tracks = "paf")$type, "DotplotView")
 })
 
+test_that("view() assembles a generic type/init spec (e.g. a plugin view)", {
+  v <- view("ProteinView", uniprotId = "P04637", transcriptId = "NM_000546.6")
+  expect_equal(v$type, "ProteinView")
+  expect_equal(v$init$uniprotId, "P04637")
+  expect_equal(v$init$transcriptId, "NM_000546.6")
+})
+
 test_that("synteny_track builds a PAF config spanning two assemblies", {
   t <- synteny_track("data/hg38_mm39.paf", "hg38", "mm39", name = "hg38 vs mm39")
   expect_equal(t$type, "SyntenyTrack")

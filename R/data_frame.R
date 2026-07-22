@@ -6,8 +6,8 @@
 #' the genome.
 #'
 #' @param data A data frame with columns `chrom`, `start`, `end`, `name`. An
-#'   optional `score` column makes it a quantitative track; any `additional`
-#'   column is attached to each feature.
+#'   optional `score` column makes it a quantitative track; every other column
+#'   rides along as a feature attribute, shown in the feature details.
 #' @param name Track display name.
 #' @param assembly_name Assembly the track belongs to. Usually left `NULL` —
 #'   [JBrowseR()] backfills it from the loaded assembly.
@@ -31,46 +31,20 @@ track_data_frame <- function(data, name, assembly_name = NULL, ...) {
   missing <- setdiff(c("chrom", "start", "end", "name"), colnames(data))
   if (length(missing) > 0) {
     stop(
-      sprintf(
-        "`data` is missing required column(s): %s",
-        paste(missing, collapse = ", ")
-      ),
+      "`data` is missing required column(s): ", paste(missing, collapse = ", "),
       call. = FALSE
     )
   }
-
-  has_score <- "score" %in% colnames(data)
-  has_additional <- "additional" %in% colnames(data)
-  features <- lapply(seq_len(nrow(data)), function(i) {
-    feature <- list(
-      refName = as.character(data$chrom[i]),
-      start = data$start[i],
-      end = data$end[i],
-      uniqueId = paste0(name, "-", i),
-      name = as.character(data$name[i]),
-      type = ""
-    )
-    if (has_score) {
-      feature$score <- data$score[i]
-    }
-    if (has_additional) {
-      feature$additional <- as.character(data$additional[i])
-    }
-    feature
+  colnames(data)[colnames(data) == "chrom"] <- "refName"
+  features <- lapply(seq_len(nrow(data)), \(i) {
+    c(as.list(data[i, ]), uniqueId = paste0(name, "-", i), type = "")
   })
-
   out <- list(
-    type = if (has_score) "QuantitativeTrack" else "FeatureTrack",
-    trackId = if (is.null(assembly_name)) name else paste0(assembly_name, "_", name),
+    type = if ("score" %in% colnames(data)) "QuantitativeTrack" else "FeatureTrack",
+    trackId = paste(c(assembly_name, name), collapse = "_"),
     name = name,
+    assemblyNames = as_json_array(assembly_name),
     adapter = list(type = "FromConfigAdapter", features = features)
   )
-  if (!is.null(assembly_name)) {
-    out$assemblyNames <- list(assembly_name)
-  }
-  extra <- list(...)
-  if (length(extra) > 0) {
-    out <- utils::modifyList(out, extra)
-  }
-  out
+  utils::modifyList(drop_null(out), list(...))
 }

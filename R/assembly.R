@@ -27,19 +27,12 @@
 #'   aliases = "GRCh37"
 #' )
 assembly <- function(fasta, name = NULL, aliases = NULL, refname_aliases = NULL) {
-  name <- name %||% base_name(fasta)
-  # flat shorthand: core expands { name, uri } into the full sequence track
-  out <- list(
-    name = name,
-    uri = fasta
-  )
-  if (!is.null(aliases)) {
-    out$aliases <- as.list(aliases)
-  }
-  if (!is.null(refname_aliases)) {
-    # same bare `{ uri }` shorthand; the alias file is always a
-    # RefNameAliasAdapter, so its type and the adapter nesting are boilerplate
-    out$refNameAliases <- list(uri = refname_aliases)
-  }
-  out
+  # flat shorthand: core expands { name, uri } into the full sequence track, and
+  # the same bare { uri } into a RefNameAliasAdapter
+  drop_null(list(
+    name = name %||% base_name(fasta),
+    uri = fasta,
+    aliases = as_json_array(aliases),
+    refNameAliases = if (is.null(refname_aliases)) NULL else list(uri = refname_aliases)
+  ))
 }

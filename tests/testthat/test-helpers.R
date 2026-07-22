@@ -30,6 +30,13 @@ test_that("track_data_frame() emits FromConfigAdapter features", {
   expect_equal(t$adapter$features[[2]]$score, 6)
 })
 
+test_that("track_data_frame() carries extra columns onto each feature", {
+  df <- data.frame(chrom = "1", start = 1, end = 9, name = "f", pvalue = 0.01)
+  f <- track_data_frame(df, "t")$adapter$features[[1]]
+  expect_equal(f$pvalue, 0.01)
+  expect_equal(f$uniqueId, "t-1")
+})
+
 test_that("track_data_frame() rejects missing columns", {
   expect_error(track_data_frame(data.frame(x = 1), "t"), "missing required")
 })
@@ -37,14 +44,4 @@ test_that("track_data_frame() rejects missing columns", {
 test_that("track_data_frame() without score is a FeatureTrack", {
   df <- data.frame(chrom = "1", start = 1, end = 9, name = "f")
   expect_equal(track_data_frame(df, "t")$type, "FeatureTrack")
-})
-
-test_that("backfill_assembly_names fills only missing assemblyNames", {
-  tk <- list(
-    track("x/a.bam"),
-    track("x/b.vcf.gz", assembly_names = "custom")
-  )
-  filled <- JBrowseR:::backfill_assembly_names(tk, "hg19")
-  expect_equal(filled[[1]]$assemblyNames[[1]], "hg19")
-  expect_equal(filled[[2]]$assemblyNames[[1]], "custom")
 })

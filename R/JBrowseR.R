@@ -13,8 +13,9 @@
 #'   view builds an assembly from (`".../hg38.fa.gz"`, `.2bit`), or an assembly
 #'   config list from [assembly()] (needed only for aliases or a non-sibling
 #'   index).
-#' @param tracks A list of track configs, e.g. from [tracks()] / [track()].
-#'   Tracks missing `assemblyNames` are backfilled with the assembly's name.
+#' @param tracks A list of track entries: a bare data-file URL, a spec from
+#'   [track()] / [track_data_frame()], or a full track config. Entries missing
+#'   `assemblyNames` are backfilled with the assembly's name by the view.
 #' @param location A region string (`"chr1:1-1000"`) or, when the assembly hub
 #'   provides a gene-name search index, a gene name (`"BRCA1"`).
 #' @param default_session An optional serialized session (advanced); when given
@@ -24,8 +25,8 @@
 #' @param theme A theme config from [theme()].
 #' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
 #' @param config Escape hatch: a whole JBrowse config (a list, or a JSON string
-#'   from [json_config()]). When supplied it takes precedence over the
-#'   individual fields above.
+#'   from [json_config()]) forming the payload base that explicit arguments
+#'   override.
 #' @param width,height,elementId Standard htmlwidget sizing arguments.
 #'
 #' @return an htmlwidget of the JBrowse 2 linear genome view
@@ -36,69 +37,22 @@
 #' @examples
 #' # a whole human genome browser in one line (gene search included)
 #' JBrowseR("hg38", location = "BRCA1")
-JBrowseR <- function(assembly, tracks = NULL, location = NULL,
+JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
                      default_session = NULL, text_search = NULL, theme = NULL,
                      plugins = NULL, config = NULL, width = NULL, height = NULL,
                      elementId = NULL) {
-  if (is.null(config)) {
-    payload <- drop_null(list(
-      assembly = assembly,
-      tracks = backfill_assembly_names(tracks, assembly_name(assembly)),
-      location = location,
-      defaultSession = default_session,
-      textSearch = text_search,
-      theme = theme,
-      plugins = plugins
-    ))
-  } else {
-    payload <- drop_null(list(config = config, location = location))
+  if (is.null(assembly) && is.null(config)) {
+    stop("provide an `assembly` (or a whole `config`)", call. = FALSE)
   }
-
-  htmlwidgets::createWidget(
-    name = "JBrowseR",
-    x = payload,
-    width = width,
-    height = height,
-    package = "JBrowseR",
-    elementId = elementId,
-    sizingPolicy = htmlwidgets::sizingPolicy(
-      defaultWidth = "100%",
-      viewer.fill = TRUE,
-      browser.fill = TRUE
-    )
-  )
-}
-
-# the assembly name for backfilling tracks. A config list carries it under
-# $name. A string is either a sequence-file URL the view builds an assembly from
-# (name derived from the file, matching makeAssembly) or a hub name that is
-# itself the resolved name.
-assembly_name <- function(assembly) {
-  if (is.character(assembly)) {
-    if (is_sequence_uri(assembly)) assembly_name_from_uri(assembly) else assembly
-  } else {
-    assembly$name
-  }
-}
-
-# normalize each entry (a bare URL or c(url, index) pair becomes a track config)
-# then fill assemblyNames from the loaded assembly when a track omits it
-backfill_assembly_names <- function(tracks, name) {
-  if (is.null(tracks)) {
-    tracks
-  } else {
-    lapply(tracks, \(entry) {
-      track <- normalize_track(entry)
-      if (!is.null(name) && is.null(track$assemblyNames)) {
-        track$assemblyNames <- list(name)
-      }
-      track
-    })
-  }
-}
-
-drop_null <- function(x) {
-  x[!vapply(x, is.null, logical(1))]
+  create_widget("JBrowseR", config, list(
+    assembly = assembly,
+    tracks = tracks,
+    location = location,
+    defaultSession = default_session,
+    aggregateTextSearchAdapters = as_adapter_list(text_search),
+    configuration = configuration_from_theme(theme),
+    plugins = plugins
+  ), width, height, elementId)
 }
 
 #' Shiny bindings for JBrowseR

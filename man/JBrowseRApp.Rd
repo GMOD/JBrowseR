@@ -5,7 +5,7 @@
 \title{Embed the full JBrowse 2 app (multiple views of any type)}
 \usage{
 JBrowseRApp(
-  assemblies,
+  assemblies = NULL,
   tracks = NULL,
   views = NULL,
   plugins = NULL,
@@ -31,7 +31,8 @@ builds the common PAF case.}
 \item{theme}{A theme config from \code{\link[=theme]{theme()}}.}
 
 \item{config}{Escape hatch: a whole JBrowse config (a list, or a JSON string
-from \code{\link[=json_config]{json_config()}}). When supplied it takes precedence over the fields above.}
+from \code{\link[=json_config]{json_config()}}) forming the payload base that explicit arguments
+override.}
 
 \item{width, height, elementId}{Standard htmlwidget sizing arguments.}
 }

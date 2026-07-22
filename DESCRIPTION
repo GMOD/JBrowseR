@@ -27,7 +27,8 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.1.0)
 Imports:
-    htmlwidgets
+    htmlwidgets,
+    jsonlite
 Suggests:
     testthat (>= 3.0.0),
     knitr,

@@ -5,7 +5,7 @@
 \title{Embed a JBrowse 2 linear genome view}
 \usage{
 JBrowseR(
-  assembly,
+  assembly = NULL,
   tracks = NULL,
   location = NULL,
   default_session = NULL,
@@ -25,8 +25,9 @@ view builds an assembly from (\code{".../hg38.fa.gz"}, \verb{.2bit}), or an asse
 config list from \code{\link[=assembly]{assembly()}} (needed only for aliases or a non-sibling
 index).}
 
-\item{tracks}{A list of track configs, e.g. from \code{\link[=tracks]{tracks()}} / \code{\link[=track]{track()}}.
-Tracks missing \code{assemblyNames} are backfilled with the assembly's name.}
+\item{tracks}{A list of track entries: a bare data-file URL, a spec from
+\code{\link[=track]{track()}} / \code{\link[=track_data_frame]{track_data_frame()}}, or a full track config. Entries missing
+\code{assemblyNames} are backfilled with the assembly's name by the view.}
 
 \item{location}{A region string (\code{"chr1:1-1000"}) or, when the assembly hub
 provides a gene-name search index, a gene name (\code{"BRCA1"}).}
@@ -42,8 +43,8 @@ it owns the initial track layout instead of \code{tracks}.}
 \item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
 
 \item{config}{Escape hatch: a whole JBrowse config (a list, or a JSON string
-from \code{\link[=json_config]{json_config()}}). When supplied it takes precedence over the
-individual fields above.}
+from \code{\link[=json_config]{json_config()}}) forming the payload base that explicit arguments
+override.}
 
 \item{width, height, elementId}{Standard htmlwidget sizing arguments.}
 }
