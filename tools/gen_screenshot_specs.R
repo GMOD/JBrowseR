@@ -16,6 +16,14 @@ refseq_gff <- paste0(
 )
 phylop_bw <- "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw"
 
+# The hosted hg19 hub config carries no refNameAliases (hg38's does), so its
+# refNames are reachable only as chrN and a track keyed on bare N draws nothing.
+# Spelling the assembly out with its aliases file fixes both.
+hg19 <- assembly(
+  "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+  refname_aliases = "https://jbrowse.org/genomes/hg19/hg19_aliases.txt"
+)
+
 set.seed(1)
 peaks <- data.frame(
   chrom = "17",
@@ -70,7 +78,7 @@ specs <- list(
   ),
   "demo-skbr3" = lgv(
     "SKBR3 long-read structural variants",
-    "hg19",
+    hg19,
     tracks = tracks(
       track(
         paste0(
@@ -89,7 +97,7 @@ specs <- list(
     ),
     # the one Sniffles call on chr17: a translocation to chr20 at 65,445,795;
     # a tight window here shows the reads clipping at the breakpoint
-    location = "chr17:65,440,000..65,451,000"
+    location = "17:65,440,000..65,451,000"
   ),
   "demo-cancer-deletion" = lgv(
     "HG008-T PacBio HiFi somatic deletion at CUZD1",
@@ -104,7 +112,7 @@ specs <- list(
   # LinearManhattanDisplay draws summary statistics in the linear view
   "demo-manhattan" = lgv(
     "GWAS summary stats as a Manhattan plot",
-    "hg19",
+    hg19,
     tracks = list(list(
       type = "GWASTrack",
       trackId = "gwas_track",
@@ -116,7 +124,7 @@ specs <- list(
       ),
       displays = list(list(type = "LinearManhattanDisplay", height = 250))
     )),
-    location = "chr2"
+    location = "2"
   ),
   "demo-theme" = lgv(
     "custom-themed browser",

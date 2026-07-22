@@ -2,6 +2,13 @@ library(shiny)
 library(JBrowseR)
 library(bslib)
 
+# the hosted hg19 hub has no refName aliases, so name the assembly with its
+# alias file: the data below uses bare chromosome names
+hg19 <- assembly(
+  "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+  refname_aliases = "https://jbrowse.org/genomes/hg19/hg19_aliases.txt"
+)
+
 # SKBR3 is a widely studied HER2+ breast cancer cell line with a heavily
 # rearranged genome. Here we view PacBio long reads aligned to hg19 alongside
 # the structural variants called from them by Sniffles. Long reads span
@@ -18,14 +25,14 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  loc <- reactiveVal("chr17:37,686,000..37,730,000")
+  loc <- reactiveVal("17:37,686,000..37,730,000")
 
-  observeEvent(input$klhdc2, loc("chr14:50,230,000..50,255,000"))
-  observeEvent(input$tatdn1, loc("chr8:125,490,000..125,560,000"))
-  observeEvent(input$erbb2, loc("chr17:37,686,000..37,730,000"))
+  observeEvent(input$klhdc2, loc("14:50,230,000..50,255,000"))
+  observeEvent(input$tatdn1, loc("8:125,490,000..125,560,000"))
+  observeEvent(input$erbb2, loc("17:37,686,000..37,730,000"))
 
   output$browserOutput <- renderJBrowseR(JBrowseR(
-    "hg19",
+    hg19,
     tracks = tracks(
       track(
         "https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz",

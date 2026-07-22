@@ -2,6 +2,13 @@ library(shiny)
 library(JBrowseR)
 library(bslib)
 
+# the hosted hg19 hub has no refName aliases, so name the assembly with its
+# alias file: the data below uses bare chromosome names
+hg19 <- assembly(
+  "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+  refname_aliases = "https://jbrowse.org/genomes/hg19/hg19_aliases.txt"
+)
+
 # View features you build in R (here a small data frame) directly on the genome,
 # with no files and no web server. Click a feature to read it back in Shiny.
 
@@ -21,9 +28,9 @@ server <- function(input, output, session) {
   )
 
   output$widgetOutput <- renderJBrowseR(JBrowseR(
-    "hg19",
+    hg19,
     tracks = list(track_data_frame(df, "my_features")),
-    location = "chr2:1..101200"
+    location = "2:1..101200"
   ))
 
   output$selected <- renderPrint({
