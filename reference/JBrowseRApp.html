@@ -92,7 +92,7 @@ URLs — built most easily with <code><a href="linear_view.html">linear_view()</
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">JBrowseRApp</span><span class="op">(</span></span>
-<span>  <span class="va">assemblies</span>,</span>
+<span>  assemblies <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  views <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plugins <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -133,7 +133,8 @@ builds the common PAF case.</p></dd>
 
 <dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
 <dd><p>Escape hatch: a whole JBrowse config (a list, or a JSON string
-from <code><a href="json_config.html">json_config()</a></code>). When supplied it takes precedence over the fields above.</p></dd>
+from <code><a href="json_config.html">json_config()</a></code>) forming the payload base that explicit arguments
+override.</p></dd>
 
 
 <dt id="arg-width-height-elementid">width, height, elementId<a class="anchor" aria-label="anchor" href="#arg-width-height-elementid"></a></dt>

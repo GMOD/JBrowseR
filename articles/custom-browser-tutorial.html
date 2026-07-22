@@ -128,7 +128,7 @@ the FASTA itself. Add reference-name aliases so
 <code class="sourceCode R"><span><span class="va">hg19</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span></span>
 <span>  <span class="st">"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>,</span>
 <span>  aliases <span class="op">=</span> <span class="st">"GRCh37"</span>,</span>
-<span>  refname_aliases <span class="op">=</span> <span class="st">"https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"</span></span>
+<span>  refname_aliases <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -141,7 +141,7 @@ to set <code>assemblyNames</code> on each track —
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_tracks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
-<span>    <span class="st">"https://s3.amazonaws.com/jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz"</span>,</span>
+<span>    <span class="st">"https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>

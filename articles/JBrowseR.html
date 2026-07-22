@@ -230,7 +230,7 @@ constructor entirely:</p>
 <span>  <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="st">"https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw"</span>,</span>
-<span>    <span class="st">"https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span></span>
+<span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"BRCA1"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -251,7 +251,7 @@ assembly, navigated by name.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
-<span>    <span class="st">"https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span>,</span>
+<span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"BRCA1"</span></span>
@@ -285,10 +285,46 @@ assembly, navigated by name.</p>
 <div class="float">
 <img src="../reference/figures/demo-conservation.png" alt="phyloP conservation"><div class="figcaption">phyloP conservation</div>
 </div>
+<p><strong>Plots from a display.</strong> A track’s <em>display</em> can
+plot its data: a <code>GWASTrack</code> with a
+<code>LinearManhattanDisplay</code> draws genome-wide summary statistics
+as a Manhattan plot right in the linear view, so no separate plotting
+widget is needed. Write the track as a config list — the same JSON a
+JBrowse config file holds — and let the <code>uri</code> shorthand find
+the <code>.tbi</code> index.</p>
+<p>The hosted hg19 hub carries no reference-name aliases (hg38’s does),
+so name that assembly yourself with its alias file — otherwise the view
+only answers to <code>chr2</code> and a track keyed on a bare
+<code>2</code> draws nothing.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hg19</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span></span>
+<span>  <span class="st">"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>,</span>
+<span>  refname_aliases <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  <span class="va">hg19</span>,</span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"GWASTrack"</span>,</span>
+<span>    trackId <span class="op">=</span> <span class="st">"gwas_track"</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"GWAS"</span>,</span>
+<span>    adapter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"GWASAdapter"</span>,</span>
+<span>      scoreColumn <span class="op">=</span> <span class="st">"neg_log_pvalue"</span>,</span>
+<span>      uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    displays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"LinearManhattanDisplay"</span>, height <span class="op">=</span> <span class="fl">250</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span>,</span>
+<span>  location <span class="op">=</span> <span class="st">"2"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="../reference/figures/demo-manhattan.png" alt="GWAS summary statistics as a Manhattan plot across chromosome 2"><div class="figcaption">GWAS summary statistics as a Manhattan plot
+across chromosome 2</div>
+</div>
 <p><strong>Your R results.</strong> Turn a data frame of features into a
 track with <code><a href="../reference/track_data_frame.html">track_data_frame()</a></code> — no files and no web server.
 Any <code>score</code> column makes it a quantitative track.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  chrom <span class="op">=</span> <span class="st">"17"</span>,</span>
 <span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">43000000</span>, <span class="fl">43120000</span>, by <span class="op">=</span> <span class="fl">12000</span><span class="op">)</span>,</span>
@@ -311,16 +347,16 @@ breakpoints short reads cannot, and Sniffles calls the structural
 variants from them. This view lands on a translocation from chr17 to
 chr20 (<code>&lt;TRA&gt; 20:61,039,934</code>): the call sits in the
 Sniffles track and the long reads carry it below.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg19"</span>,</span>
+<span>  <span class="va">hg19</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
 <span>      <span class="st">"https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz"</span>,</span>
 <span>      name <span class="op">=</span> <span class="st">"Sniffles SV calls"</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
-<span>      <span class="st">"https://s3.amazonaws.com/jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam"</span>,</span>
+<span>      <span class="st">"https://jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam"</span>,</span>
 <span>      name <span class="op">=</span> <span class="st">"SKBR3 PacBio long reads"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
@@ -332,7 +368,7 @@ Sniffles track and the long reads carry it below.</p>
 <p><strong>A somatic deletion.</strong> HG008-T is a tumor reference
 sample; its PacBio HiFi reads carry a ~1.8 kb somatic deletion in
 <em>CUZD1</em>, visible as a clean drop-out spanning many reads.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
@@ -346,11 +382,11 @@ sample; its PacBio HiFi reads carry a ~1.8 kb somatic deletion in
 </div>
 <p><strong>A custom theme.</strong> <code><a href="../reference/theme.html">theme()</a></code> recolors the
 browser.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
-<span>    <span class="st">"https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span>,</span>
+<span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
 <span>  theme <span class="op">=</span> <span class="fu"><a href="../reference/theme.html">theme</a></span><span class="op">(</span><span class="st">"#311b92"</span>, <span class="st">"#0097a7"</span><span class="op">)</span>,</span>

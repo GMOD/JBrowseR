@@ -96,8 +96,8 @@ the genome.</p>
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A data frame with columns <code>chrom</code>, <code>start</code>, <code>end</code>, <code>name</code>. An
-optional <code>score</code> column makes it a quantitative track; any <code>additional</code>
-column is attached to each feature.</p></dd>
+optional <code>score</code> column makes it a quantitative track; every other column
+rides along as a feature attribute, shown in the feature details.</p></dd>
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
@@ -151,11 +151,11 @@ column is attached to each feature.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$end</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 789</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$uniqueId</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my_features-1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "feature1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$uniqueId</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my_features-1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$type</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
@@ -171,11 +171,11 @@ column is attached to each feature.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$end</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 101112</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$uniqueId</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my_features-2"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "feature2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$uniqueId</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my_features-2"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$type</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>

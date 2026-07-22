@@ -130,7 +130,7 @@ index.</p>
 <span>  <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>      <span class="st">"https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/"</span>,</span>
+<span>      <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/"</span>,</span>
 <span>      <span class="st">"GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
@@ -138,7 +138,7 @@ index.</p>
 <span>  location <span class="op">=</span> <span class="st">"BRCA1"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="JBrowseR html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"assembly":"hg38","tracks":[{"uri":"https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz","name":"NCBI RefSeq Genes","assemblyNames":["hg38"]}],"location":"BRCA1"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"assembly":"hg38","tracks":[{"uri":"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz","name":"NCBI RefSeq Genes"}],"location":"BRCA1"},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level2">
 <h2 id="a-custom-genome-from-a-fasta-url">A custom genome from a FASTA URL<a class="anchor" aria-label="anchor" href="#a-custom-genome-from-a-fasta-url"></a>
@@ -154,7 +154,7 @@ inferred into a track — here an alignments track from a BAM.</p>
 <span>  location <span class="op">=</span> <span class="st">"ctgA:1..5,000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="JBrowseR html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"assembly":"https://jbrowse.org/genomes/volvox/volvox.fa","tracks":[{"uri":"https://jbrowse.org/genomes/volvox/volvox.bam","assemblyNames":["volvox"]}],"location":"ctgA:1..5,000"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"assembly":"https://jbrowse.org/genomes/volvox/volvox.fa","tracks":["https://jbrowse.org/genomes/volvox/volvox.bam"],"location":"ctgA:1..5,000"},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level2">
 <h2 id="an-r-result-as-a-track">An R result as a track<a class="anchor" aria-label="anchor" href="#an-r-result-as-a-track"></a>
@@ -177,7 +177,7 @@ inferred into a track — here an alignments track from a BAM.</p>
 <span>  location <span class="op">=</span> <span class="st">"17:43,000,000..43,125,000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="JBrowseR html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"assembly":"hg38","tracks":[{"type":"QuantitativeTrack","trackId":"R_peaks","name":"R_peaks","adapter":{"type":"FromConfigAdapter","features":[{"refName":"17","start":43000000,"end":43004000,"uniqueId":"R_peaks-1","name":"peak1","type":"","score":13},{"refName":"17","start":43012000,"end":43016000,"uniqueId":"R_peaks-2","name":"peak2","type":"","score":84},{"refName":"17","start":43024000,"end":43028000,"uniqueId":"R_peaks-3","name":"peak3","type":"","score":62},{"refName":"17","start":43036000,"end":43040000,"uniqueId":"R_peaks-4","name":"peak4","type":"","score":20},{"refName":"17","start":43048000,"end":43052000,"uniqueId":"R_peaks-5","name":"peak5","type":"","score":6},{"refName":"17","start":43060000,"end":43064000,"uniqueId":"R_peaks-6","name":"peak6","type":"","score":49},{"refName":"17","start":43072000,"end":43076000,"uniqueId":"R_peaks-7","name":"peak7","type":"","score":52},{"refName":"17","start":43084000,"end":43088000,"uniqueId":"R_peaks-8","name":"peak8","type":"","score":33},{"refName":"17","start":43096000,"end":43100000,"uniqueId":"R_peaks-9","name":"peak9","type":"","score":75},{"refName":"17","start":43108000,"end":43112000,"uniqueId":"R_peaks-10","name":"peak10","type":"","score":78},{"refName":"17","start":43120000,"end":43124000,"uniqueId":"R_peaks-11","name":"peak11","type":"","score":88}]},"assemblyNames":["hg38"]}],"location":"17:43,000,000..43,125,000"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"assembly":"hg38","tracks":[{"type":"QuantitativeTrack","trackId":"R_peaks","name":"R_peaks","adapter":{"type":"FromConfigAdapter","features":[{"refName":"17","start":43000000,"end":43004000,"name":"peak1","score":13,"uniqueId":"R_peaks-1","type":""},{"refName":"17","start":43012000,"end":43016000,"name":"peak2","score":84,"uniqueId":"R_peaks-2","type":""},{"refName":"17","start":43024000,"end":43028000,"name":"peak3","score":62,"uniqueId":"R_peaks-3","type":""},{"refName":"17","start":43036000,"end":43040000,"name":"peak4","score":20,"uniqueId":"R_peaks-4","type":""},{"refName":"17","start":43048000,"end":43052000,"name":"peak5","score":6,"uniqueId":"R_peaks-5","type":""},{"refName":"17","start":43060000,"end":43064000,"name":"peak6","score":49,"uniqueId":"R_peaks-6","type":""},{"refName":"17","start":43072000,"end":43076000,"name":"peak7","score":52,"uniqueId":"R_peaks-7","type":""},{"refName":"17","start":43084000,"end":43088000,"name":"peak8","score":33,"uniqueId":"R_peaks-8","type":""},{"refName":"17","start":43096000,"end":43100000,"name":"peak9","score":75,"uniqueId":"R_peaks-9","type":""},{"refName":"17","start":43108000,"end":43112000,"name":"peak10","score":78,"uniqueId":"R_peaks-10","type":""},{"refName":"17","start":43120000,"end":43124000,"name":"peak11","score":88,"uniqueId":"R_peaks-11","type":""}]}}],"location":"17:43,000,000..43,125,000"},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level2">
 <h2 id="a-statistical-plot-gwas-manhattan">A statistical plot (GWAS Manhattan)<a class="anchor" aria-label="anchor" href="#a-statistical-plot-gwas-manhattan"></a>
@@ -191,24 +191,28 @@ The adapter’s <code>uri</code> shorthand finds the <code>.tbi</code>
 index next to the data, and JBrowse fills in <code>displayId</code>, so
 the config stays short.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg19"</span>,</span>
+<code class="sourceCode R"><span><span class="va">hg19</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span></span>
+<span>  <span class="st">"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>,</span>
+<span>  refname_aliases <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  <span class="va">hg19</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    type <span class="op">=</span> <span class="st">"GWASTrack"</span>,</span>
 <span>    trackId <span class="op">=</span> <span class="st">"gwas_track"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"GWAS"</span>,</span>
-<span>    assemblyNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"hg19"</span><span class="op">)</span>,</span>
 <span>    adapter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      type <span class="op">=</span> <span class="st">"GWASAdapter"</span>,</span>
 <span>      scoreColumn <span class="op">=</span> <span class="st">"neg_log_pvalue"</span>,</span>
-<span>      uri <span class="op">=</span> <span class="st">"https://s3.amazonaws.com/jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"</span></span>
+<span>      uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    displays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"LinearManhattanDisplay"</span>, height <span class="op">=</span> <span class="fl">250</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"2"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="JBrowseR html-widget html-fill-item" id="htmlwidget-febe03efa1a2d8d52a86" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"assembly":"hg19","tracks":[{"type":"GWASTrack","trackId":"gwas_track","name":"GWAS","assemblyNames":["hg19"],"adapter":{"type":"GWASAdapter","scoreColumn":"neg_log_pvalue","uri":"https://s3.amazonaws.com/jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"},"displays":[{"type":"LinearManhattanDisplay","height":250}]}],"location":"2"},"evals":[],"jsHooks":[]}</script><p>For comparative genomics — synteny and dotplots across two assemblies
+<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"assembly":{"name":"hg19","uri":"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz","refNameAliases":{"uri":"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"}},"tracks":[{"type":"GWASTrack","trackId":"gwas_track","name":"GWAS","adapter":{"type":"GWASAdapter","scoreColumn":"neg_log_pvalue","uri":"https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"},"displays":[{"type":"LinearManhattanDisplay","height":250}]}],"location":"2"},"evals":[],"jsHooks":[]}</script><p>For comparative genomics — synteny and dotplots across two assemblies
 — see the <a href="synteny.html">comparing genomes</a> article, which
 uses <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code>.</p>
 </div>

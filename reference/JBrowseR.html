@@ -86,7 +86,7 @@ console.</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">JBrowseR</span><span class="op">(</span></span>
-<span>  <span class="va">assembly</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  location <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  default_session <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -113,8 +113,9 @@ index).</p></dd>
 
 
 <dt id="arg-tracks">tracks<a class="anchor" aria-label="anchor" href="#arg-tracks"></a></dt>
-<dd><p>A list of track configs, e.g. from <code><a href="tracks.html">tracks()</a></code> / <code><a href="track.html">track()</a></code>.
-Tracks missing <code>assemblyNames</code> are backfilled with the assembly's name.</p></dd>
+<dd><p>A list of track entries: a bare data-file URL, a spec from
+<code><a href="track.html">track()</a></code> / <code><a href="track_data_frame.html">track_data_frame()</a></code>, or a full track config. Entries missing
+<code>assemblyNames</code> are backfilled with the assembly's name by the view.</p></dd>
 
 
 <dt id="arg-location">location<a class="anchor" aria-label="anchor" href="#arg-location"></a></dt>
@@ -142,8 +143,8 @@ it owns the initial track layout instead of <code>tracks</code>.</p></dd>
 
 <dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
 <dd><p>Escape hatch: a whole JBrowse config (a list, or a JSON string
-from <code><a href="json_config.html">json_config()</a></code>). When supplied it takes precedence over the
-individual fields above.</p></dd>
+from <code><a href="json_config.html">json_config()</a></code>) forming the payload base that explicit arguments
+override.</p></dd>
 
 
 <dt id="arg-width-height-elementid">width, height, elementId<a class="anchor" aria-label="anchor" href="#arg-width-height-elementid"></a></dt>

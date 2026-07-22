@@ -121,20 +121,23 @@ can be a <code><a href="../reference/linear_view.html">linear_view()</a></code>,
 CFT073, NCTC86) tied together by one all-vs-all minimap2 alignment — the
 same hosted data as the JBrowse <a href="https://jbrowse.org/jb2/docs/tutorials/allvsall_synteny/" class="external-link">all-vs-all
 synteny tutorial</a>.</p>
+<p>Everything here also runs on Colab’s R runtime: <a href="https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_comparative_colab.ipynb" class="external-link"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="describe-the-four-assemblies">Describe the four assemblies<a class="anchor" aria-label="anchor" href="#describe-the-four-assemblies"></a>
 </h2>
-<p>Each genome is an <code><a href="../reference/assembly.html">assembly()</a></code> from its hosted FASTA;
-JBrowse derives the <code>.fai</code> and <code>.gzi</code> index
-locations from the URL.</p>
+<p>An assembly is the flat <code>list(name = , uri = )</code> shorthand
+JBrowse expands itself — it picks the adapter from the extension and
+derives the <code>.fai</code>/<code>.gzi</code> index locations, so the
+URL is all you write. (<code><a href="../reference/assembly.html">assembly()</a></code> is the same thing with
+the name defaulted from the file.)</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">base</span> <span class="op">&lt;-</span> <span class="st">"https://jbrowse.org/demos/ecoli_pangenome"</span></span>
 <span><span class="va">strains</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K12"</span>, <span class="st">"Sakai"</span>, <span class="st">"CFT073"</span>, <span class="st">"NCTC86"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">assemblies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">strains</span>, <span class="kw">function</span><span class="op">(</span><span class="va">s</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/"</span>, <span class="va">s</span>, <span class="st">".fa.gz"</span><span class="op">)</span>, name <span class="op">=</span> <span class="va">s</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="va">s</span>, uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/"</span>, <span class="va">s</span>, <span class="st">".fa.gz"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -180,6 +183,10 @@ per gap. <code>draw_curves = FALSE</code> draws straight ribbons;
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">app</span></span></code></pre></div>
+<div class="float">
+<img src="../reference/figures/demo-synteny.png" alt="Four E. coli strains stacked, with the blocks each adjacent pair shares drawn between the rows"><div class="figcaption">Four E. coli strains stacked, with the blocks
+each adjacent pair shares drawn between the rows</div>
+</div>
 <p>In the console this opens a browser tab; in R Markdown it renders
 inline; in Shiny, pair <code><a href="../reference/JBrowseR-shiny.html">JBrowseROutput()</a></code> with
 <code><a href="../reference/JBrowseR-shiny.html">renderJBrowseR()</a></code>.</p>
@@ -195,6 +202,10 @@ the shared backbone, off-diagonal segments are rearrangements.</p>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">ecoli_ava</span><span class="op">)</span>,</span>
 <span>  views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/dotplot_view.html">dotplot_view</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"K12"</span>, <span class="st">"Sakai"</span><span class="op">)</span>, tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="../reference/figures/demo-dotplot.png" alt="K12 against Sakai as a dotplot: a long shared diagonal with off-diagonal rearrangements"><div class="figcaption">K12 against Sakai as a dotplot: a long shared
+diagonal with off-diagonal rearrangements</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="building-the-paf-from-your-own-genomes">Building the PAF from your own genomes<a class="anchor" aria-label="anchor" href="#building-the-paf-from-your-own-genomes"></a>
