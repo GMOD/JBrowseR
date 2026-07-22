@@ -28,6 +28,7 @@ reference:
     desc: 'Render the full app with several views of any type'
   - contents:
       - JBrowseRApp
+      - view
       - linear_view
       - synteny_view
       - dotplot_view

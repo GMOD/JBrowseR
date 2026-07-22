@@ -12,6 +12,13 @@
   comparative genomics (linear synteny, dotplots) is now reachable from R.
   `synteny_track()` builds the PAF track config. It loads a separate widget
   bundle, so the single-view `JBrowseR()` stays lean.
+- New `view(type, ...)` builds the `list(type, init)` spec for any view type,
+  including one a runtime `plugins` entry registers — its init fields are the
+  plugin's own, so nothing in JBrowseR has to keep up with them. The three view
+  helpers are thin wrappers over it, and `NULL` fields are dropped.
+- `track_data_frame()` carries every column beyond `chrom`/`start`/`end`/`name`
+  onto each feature (previously only `score` and `additional`), so any column
+  you computed shows in the feature details.
 - `assembly()` accepts a `.2bit` URL (`TwoBitAdapter`) in addition to FASTA.
 
 - Upgraded to the GPU-accelerated JBrowse 2 v4 linear genome view
