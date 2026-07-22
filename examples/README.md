@@ -14,12 +14,21 @@ then set **Runtime → Change runtime type → R** and run all cells.
 
 ## Shiny apps
 
-See [`../example_apps`](../example_apps) for Shiny applications:
+Run any of these locally with `shiny::runApp("example_apps/<name>")`, or open the
+hosted copy. The hosted apps are deployed from `example_apps/deploy.R` and lag
+this checkout until someone redeploys, so they run whichever JBrowseR release
+shinyapps.io resolved.
 
-- `basic_usage_with_text_index` — search a hub genome by gene name
-- `load_data_frame` — render an R data frame as a track, with feature click-back
-- `load_config_json` — load a full JBrowse `config.json`
-- `using_plugins` — load a JBrowse 2 plugin via a config
-- `skbr3_gene_fusions` — SKBR3 cancer cell line long-read structural variants
-- `bookmarks_demo` — an interactive tour: gene navigation, data-frame tracks,
-  and feature bookmarking
+| App | What it shows | Hosted |
+|---|---|---|
+| `basic_usage_with_text_index` | search a hub genome by gene name | [live](https://gmod.shinyapps.io/basic_usage_with_text_index/) |
+| `load_data_frame` | an R data frame as a track, with feature click-back | [live](https://gmod.shinyapps.io/load_data_frame/) |
+| `load_config_json` | a full JBrowse `config.json` | [live](https://gmod.shinyapps.io/load_config_json/) |
+| `skbr3_gene_fusions` | SKBR3 long-read structural variants | [live](https://gmod.shinyapps.io/skbr3_gene_fusions/) |
+| `bookmarks_demo` | gene navigation, data-frame tracks, feature bookmarking | [live](https://gmod.shinyapps.io/bookmarks_demo/) |
+| `interactive_peak_calling` | a slider that re-runs the analysis and repaints | not deployed yet |
+| `using_plugins` | a JBrowse 2 plugin loaded via a config | not deployed yet |
+
+For browsers with no server at all, the website's
+[live articles](https://gmod.github.io/JBrowseR/articles/live-browser.html)
+embed the widget directly in the page.
