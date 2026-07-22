@@ -52,9 +52,36 @@ if (length(unknown) > 0) {
   stop("no such app: ", paste(unknown, collapse = ", "), call. = FALSE)
 }
 
+# One app failing shouldn't strand the rest — an account over its plan's app
+# limit fails only on the ones past it — so keep going and report at the end.
+# forceUpdate because redeploying over an existing app is the whole point here,
+# and the prompt rsconnect would otherwise raise has nobody to answer it in CI.
+failed <- character(0)
 for (app in apps) {
-  deployApp(file.path("example_apps", app), appName = app, account = account)
-  message(sprintf("https://%s.shinyapps.io/%s/", account, app))
+  ok <- tryCatch(
+    {
+      deployApp(
+        file.path("example_apps", app),
+        appName = app,
+        account = account,
+        forceUpdate = TRUE
+      )
+      TRUE
+    },
+    error = function(e) {
+      message(sprintf("FAILED %s: %s", app, conditionMessage(e)))
+      FALSE
+    }
+  )
+  if (ok) {
+    message(sprintf("deployed https://%s.shinyapps.io/%s/", account, app))
+  } else {
+    failed <- c(failed, app)
+  }
+}
+
+if (length(failed) > 0) {
+  stop("failed to deploy: ", paste(failed, collapse = ", "), call. = FALSE)
 }
 
 ## install.packages(c('JBrowseR', 'crosstalk', 'DT', 'rsconnect'))
