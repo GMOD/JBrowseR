@@ -102,6 +102,10 @@ track("https://example.com/reads.bam", index = "https://example.com/reads.bai")
 
 ## A gallery
 
+The figures below are screenshots, so this vignette stays within CRAN's size
+limits. Every one of them is also on the website as a
+[live, interactive browser](https://gmod.github.io/JBrowseR/articles/live-browser.html).
+
 **Genes.** A gene annotation track over the hub assembly, navigated by name.
 
 ```{r}

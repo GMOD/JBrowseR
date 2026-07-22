@@ -21,7 +21,8 @@ together by one all-vs-all minimap2 alignment — the same hosted data as the
 JBrowse [all-vs-all synteny
 tutorial](https://jbrowse.org/jb2/docs/tutorials/allvsall_synteny/).
 
-Everything here also runs on Colab's R runtime:
+The website hosts the [same views as live widgets](https://gmod.github.io/JBrowseR/articles/synteny.html), and everything
+here also runs on Colab's R runtime:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_comparative_colab.ipynb)
 
 ```{r setup}

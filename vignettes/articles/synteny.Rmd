@@ -52,7 +52,7 @@ JBrowseRApp(
 The same assemblies and PAF render as a dotplot with one function call
 different — `dotplot_view()` in place of `synteny_view()`:
 
-```{r dotplot, eval = FALSE}
+```{r dotplot}
 JBrowseRApp(
   assemblies = list(
     assembly(paste0(base, "volvox.2bit"), name = "volvox"),

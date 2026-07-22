@@ -111,6 +111,16 @@ vignette, or run it on Colab: [![Open In Colab](https://colab.research.google.co
 
 <img src="man/figures/demo-dotplot.png" width="100%" />
 
+## Try it live
+
+The figures above are screenshots so the package stays inside CRAN's size
+budget, but the website hosts the same browsers as **real, interactive
+widgets** — pan, zoom, and click features in the page:
+
+- [Live embedded browsers](https://gmod.github.io/JBrowseR/articles/live-browser.html) — a hub genome, a custom FASTA, an R data
+  frame as a track, and a GWAS Manhattan plot
+- [Comparing genomes, live](https://gmod.github.io/JBrowseR/articles/synteny.html) — a linear synteny view and a dotplot
+
 ## Getting started
 
 See the vignettes:
