@@ -22,4 +22,5 @@
 ^example_apps$
 ^CRAN-SUBMISSION$
 ^CONTRIBUTING\.md$
+^agent-docs$
 ^PUBLISHING\.md$
