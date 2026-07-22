@@ -1,5 +1,7 @@
 # JBrowseR 0.11.0
 
+- A browser that fails to load now reports the error in place instead of
+  rendering a blank widget with the reason only in the devtools console.
 - Removed `serve_data()` and its hand-rolled HTTP server. Serve local files with
   any static server that supports CORS and range requests (e.g.
   `npx http-server --cors`); see the "Hosting data" vignette. This drops the
