@@ -131,12 +131,12 @@ guide</a> and may contain <code>assembly</code>, <code>tracks</code>,
 <div class="section level2">
 <h2 id="from-a-config-file">From a config file<a class="anchor" aria-label="anchor" href="#from-a-config-file"></a>
 </h2>
-<p><code><a href="../reference/json_config.html">json_config()</a></code> reads a <code>config.json</code> (a local
-path or a URL) into the string <code>config</code> expects. A config
-file is portable — the same file works in the JBrowse web app and
+<p><code>config</code> takes the path or URL of a
+<code>config.json</code> and reads it for you (JSON text works too). A
+config file is portable — the same file works in the JBrowse web app and
 desktop.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>config <span class="op">=</span> <span class="fu"><a href="../reference/json_config.html">json_config</a></span><span class="op">(</span><span class="st">"https://jbrowse.org/genomes/hg19/config.json"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/config.json"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="from-an-r-list">From an R list<a class="anchor" aria-label="anchor" href="#from-an-r-list"></a>

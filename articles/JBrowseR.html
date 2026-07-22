@@ -292,18 +292,9 @@ as a Manhattan plot right in the linear view, so no separate plotting
 widget is needed. Write the track as a config list — the same JSON a
 JBrowse config file holds — and let the <code>uri</code> shorthand find
 the <code>.tbi</code> index.</p>
-<p>The hosted hg19 hub carries no reference-name aliases (hg38’s does),
-so name that assembly yourself with its alias file — otherwise the view
-only answers to <code>chr2</code> and a track keyed on a bare
-<code>2</code> draws nothing.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hg19</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span></span>
-<span>  <span class="st">"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>,</span>
-<span>  refname_aliases <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="va">hg19</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  <span class="st">"hg19"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    type <span class="op">=</span> <span class="st">"GWASTrack"</span>,</span>
 <span>    trackId <span class="op">=</span> <span class="st">"gwas_track"</span>,</span>
@@ -349,7 +340,7 @@ chr20 (<code>&lt;TRA&gt; 20:61,039,934</code>): the call sits in the
 Sniffles track and the long reads carry it below.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="va">hg19</span>,</span>
+<span>  <span class="st">"hg19"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
 <span>      <span class="st">"https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz"</span>,</span>

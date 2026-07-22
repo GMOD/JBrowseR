@@ -191,13 +191,8 @@ The adapter’s <code>uri</code> shorthand finds the <code>.tbi</code>
 index next to the data, and JBrowse fills in <code>displayId</code>, so
 the config stays short.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hg19</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span></span>
-<span>  <span class="st">"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>,</span>
-<span>  refname_aliases <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="va">hg19</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  <span class="st">"hg19"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    type <span class="op">=</span> <span class="st">"GWASTrack"</span>,</span>
 <span>    trackId <span class="op">=</span> <span class="st">"gwas_track"</span>,</span>
@@ -212,7 +207,7 @@ the config stays short.</p>
 <span>  location <span class="op">=</span> <span class="st">"2"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="JBrowseR html-widget html-fill-item" id="htmlwidget-febe03efa1a2d8d52a86" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"assembly":{"name":"hg19","uri":"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz","refNameAliases":{"uri":"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"}},"tracks":[{"type":"GWASTrack","trackId":"gwas_track","name":"GWAS","adapter":{"type":"GWASAdapter","scoreColumn":"neg_log_pvalue","uri":"https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"},"displays":[{"type":"LinearManhattanDisplay","height":250}]}],"location":"2"},"evals":[],"jsHooks":[]}</script><p>For comparative genomics — synteny and dotplots across two assemblies
+<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"assembly":"hg19","tracks":[{"type":"GWASTrack","trackId":"gwas_track","name":"GWAS","adapter":{"type":"GWASAdapter","scoreColumn":"neg_log_pvalue","uri":"https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"},"displays":[{"type":"LinearManhattanDisplay","height":250}]}],"location":"2"},"evals":[],"jsHooks":[]}</script><p>For comparative genomics — synteny and dotplots across two assemblies
 — see the <a href="synteny.html">comparing genomes</a> article, which
 uses <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code>.</p>
 </div>
