@@ -1,0 +1,13 @@
+{
+  // The @jbrowse/* deps are `link:`ed to the sibling jbrowse-components
+  // checkout and resolve to its TypeScript *source*, so tsc typechecks that
+  // tree along with ours. Extending its tsconfig (rather than restating a
+  // similar one) keeps the two in exact step: under any other settings its
+  // source reports errors that aren't ours to fix.
+  "extends": "../jbrowse-components/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "srcjs",
+    "noEmit": true
+  },
+  "include": ["srcjs"]
+}

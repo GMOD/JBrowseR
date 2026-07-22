@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build && JB_TARGET=app vite build",
-    "dev": "vite build --watch"
+    "dev": "vite build --watch",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.1.0",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.5.1",
+    "typescript": "^7.0.2",
     "vite": "^6.3.5",
     "vite-plugin-node-polyfills": "0.22.0"
   }

@@ -9,7 +9,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 const require = createRequire(import.meta.url)
 
 const streamWebShim = fileURLToPath(
-  new URL('./srcjs/stream-web-shim.js', import.meta.url),
+  new URL('./srcjs/stream-web-shim.ts', import.meta.url),
 )
 
 // vite-plugin-node-polyfills injects `import 'vite-plugin-node-polyfills/shims/<x>'`
@@ -66,7 +66,7 @@ export default defineConfig({
     outDir: 'inst/htmlwidgets',
     emptyOutDir: false,
     lib: {
-      entry: isApp ? 'srcjs/app.jsx' : 'srcjs/index.jsx',
+      entry: isApp ? 'srcjs/app.ts' : 'srcjs/index.ts',
       formats: ['iife'],
       name: widgetName,
       fileName: () => `${widgetName}.js`,
