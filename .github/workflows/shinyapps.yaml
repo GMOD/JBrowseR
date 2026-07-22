@@ -25,23 +25,30 @@ jobs:
 
       - uses: r-lib/actions/setup-r@v2
 
-      # Plain install.packages from cloud CRAN, not setup-r-dependencies: R
-      # stores the *name* of the repo a package came from in its DESCRIPTION,
-      # rsconnect copies that into the manifest, and shinyapps.io's builder then
-      # fails on "Unsupported url scheme: RSPM/src/contrib/shiny_1.14.0.tar.gz".
-      # pak reaches for Posit Package Manager on Linux whatever use-public-rspm
-      # says, so the repo has to be pinned here, at install time — setting
-      # `repos` at deploy time is too late to relabel installed packages.
-      - name: Install dependencies from CRAN
+      # Posit Package Manager binaries, but registered under the name CRAN. R
+      # stores the repo *name* in each installed package's DESCRIPTION and
+      # rsconnect resolves that name against the session's `repos` when it writes
+      # the manifest: left as RSPM the builder gets `Unsupported url scheme:
+      # RSPM/src/contrib/shiny_1.14.0.tar.gz`, while CRAN resolves to the url
+      # deploy.R sets, which it can fetch. Binaries also dodge compiling fs and
+      # curl, whose system headers the runner doesn't carry.
+      - name: Install dependencies
         run: |
-          options(repos = c(CRAN = "https://cloud.r-project.org"))
-          install.packages(c(
-            "rsconnect", "remotes", "shiny", "bslib", "DT", "crosstalk"
-          ))
+          ppm <- Sys.getenv("RSPM", "https://cloud.r-project.org")
+          options(repos = c(CRAN = ppm))
+          pkgs <- c("rsconnect", "remotes", "shiny", "bslib", "DT", "crosstalk")
+          install.packages(pkgs)
           # this checkout's JBrowseR, not the CRAN release: rsconnect reinstalls
           # each dependency on the server from wherever the local copy came, and
           # a local build records no remote for it to fetch
           remotes::install_github(paste0("GMOD/JBrowseR@", Sys.getenv("GITHUB_SHA")))
+          # install.packages only warns when a package fails to build, which
+          # otherwise surfaces as a confusing `no package called 'rsconnect'` in
+          # the deploy step
+          missing <- pkgs[!vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)]
+          if (length(missing) > 0) {
+            stop("not installed: ", paste(missing, collapse = ", "))
+          }
         shell: Rscript {0}
 
       - name: Deploy
