@@ -15,9 +15,9 @@
 #' @param views A list of view specs, e.g. from [synteny_view()] / [linear_view()].
 #' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
 #' @param theme A theme config from [theme()].
-#' @param config Escape hatch: a whole JBrowse config (a list, or a JSON string
-#'   from [json_config()]) forming the payload base that explicit arguments
-#'   override.
+#' @param config Escape hatch: a whole JBrowse config forming the payload base
+#'   that explicit arguments override — a list, or the path, URL, or JSON text of
+#'   a `config.json`.
 #' @param width,height,elementId Standard htmlwidget sizing arguments.
 #'
 #' @return an htmlwidget of the JBrowse 2 app

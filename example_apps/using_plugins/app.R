@@ -15,7 +15,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   output$browserOutput <- renderJBrowseR(JBrowseR(
-    config = json_config("./config.json"),
+    config = "./config.json",
     location = "1:20,000,000-20,500,000"
   ))
 }

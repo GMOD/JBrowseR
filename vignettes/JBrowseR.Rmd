@@ -153,18 +153,9 @@ Manhattan plot right in the linear view, so no separate plotting widget is
 needed. Write the track as a config list — the same JSON a JBrowse config file
 holds — and let the `uri` shorthand find the `.tbi` index.
 
-The hosted hg19 hub carries no reference-name aliases (hg38's does), so
-name that assembly yourself with its alias file — otherwise the view only
-answers to `chr2` and a track keyed on a bare `2` draws nothing.
-
 ```{r}
-hg19 <- assembly(
-  "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
-  refname_aliases = "https://jbrowse.org/genomes/hg19/hg19_aliases.txt"
-)
-
 JBrowseR(
-  hg19,
+  "hg19",
   tracks = list(list(
     type = "GWASTrack",
     trackId = "gwas_track",
@@ -212,7 +203,7 @@ Sniffles track and the long reads carry it below.
 
 ```{r}
 JBrowseR(
-  hg19,
+  "hg19",
   tracks = tracks(
     track(
       "https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz",

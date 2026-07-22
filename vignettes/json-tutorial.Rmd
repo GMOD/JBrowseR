@@ -32,12 +32,12 @@ contain `assembly`, `tracks`, `defaultSession`, `aggregateTextSearchAdapters`,
 
 ## From a config file
 
-`json_config()` reads a `config.json` (a local path or a URL) into the string
-`config` expects. A config file is portable — the same file works in the
-JBrowse web app and desktop.
+`config` takes the path or URL of a `config.json` and reads it for you (JSON
+text works too). A config file is portable — the same file works in the JBrowse
+web app and desktop.
 
 ```{r}
-JBrowseR(config = json_config("https://jbrowse.org/genomes/hg19/config.json"))
+JBrowseR(config = "https://jbrowse.org/genomes/hg19/config.json")
 ```
 
 ## From an R list

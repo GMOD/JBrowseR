@@ -42,9 +42,9 @@ it owns the initial track layout instead of \code{tracks}.}
 
 \item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
 
-\item{config}{Escape hatch: a whole JBrowse config (a list, or a JSON string
-from \code{\link[=json_config]{json_config()}}) forming the payload base that explicit arguments
-override.}
+\item{config}{Escape hatch: a whole JBrowse config forming the payload base
+that explicit arguments override — a list, or the path, URL, or JSON text of
+a \code{config.json}.}
 
 \item{width, height, elementId}{Standard htmlwidget sizing arguments.}
 }

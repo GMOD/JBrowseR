@@ -51,8 +51,9 @@ as_adapter_list <- function(x) {
   if (is.null(x) || is.null(x$type)) x else list(x)
 }
 
-# config escape hatch: a list passes through; a JSON string (e.g. read by hand)
-# is parsed. It forms the payload base that explicit arguments override.
+# config escape hatch, forming the payload base explicit arguments override: a
+# list passes through; a string is a path, a URL, or the JSON itself — no
+# sniffing here, fromJSON already distinguishes all three.
 as_config <- function(config) {
   if (is.null(config)) {
     list()

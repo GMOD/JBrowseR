@@ -37,3 +37,14 @@ test_that("both widgets require an assembly or a config", {
   expect_error(JBrowseR(), "assembly")
   expect_error(JBrowseRApp(), "assemblies")
 })
+
+test_that("config reads a path, a URL, or inline JSON (all via jsonlite)", {
+  path <- tempfile(fileext = ".json")
+  on.exit(unlink(path))
+  writeLines('{"assembly": {"name": "from-file"}, "tracks": []}', path)
+  expect_equal(JBrowseR(config = path)$x$assembly$name, "from-file")
+  expect_equal(
+    JBrowseR(config = '{"assembly": {"name": "inline"}}')$x$assembly$name,
+    "inline"
+  )
+})

@@ -20,6 +20,9 @@
   onto each feature (previously only `score` and `additional`), so any column
   you computed shows in the feature details.
 - `assembly()` accepts a `.2bit` URL (`TwoBitAdapter`) in addition to FASTA.
+- Removed `json_config()`. `config =` takes the path or URL of a `config.json`
+  directly (as well as a list or JSON text), so reading the file is no longer a
+  separate step.
 
 - Upgraded to the GPU-accelerated JBrowse 2 v4 linear genome view
   (`@jbrowse/react-linear-genome-view2`), driven through the shared

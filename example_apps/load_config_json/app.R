@@ -13,7 +13,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   output$widgetOutput <- renderJBrowseR(JBrowseR(
-    config = json_config("./config.json"),
+    config = "./config.json",
     location = "10:29,838,737..29,838,819"
   ))
 }

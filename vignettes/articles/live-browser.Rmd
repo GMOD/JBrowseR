@@ -87,13 +87,8 @@ index next to the data, and JBrowse fills in `displayId`, so the config stays
 short.
 
 ```{r manhattan}
-hg19 <- assembly(
-  "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
-  refname_aliases = "https://jbrowse.org/genomes/hg19/hg19_aliases.txt"
-)
-
 JBrowseR(
-  hg19,
+  "hg19",
   tracks = list(list(
     type = "GWASTrack",
     trackId = "gwas_track",

@@ -33,7 +33,3 @@ reference:
       - synteny_view
       - dotplot_view
       - synteny_track
-  - title: 'Advanced'
-    desc: 'Full JBrowse config escape hatch'
-  - contents:
-      - json_config
