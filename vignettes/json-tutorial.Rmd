@@ -54,7 +54,7 @@ cfg <- list(
   ),
   tracks = tracks(
     track(
-      "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
+      "https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
       name = "NCBI RefSeq Genes"
     )
   ),

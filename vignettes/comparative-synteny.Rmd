@@ -21,21 +21,26 @@ together by one all-vs-all minimap2 alignment — the same hosted data as the
 JBrowse [all-vs-all synteny
 tutorial](https://jbrowse.org/jb2/docs/tutorials/allvsall_synteny/).
 
+Everything here also runs on Colab's R runtime:
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_comparative_colab.ipynb)
+
 ```{r setup}
 library(JBrowseR)
 ```
 
 ## Describe the four assemblies
 
-Each genome is an `assembly()` from its hosted FASTA; JBrowse derives the `.fai`
-and `.gzi` index locations from the URL.
+An assembly is the flat `list(name = , uri = )` shorthand JBrowse expands
+itself — it picks the adapter from the extension and derives the `.fai`/`.gzi`
+index locations, so the URL is all you write. (`assembly()` is the same thing
+with the name defaulted from the file.)
 
 ```{r}
 base <- "https://jbrowse.org/demos/ecoli_pangenome"
 strains <- c("K12", "Sakai", "CFT073", "NCTC86")
 
 assemblies <- lapply(strains, function(s) {
-  assembly(paste0(base, "/", s, ".fa.gz"), name = s)
+  list(name = s, uri = paste0(base, "/", s, ".fa.gz"))
 })
 ```
 
@@ -83,6 +88,8 @@ app <- JBrowseRApp(
 app
 ```
 
+![Four E. coli strains stacked, with the blocks each adjacent pair shares drawn between the rows](../man/figures/demo-synteny.png)
+
 In the console this opens a browser tab; in R Markdown it renders inline; in
 Shiny, pair `JBrowseROutput()` with `renderJBrowseR()`.
 
@@ -98,6 +105,8 @@ JBrowseRApp(
   views = list(dotplot_view(list("K12", "Sakai"), tracks = list("ecoli_ava")))
 )
 ```
+
+![K12 against Sakai as a dotplot: a long shared diagonal with off-diagonal rearrangements](../man/figures/demo-dotplot.png)
 
 ## Building the PAF from your own genomes
 

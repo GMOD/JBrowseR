@@ -25,7 +25,7 @@
       "adapter": {
         "type": "RefNameAliasAdapter",
         "location": {
-          "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt",
+          "uri": "https://jbrowse.org/genomes/hg19/hg19_aliases.txt",
           "locationType": "UriLocation"
         }
       }
@@ -34,7 +34,7 @@
       "adapter": {
         "type": "CytobandAdapter",
         "cytobandLocation": {
-          "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/cytoBand.txt"
+          "uri": "https://jbrowse.org/genomes/hg19/cytoBand.txt"
         }
       }
     }
@@ -56,12 +56,12 @@
       "adapter": {
         "type": "Gff3TabixAdapter",
         "gffGzLocation": {
-          "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/ncbi_refseq/GRCh37_latest_genomic.sort.gff.gz",
+          "uri": "https://jbrowse.org/genomes/hg19/ncbi_refseq/GRCh37_latest_genomic.sort.gff.gz",
           "internetAccountId": "httpHeaders"
         },
         "index": {
           "location": {
-            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/ncbi_refseq/GRCh37_latest_genomic.sort.gff.gz.tbi",
+            "uri": "https://jbrowse.org/genomes/hg19/ncbi_refseq/GRCh37_latest_genomic.sort.gff.gz.tbi",
             "internetAccountId": "httpHeaders"
           }
         }
@@ -77,7 +77,7 @@
   "plugins": [
     {
       "name": "ModifyHTTPHeaders",
-      "url": "https://s3.amazonaws.com/jbrowse.org/demos/jbrowse-plugin-modifyhttpheaders.umd.development.js"
+      "url": "https://jbrowse.org/demos/jbrowse-plugin-modifyhttpheaders.umd.development.js"
     }
   ]
 }

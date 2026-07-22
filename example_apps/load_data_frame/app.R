@@ -23,7 +23,7 @@ server <- function(input, output, session) {
   output$widgetOutput <- renderJBrowseR(JBrowseR(
     "hg19",
     tracks = list(track_data_frame(df, "my_features")),
-    location = "2:1..101200"
+    location = "chr2:1..101200"
   ))
 
   output$selected <- renderPrint({

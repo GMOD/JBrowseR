@@ -18,11 +18,11 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  loc <- reactiveVal("17:37,686,000..37,730,000")
+  loc <- reactiveVal("chr17:37,686,000..37,730,000")
 
-  observeEvent(input$klhdc2, loc("14:50,230,000..50,255,000"))
-  observeEvent(input$tatdn1, loc("8:125,490,000..125,560,000"))
-  observeEvent(input$erbb2, loc("17:37,686,000..37,730,000"))
+  observeEvent(input$klhdc2, loc("chr14:50,230,000..50,255,000"))
+  observeEvent(input$tatdn1, loc("chr8:125,490,000..125,560,000"))
+  observeEvent(input$erbb2, loc("chr17:37,686,000..37,730,000"))
 
   output$browserOutput <- renderJBrowseR(JBrowseR(
     "hg19",
@@ -32,7 +32,7 @@ server <- function(input, output, session) {
         name = "Sniffles SV calls"
       ),
       track(
-        "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
+        "https://jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
         name = "SKBR3 PacBio long reads"
       )
     ),

@@ -11,7 +11,7 @@ spec <- function(bundle, caption, x) list(bundle = bundle, caption = caption, x 
 lgv <- function(caption, ...) spec("JBrowseR.js", caption, JBrowseR(...)$x)
 
 refseq_gff <- paste0(
-  "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/",
+  "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/",
   "GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
 )
 phylop_bw <- "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw"
@@ -81,7 +81,7 @@ specs <- list(
       ),
       track(
         paste0(
-          "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/skbr3/",
+          "https://jbrowse.org/genomes/hg19/skbr3/",
           "reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam"
         ),
         name = "SKBR3 PacBio long reads"
@@ -89,7 +89,7 @@ specs <- list(
     ),
     # the one Sniffles call on chr17: a translocation to chr20 at 65,445,795;
     # a tight window here shows the reads clipping at the breakpoint
-    location = "17:65,440,000..65,451,000"
+    location = "chr17:65,440,000..65,451,000"
   ),
   "demo-cancer-deletion" = lgv(
     "HG008-T PacBio HiFi somatic deletion at CUZD1",
@@ -99,6 +99,24 @@ specs <- list(
       name = "HG008-T PacBio HiFi"
     )),
     location = "10:122,822,000..122,851,000"
+  ),
+  # a track's *display* can plot its data: a GWASTrack with a
+  # LinearManhattanDisplay draws summary statistics in the linear view
+  "demo-manhattan" = lgv(
+    "GWAS summary stats as a Manhattan plot",
+    "hg19",
+    tracks = list(list(
+      type = "GWASTrack",
+      trackId = "gwas_track",
+      name = "GWAS",
+      adapter = list(
+        type = "GWASAdapter",
+        scoreColumn = "neg_log_pvalue",
+        uri = "https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"
+      ),
+      displays = list(list(type = "LinearManhattanDisplay", height = 250))
+    )),
+    location = "chr2"
   ),
   "demo-theme" = lgv(
     "custom-themed browser",
@@ -112,8 +130,9 @@ specs <- list(
 # comparative synteny uses the full app (JBrowseRApp / app.jsx bundle)
 base <- "https://jbrowse.org/demos/ecoli_pangenome"
 strains <- c("K12", "Sakai", "CFT073", "NCTC86")
+# the flat { name, uri } assembly shorthand core expands itself — no helper
 assemblies <- lapply(strains, function(s) {
-  assembly(paste0(base, "/", s, ".fa.gz"), name = s)
+  list(name = s, uri = paste0(base, "/", s, ".fa.gz"))
 })
 ecoli_ava <- list(
   type = "SyntenyTrack",
@@ -140,6 +159,16 @@ specs[["demo-synteny"]] <- spec(
         minAlignmentLength = 10000
       )
     )
+  )$x
+)
+
+specs[["demo-dotplot"]] <- spec(
+  "JBrowseRApp.js",
+  "the same PAF as a whole-genome dotplot",
+  JBrowseRApp(
+    assemblies = assemblies[1:2],
+    tracks = list(ecoli_ava),
+    views = list(dotplot_view(list("K12", "Sakai"), tracks = list("ecoli_ava")))
   )$x
 )
 

@@ -30,7 +30,7 @@ JBrowseR(
   "hg38",
   tracks = tracks(track(
     paste0(
-      "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/",
+      "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/",
       "GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
     ),
     name = "NCBI RefSeq Genes"
@@ -93,15 +93,14 @@ JBrowseR(
     type = "GWASTrack",
     trackId = "gwas_track",
     name = "GWAS",
-    assemblyNames = list("hg19"),
     adapter = list(
       type = "GWASAdapter",
       scoreColumn = "neg_log_pvalue",
-      uri = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"
+      uri = "https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"
     ),
     displays = list(list(type = "LinearManhattanDisplay", height = 250))
   )),
-  location = "2"
+  location = "chr2"
 )
 ```
 

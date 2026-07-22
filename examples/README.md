@@ -2,14 +2,15 @@
 
 ## Google Colab (R runtime)
 
-A runnable notebook that installs JBrowseR and renders several browsers — a
-one-line human genome, alignments, a track built from an R data frame, and
-cancer structural variants.
+Runnable notebooks that install JBrowseR and render live browsers. Open one,
+then set **Runtime → Change runtime type → R** and run all cells.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_colab.ipynb)
-
-Open the notebook, then set **Runtime → Change runtime type → R** and run all
-cells.
+- **Getting started** — a one-line human genome, alignments, a track built from
+  an R data frame, and cancer structural variants
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_colab.ipynb)
+- **Comparing genomes** — four *E. coli* strains in a linear synteny view and a
+  dotplot, from one all-vs-all PAF
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_comparative_colab.ipynb)
 
 ## Shiny apps
 

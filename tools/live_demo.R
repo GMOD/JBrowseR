@@ -29,7 +29,7 @@ save_demo(
     "hg38",
     tracks = tracks(track(
       paste0(
-        "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/",
+        "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/",
         "GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
       ),
       name = "NCBI RefSeq Genes"

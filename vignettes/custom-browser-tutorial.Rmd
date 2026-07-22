@@ -29,7 +29,7 @@ point at the FASTA itself. Add reference-name aliases so `chr1`/`1` both resolve
 hg19 <- assembly(
   "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
   aliases = "GRCh37",
-  refname_aliases = "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/hg19_aliases.txt"
+  refname_aliases = "https://jbrowse.org/genomes/hg19/hg19_aliases.txt"
 )
 ```
 
@@ -42,7 +42,7 @@ tracks with `tracks()`. You do not need to set `assemblyNames` on each track —
 ```{r}
 my_tracks <- tracks(
   track(
-    "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
+    "https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
     name = "NCBI RefSeq Genes"
   )
 )

@@ -15,7 +15,7 @@ server <- function(input, output, session) {
   output$widgetOutput <- renderJBrowseR(JBrowseR(
     "hg38",
     tracks = tracks(track(
-      "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
+      "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
       name = "NCBI RefSeq Genes"
     )),
     location = "BRCA1"

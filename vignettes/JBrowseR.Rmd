@@ -86,7 +86,7 @@ JBrowseR(
   "hg38",
   tracks = list(
     "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
-    "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
+    "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
   ),
   location = "BRCA1"
 )
@@ -108,7 +108,7 @@ track("https://example.com/reads.bam", index = "https://example.com/reads.bai")
 JBrowseR(
   "hg38",
   tracks = tracks(track(
-    "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
+    "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
     name = "NCBI RefSeq Genes"
   )),
   location = "BRCA1"
@@ -147,6 +147,32 @@ JBrowseR(
 
 ![phyloP conservation](../man/figures/demo-conservation.png)
 
+**Plots from a display.** A track's *display* can plot its data: a `GWASTrack`
+with a `LinearManhattanDisplay` draws genome-wide summary statistics as a
+Manhattan plot right in the linear view, so no separate plotting widget is
+needed. Write the track as a config list — the same JSON a JBrowse config file
+holds — and let the `uri` shorthand find the `.tbi` index.
+
+```{r}
+JBrowseR(
+  "hg19",
+  tracks = list(list(
+    type = "GWASTrack",
+    trackId = "gwas_track",
+    name = "GWAS",
+    adapter = list(
+      type = "GWASAdapter",
+      scoreColumn = "neg_log_pvalue",
+      uri = "https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"
+    ),
+    displays = list(list(type = "LinearManhattanDisplay", height = 250))
+  )),
+  location = "chr2"
+)
+```
+
+![GWAS summary statistics as a Manhattan plot across chromosome 2](../man/figures/demo-manhattan.png)
+
 **Your R results.** Turn a data frame of features into a track with
 `track_data_frame()` — no files and no web server. Any `score` column makes it a
 quantitative track.
@@ -184,11 +210,11 @@ JBrowseR(
       name = "Sniffles SV calls"
     ),
     track(
-      "https://s3.amazonaws.com/jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
+      "https://jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
       name = "SKBR3 PacBio long reads"
     )
   ),
-  location = "17:65,440,000..65,451,000"
+  location = "chr17:65,440,000..65,451,000"
 )
 ```
 
@@ -217,7 +243,7 @@ JBrowseR(
 JBrowseR(
   "hg38",
   tracks = tracks(track(
-    "https://s3.amazonaws.com/jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
+    "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
     name = "NCBI RefSeq Genes"
   )),
   theme = theme("#311b92", "#0097a7"),
