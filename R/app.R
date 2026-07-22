@@ -54,12 +54,13 @@ JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
 #' [dotplot_view()]: builds the `list(type = ..., init = ...)` spec any view type
 #' understands, where `init` is the declarative
 #' [session-spec init](https://jbrowse.org/jb2/docs/urlparams/#session-spec) for
-#' that type. Use it for view types those helpers don't cover — a plugin's, say a
-#' 3D protein structure:
+#' that type. Use it for view types those helpers don't cover, including any a
+#' runtime `plugins` entry registers — its init fields are the plugin's own, so
+#' nothing here has to keep up with them:
 #'
-#' \preformatted{view("ProteinView", uniprotId = "P04637",
-#'      transcriptId = "NM_000546.6",
-#'      connectedView = list(assembly = "hg38", loc = "TP53"))}
+#' \preformatted{view("ProteinView",
+#'      url = "https://alphafold.ebi.ac.uk/files/AF-P04637-F1-model_v6.cif",
+#'      height = 600)}
 #'
 #' @param type The view type (e.g. `"LinearGenomeView"`, `"LinearSyntenyView"`,
 #'   `"ProteinView"`).
