@@ -19,7 +19,13 @@
 
 library(rsconnect)
 
-account <- Sys.getenv("SHINYAPPS_NAME", "gmod")
+# rsconnect writes the current `repos` into the manifest and the shinyapps build
+# server fetches sources from it, so it has to be a URL that server understands.
+# CI installs from Posit Package Manager for speed, which records the bare word
+# "RSPM" and fails there with `Unsupported url scheme: RSPM/src/contrib/...`.
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+account <- Sys.getenv("SHINYAPPS_NAME", "colindiesh")
 token <- Sys.getenv("SHINYAPPS_TOKEN")
 secret <- Sys.getenv("SHINYAPPS_SECRET")
 if (nzchar(token) && nzchar(secret)) {
