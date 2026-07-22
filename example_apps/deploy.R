@@ -65,7 +65,11 @@ if (length(unknown) > 0) {
 # registered and holding one of the plan's slots, so SHINYAPPS_PRUNE=true clears
 # anything on the account that isn't being deployed now.
 if (identical(Sys.getenv("SHINYAPPS_PRUNE"), "true")) {
-  for (app in setdiff(applications(account = account)$name, apps)) {
+  # already-terminated apps stay in the listing and terminating one again is an
+  # error ("Invalid status: terminated"), so go by status rather than presence
+  existing <- applications(account = account)
+  live <- existing$name[existing$status != "terminated"]
+  for (app in setdiff(live, apps)) {
     message("terminating ", app)
     terminateApp(app, account = account)
   }
