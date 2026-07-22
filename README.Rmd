@@ -121,10 +121,10 @@ widgets** — pan, zoom, and click features in the page:
   frame as a track, and a GWAS Manhattan plot
 - [Comparing genomes, live](https://gmod.github.io/JBrowseR/articles/synteny.html) — a linear synteny view and a dotplot
 
-For the Shiny side, several [example apps](examples/README.md#shiny-apps) are
-hosted too — an [R data frame as a track](https://jbrowse.shinyapps.io/load_data_frame/)
-with feature click-back, and
-[SKBR3 structural variants](https://jbrowse.shinyapps.io/skbr3_gene_fusions/).
+For the Shiny side, [**JBrowseR demos**](https://jbrowse.shinyapps.io/demos/) is
+every [example app](examples/README.md#shiny-apps) in one place — gene search, a
+data frame as a track, a slider that re-runs the analysis, SKBR3 structural
+variants, a whole `config.json`, and a plugin.
 
 ## Getting started
 

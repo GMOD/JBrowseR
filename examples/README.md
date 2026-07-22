@@ -14,21 +14,26 @@ then set **Runtime → Change runtime type → R** and run all cells.
 
 ## Shiny apps
 
-Run any of these locally with `shiny::runApp("example_apps/<name>")`, or open the
-hosted copy. Hosting comes from `example_apps/deploy.R`, which the **shinyapps**
-workflow runs on demand (Actions → shinyapps → Run workflow) and on each
-published release; the URLs below follow whichever account is in the repo's
-`SHINYAPPS_NAME` secret.
+One hosted app, [**JBrowseR demos**](https://jbrowse.shinyapps.io/demos/), carries
+every example below as a tab — shinyapps.io plans cap how many applications an
+account may host, and a combined app spends one slot instead of one per demo.
 
-| App | What it shows | Hosted |
-|---|---|---|
-| `basic_usage_with_text_index` | search a hub genome by gene name | [live](https://jbrowse.shinyapps.io/basic_usage_with_text_index/) |
-| `load_data_frame` | an R data frame as a track, with feature click-back | [live](https://jbrowse.shinyapps.io/load_data_frame/) |
-| `load_config_json` | a full JBrowse `config.json` | [live](https://jbrowse.shinyapps.io/load_config_json/) |
-| `skbr3_gene_fusions` | SKBR3 long-read structural variants | [live](https://jbrowse.shinyapps.io/skbr3_gene_fusions/) |
-| `bookmarks_demo` | gene navigation, data-frame tracks, feature bookmarking | [live](https://jbrowse.shinyapps.io/bookmarks_demo/) |
-| `interactive_peak_calling` | a slider that re-runs the analysis and repaints | not deployed yet |
-| `using_plugins` | a JBrowse 2 plugin loaded via a config | not deployed yet |
+The single-purpose apps are the ones to read: each is a page of code that does
+one thing. Run any of them with `shiny::runApp("example_apps/<name>")`.
+
+| App | What it shows |
+|---|---|
+| `basic_usage_with_text_index` | search a hub genome by gene name |
+| `load_data_frame` | an R data frame as a track, with feature click-back |
+| `interactive_peak_calling` | a slider that re-runs the analysis and repaints |
+| `skbr3_gene_fusions` | SKBR3 long-read structural variants |
+| `bookmarks_demo` | gene navigation, data-frame tracks, feature bookmarking |
+| `load_config_json` | a full JBrowse `config.json` |
+| `using_plugins` | a JBrowse 2 plugin loaded via a config |
+| `demos` | all of the above as tabs — what gets hosted |
+
+Hosting comes from `example_apps/deploy.R`, which the **shinyapps** workflow runs
+on demand (Actions → shinyapps → Run workflow) and on each published release.
 
 For browsers with no server at all, the website's
 [live articles](https://gmod.github.io/JBrowseR/articles/live-browser.html)
