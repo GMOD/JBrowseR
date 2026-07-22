@@ -29,11 +29,15 @@ R
 
 ## After a CRAN release
 
-Redeploy the hosted Shiny apps so they match the release:
+The **shinyapps** workflow redeploys the hosted example apps on every published
+release, using the `SHINYAPPS_NAME`/`SHINYAPPS_TOKEN`/`SHINYAPPS_SECRET` repo
+secrets, so nothing needs doing by hand. To deploy at another time, run it from
+Actions → shinyapps → Run workflow (it takes a list of app names, or `all`), or
+locally:
 
 ```
 R -e 'remotes::install_github("GMOD/JBrowseR")'   # see the note in example_apps/deploy.R
-Rscript example_apps/deploy.R
+Rscript example_apps/deploy.R                    # or: ... deploy.R bookmarks_demo
 ```
 
 ## A server-free alternative (shinylive)

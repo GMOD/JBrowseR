@@ -1,0 +1,43 @@
+on:
+  workflow_dispatch:
+    inputs:
+      apps:
+        description: 'Apps to deploy (space separated, or "all")'
+        default: 'all'
+  release:
+    types: [published]
+
+name: shinyapps
+
+# Deploy the example apps in example_apps/ to shinyapps.io. Manual by default:
+# these are demos, and shinyapps.io plans cap how many apps and active hours an
+# account gets, so redeploying all of them on every push would be wasteful.
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
+      SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+      SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rsconnect, any::remotes, any::shiny, any::bslib, any::DT, any::crosstalk
+
+      # rsconnect reinstalls each dependency on the server from where the local
+      # copy came, so install JBrowseR from this exact commit rather than the
+      # checkout: a local build records no remote and silently falls back to the
+      # CRAN release.
+      - name: Install JBrowseR from this commit
+        run: remotes::install_github(paste0("GMOD/JBrowseR@", Sys.getenv("GITHUB_SHA")))
+        shell: Rscript {0}
+
+      - name: Deploy
+        run: Rscript example_apps/deploy.R ${{ github.event.inputs.apps }}

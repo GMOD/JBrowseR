@@ -1,7 +1,12 @@
 #!/usr/bin/env Rscript
 
-# Deploy the example apps to https://gmod.shinyapps.io/<app>/. Run from the repo
-# root; example_apps/README.md lists each one with its live URL.
+# Deploy the example apps to https://<account>.shinyapps.io/<app>/. Run from the
+# repo root; example_apps/README.md lists each one with its live URL.
+#
+# The account is SHINYAPPS_NAME, defaulting to the one the demos are published
+# under. Setting SHINYAPPS_TOKEN/SHINYAPPS_SECRET as well registers the account
+# first, which is how .github/workflows/shinyapps.yaml runs unattended; locally,
+# leave them unset and use the account rsconnect already has.
 #
 # Install JBrowseR from GitHub first, not from a local build:
 #
@@ -14,7 +19,14 @@
 
 library(rsconnect)
 
-apps <- c(
+account <- Sys.getenv("SHINYAPPS_NAME", "gmod")
+token <- Sys.getenv("SHINYAPPS_TOKEN")
+secret <- Sys.getenv("SHINYAPPS_SECRET")
+if (nzchar(token) && nzchar(secret)) {
+  setAccountInfo(name = account, token = token, secret = secret)
+}
+
+all_apps <- c(
   "basic_usage_with_text_index",
   "bookmarks_demo",
   "interactive_peak_calling",
@@ -24,8 +36,18 @@ apps <- c(
   "using_plugins"
 )
 
+# name apps on the command line to deploy a subset — shinyapps.io plans cap how
+# many apps an account may host, so all seven is not always what you want
+args <- setdiff(commandArgs(trailingOnly = TRUE), "all")
+apps <- if (length(args) > 0) args else all_apps
+unknown <- setdiff(apps, all_apps)
+if (length(unknown) > 0) {
+  stop("no such app: ", paste(unknown, collapse = ", "), call. = FALSE)
+}
+
 for (app in apps) {
-  deployApp(file.path("example_apps", app), appName = app, account = "gmod")
+  deployApp(file.path("example_apps", app), appName = app, account = account)
+  message(sprintf("https://%s.shinyapps.io/%s/", account, app))
 }
 
 ## install.packages(c('JBrowseR', 'crosstalk', 'DT', 'rsconnect'))

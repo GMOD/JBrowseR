@@ -15,9 +15,10 @@ then set **Runtime → Change runtime type → R** and run all cells.
 ## Shiny apps
 
 Run any of these locally with `shiny::runApp("example_apps/<name>")`, or open the
-hosted copy. The hosted apps are deployed from `example_apps/deploy.R` and lag
-this checkout until someone redeploys, so they run whichever JBrowseR release
-shinyapps.io resolved.
+hosted copy. Hosting comes from `example_apps/deploy.R`, which the **shinyapps**
+workflow runs on demand (Actions → shinyapps → Run workflow) and on each
+published release; the URLs below follow whichever account is in the repo's
+`SHINYAPPS_NAME` secret.
 
 | App | What it shows | Hosted |
 |---|---|---|
