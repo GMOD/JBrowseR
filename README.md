@@ -121,9 +121,9 @@ interactive widgets** — pan, zoom, and click features in the page:
 
 For the Shiny side, several [example
 apps](examples/README.md#shiny-apps) are hosted too — an [R data frame
-as a track](https://gmod.shinyapps.io/load_data_frame/) with feature
+as a track](https://jbrowse.shinyapps.io/load_data_frame/) with feature
 click-back, and [SKBR3 structural
-variants](https://gmod.shinyapps.io/skbr3_gene_fusions/).
+variants](https://jbrowse.shinyapps.io/skbr3_gene_fusions/).
 
 ## Getting started
 

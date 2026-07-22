@@ -1,6 +1,6 @@
 # JBrowse R Demo (with Shiny)
 
-See this app running at https://gmod.shinyapps.io/bookmarks_demo/
+See this app running at https://jbrowse.shinyapps.io/bookmarks_demo/
 
 This demo is originally by
 [Caroline Bridge](https://github.com/carolinebridge-oicr) with components by

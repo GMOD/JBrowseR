@@ -22,11 +22,11 @@ published release; the URLs below follow whichever account is in the repo's
 
 | App | What it shows | Hosted |
 |---|---|---|
-| `basic_usage_with_text_index` | search a hub genome by gene name | [live](https://gmod.shinyapps.io/basic_usage_with_text_index/) |
-| `load_data_frame` | an R data frame as a track, with feature click-back | [live](https://gmod.shinyapps.io/load_data_frame/) |
-| `load_config_json` | a full JBrowse `config.json` | [live](https://gmod.shinyapps.io/load_config_json/) |
-| `skbr3_gene_fusions` | SKBR3 long-read structural variants | [live](https://gmod.shinyapps.io/skbr3_gene_fusions/) |
-| `bookmarks_demo` | gene navigation, data-frame tracks, feature bookmarking | [live](https://gmod.shinyapps.io/bookmarks_demo/) |
+| `basic_usage_with_text_index` | search a hub genome by gene name | [live](https://jbrowse.shinyapps.io/basic_usage_with_text_index/) |
+| `load_data_frame` | an R data frame as a track, with feature click-back | [live](https://jbrowse.shinyapps.io/load_data_frame/) |
+| `load_config_json` | a full JBrowse `config.json` | [live](https://jbrowse.shinyapps.io/load_config_json/) |
+| `skbr3_gene_fusions` | SKBR3 long-read structural variants | [live](https://jbrowse.shinyapps.io/skbr3_gene_fusions/) |
+| `bookmarks_demo` | gene navigation, data-frame tracks, feature bookmarking | [live](https://jbrowse.shinyapps.io/bookmarks_demo/) |
 | `interactive_peak_calling` | a slider that re-runs the analysis and repaints | not deployed yet |
 | `using_plugins` | a JBrowse 2 plugin loaded via a config | not deployed yet |
 
