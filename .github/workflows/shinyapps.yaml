@@ -4,6 +4,10 @@ on:
       apps:
         description: 'Apps to deploy (space separated, or "all")'
         default: 'all'
+      prune:
+        description: 'Remove apps on the account that are not being deployed'
+        type: boolean
+        default: false
   release:
     types: [published]
 
@@ -19,6 +23,7 @@ jobs:
       SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
       SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
       SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+      SHINYAPPS_PRUNE: ${{ github.event.inputs.prune }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v6

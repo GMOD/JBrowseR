@@ -57,6 +57,16 @@ if (length(unknown) > 0) {
 # limit fails only on the ones past it — so keep going and report at the end.
 # forceUpdate because redeploying over an existing app is the whole point here,
 # and the prompt rsconnect would otherwise raise has nobody to answer it in CI.
+# A deploy that fails while the server builds the image still leaves the app
+# registered and holding one of the plan's slots, so SHINYAPPS_PRUNE=true clears
+# anything on the account that isn't being deployed now.
+if (identical(Sys.getenv("SHINYAPPS_PRUNE"), "true")) {
+  for (app in setdiff(applications(account = account)$name, apps)) {
+    message("terminating ", app)
+    terminateApp(app, account = account)
+  }
+}
+
 failed <- character(0)
 for (app in apps) {
   ok <- tryCatch(
