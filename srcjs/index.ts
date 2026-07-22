@@ -14,10 +14,15 @@ async function runtimePlugins(specs?: PluginSpec[]) {
   return loaded.map(p => p.plugin)
 }
 
-// Report the clicked feature back to Shiny under the same input id the old
-// widget used, so existing Shiny apps keep working.
-function onFeatureSelect(feature: unknown) {
-  window.Shiny?.setInputValue('selectedFeature', feature)
+// The clicked feature goes to `<outputId>_selected_feature` — el.id is the
+// output element's id, already namespaced by Shiny inside a module, so two
+// browsers on one page don't overwrite each other. The bare `selectedFeature`
+// every existing app observes is still set, and still global.
+function featureSelectHandler(el: HTMLElement) {
+  return (feature: unknown) => {
+    window.Shiny?.setInputValue(`${el.id}_selected_feature`, feature)
+    window.Shiny?.setInputValue('selectedFeature', feature)
+  }
 }
 
 defineWidget<Payload<CreateLinearGenomeViewOptions>, LinearGenomeViewController>(
@@ -26,6 +31,6 @@ defineWidget<Payload<CreateLinearGenomeViewOptions>, LinearGenomeViewController>
     createLinearGenomeView(el, {
       ...x,
       plugins: await runtimePlugins(x.plugins),
-      onFeatureSelect,
+      onFeatureSelect: featureSelectHandler(el),
     }),
 )

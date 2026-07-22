@@ -60,6 +60,11 @@ JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
 #' Output and render functions for using JBrowseR within Shiny
 #' applications and interactive Rmd documents.
 #'
+#' Clicking a feature sets `input[[paste0(outputId, "_selected_feature")]]`,
+#' which is namespaced per output and so is safe with several browsers on a
+#' page or inside a Shiny module. It also sets the global `input$selectedFeature`
+#' for backwards compatibility; prefer the per-output id in new apps.
+#'
 #' @param outputId output variable to read from
 #' @param width Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
 #' @param height Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.

@@ -33,3 +33,9 @@ the Shiny server bindings for a JBrowseR htmlwidget
 Output and render functions for using JBrowseR within Shiny
 applications and interactive Rmd documents.
 }
+\details{
+Clicking a feature sets \code{input[[paste0(outputId, "_selected_feature")]]},
+which is namespaced per output and so is safe with several browsers on a
+page or inside a Shiny module. It also sets the global \code{input$selectedFeature}
+for backwards compatibility; prefer the per-output id in new apps.
+}

@@ -1,5 +1,9 @@
 # JBrowseR 0.11.0
 
+- Clicking a feature now also sets `input[[paste0(outputId,
+  "_selected_feature")]]`, namespaced per output, so several browsers on one page
+  no longer overwrite each other's selection and the value is reachable from
+  inside a Shiny module. The global `input$selectedFeature` still fires.
 - A browser that fails to load now reports the error in place instead of
   rendering a blank widget with the reason only in the devtools console.
 - Removed `serve_data()` and its hand-rolled HTTP server. Serve local files with
