@@ -26,7 +26,7 @@
   directly (as well as a list or JSON text), so reading the file is no longer a
   separate step.
 
-- Upgraded to the GPU-accelerated JBrowse 2 v4 linear genome view
+- Upgraded to the GPU-accelerated JBrowse 2 v5 linear genome view
   (`@jbrowse/react-linear-genome-view2`), driven through the shared
   framework-agnostic `@jbrowse/embedded-linear-genome-view` controller.
 - New declarative API. `JBrowseR("hg38", location = "BRCA1")` loads a whole
