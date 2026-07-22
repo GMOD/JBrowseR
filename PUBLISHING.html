@@ -101,9 +101,9 @@ R
 </code></pre>
 <div class="section level2">
 <h2 id="after-a-cran-release">After a CRAN release<a class="anchor" aria-label="anchor" href="#after-a-cran-release"></a></h2>
-<p>Redeploy the hosted Shiny apps so they match the release:</p>
+<p>The <strong>shinyapps</strong> workflow redeploys the hosted example apps on every published release, using the <code>SHINYAPPS_NAME</code>/<code>SHINYAPPS_TOKEN</code>/<code>SHINYAPPS_SECRET</code> repo secrets, so nothing needs doing by hand. To deploy at another time, run it from Actions → shinyapps → Run workflow (it takes a list of app names, or <code>all</code>), or locally:</p>
 <pre><code>R -e 'remotes::install_github("GMOD/JBrowseR")'   # see the note in example_apps/deploy.R
-Rscript example_apps/deploy.R</code></pre>
+Rscript example_apps/deploy.R                    # or: ... deploy.R bookmarks_demo</code></pre>
 </div>
 <div class="section level2">
 <h2 id="a-server-free-alternative-shinylive">A server-free alternative (shinylive)<a class="anchor" aria-label="anchor" href="#a-server-free-alternative-shinylive"></a></h2>
