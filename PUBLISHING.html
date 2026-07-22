@@ -99,6 +99,13 @@ R
 &gt; install.packages(devtools)
 &gt; devtools::submit_cran()
 </code></pre>
+<div class="section level2">
+<h2 id="after-a-cran-release">After a CRAN release<a class="anchor" aria-label="anchor" href="#after-a-cran-release"></a></h2>
+<p>Redeploy the hosted Shiny apps so they match the release:</p>
+<pre><code>R -e 'remotes::install_github("GMOD/JBrowseR")'   # see the note in example_apps/deploy.R
+Rscript example_apps/deploy.R</code></pre>
+<p>A server-free option becomes available at the same moment: <a href="https://posit-dev.github.io/r-shinylive/" class="external-link">shinylive</a> compiles a Shiny app to WebAssembly, so the example apps could be served straight from the pkgdown site with no shinyapps.io account and nothing to keep running. It installs packages from the webR binary repo, which mirrors CRAN — JBrowseR, shiny and htmlwidgets are all there — so a shinylive demo tracks the CRAN version, not this checkout.</p>
+</div>
 
 
   </div>
