@@ -38,4 +38,24 @@ Clicking a feature sets \code{input[[paste0(outputId, "_selected_feature")]]},
 which is namespaced per output and so is safe with several browsers on a
 page or inside a Shiny module. It also sets the global \code{input$selectedFeature}
 for backwards compatibility; prefer the per-output id in new apps.
+
+Panning or zooming sets \code{input[[paste0(outputId, "_location")]]} to the
+visible region, so the server can recompute for what the user is looking at.
+It settles after the gesture rather than firing per frame, and there is no
+global twin — use the namespaced id:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{output$browser <- renderJBrowseR(JBrowseR("hg38", location = "BRCA1"))
+output$region <- renderText(input$browser_location)
+}\if{html}{\out{</div>}}
+
+The value is the same string the location box displays, which means it is
+formatted for reading rather than for parsing: coordinates carry thousand
+separators (\code{"17:43,044,295..43,125,483"}), and a view showing several
+regions gives them space-separated. Strip the commas before doing arithmetic
+with it — \code{as.numeric(gsub(",", "", x))}. It feeds straight back into
+\verb{location =} unchanged, though (JBrowse parses what it prints).
+
+Note that reading it in a reactive that also feeds \code{renderJBrowseR()} builds
+a loop: the widget rebuilds on every change, and a rebuild resets the view.
+Read it to drive \emph{other} outputs.
 }

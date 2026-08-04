@@ -77,6 +77,27 @@ JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
 #' page or inside a Shiny module. It also sets the global `input$selectedFeature`
 #' for backwards compatibility; prefer the per-output id in new apps.
 #'
+#' Panning or zooming sets `input[[paste0(outputId, "_location")]]` to the
+#' visible region, so the server can recompute for what the user is looking at.
+#' It settles after the gesture rather than firing per frame, and there is no
+#' global twin — use the namespaced id:
+#'
+#' ```r
+#' output$browser <- renderJBrowseR(JBrowseR("hg38", location = "BRCA1"))
+#' output$region <- renderText(input$browser_location)
+#' ```
+#'
+#' The value is the same string the location box displays, which means it is
+#' formatted for reading rather than for parsing: coordinates carry thousand
+#' separators (`"17:43,044,295..43,125,483"`), and a view showing several
+#' regions gives them space-separated. Strip the commas before doing arithmetic
+#' with it — `as.numeric(gsub(",", "", x))`. It feeds straight back into
+#' `location =` unchanged, though (JBrowse parses what it prints).
+#'
+#' Note that reading it in a reactive that also feeds `renderJBrowseR()` builds
+#' a loop: the widget rebuilds on every change, and a rebuild resets the view.
+#' Read it to drive *other* outputs.
+#'
 #' @param outputId output variable to read from
 #' @param width Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
 #' @param height Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.

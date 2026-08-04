@@ -25,6 +25,20 @@ function featureSelectHandler(el: HTMLElement) {
   }
 }
 
+// The visible region goes to `<outputId>_location`, so a server can recompute
+// for what the user is actually looking at. No global twin: `selectedFeature`
+// has one only for apps written before the namespacing, and a second browser on
+// the page would fight over it.
+//
+// The view fires this with `coarseVisibleLocStrings`, which settles after a
+// pan/zoom rather than tracking every frame — a raw read would put a Shiny
+// round-trip behind every pointer event of a drag.
+function locationChangeHandler(el: HTMLElement) {
+  return (location: string) => {
+    window.Shiny?.setInputValue(`${el.id}_location`, location)
+  }
+}
+
 defineWidget<Payload<CreateLinearGenomeViewOptions>, LinearGenomeViewController>(
   'JBrowseR',
   async (el, x) =>
@@ -32,5 +46,6 @@ defineWidget<Payload<CreateLinearGenomeViewOptions>, LinearGenomeViewController>
       ...x,
       plugins: await runtimePlugins(x.plugins),
       onFeatureSelect: featureSelectHandler(el),
+      onLocationChange: locationChangeHandler(el),
     }),
 )

@@ -40,6 +40,16 @@ assemblyNames = "hg38"         # "hg38"  <- wrong, silently
 `tests/testthat/test-app.R` pins this. It bites hardest on `assemblyNames`,
 `aliases`, and a view spec's `tracks`.
 
+**`input$<id>_location` is printed for reading, not for parsing.** It is
+`coarseVisibleLocStrings` verbatim — the location box's own string. So the
+coordinates carry thousand separators, a split view gives several regions
+space-separated, and a multi-assembly view prefixes `{assemblyName}`. The one
+that actually bites: the refName is the *assembly's*, so `JBrowseR("hg38")`
+reads back `chr17` even when you asked for `17` and your data frame says `17`.
+JBrowse aliases the two, so the track still renders and only a string
+comparison in R notices. `example_apps/interactive_peak_calling/app.R` has the
+parser (`parse_locstring`/`bare_ref`) worked out; copy it rather than rederive.
+
 **`resolve.dedupe` makes this repo's version win.** `mobx` is deduped against the
 linked monorepo checkout, so the version in `package.json` is not a local
 preference — it must track the monorepo's. A monorepo bump breaks `pnpm build`
@@ -100,13 +110,8 @@ then `node tools/screenshot_examples.mjs`.
 Tagged locally as **`wip/embedded-session-work`** (`d6979d6`), cut before main
 diverged, so it does *not* apply cleanly — it predates the TypeScript entrypoint
 migration, the namespaced Shiny inputs and the generic `view()`. Reference, not
-a patch. It contains, in rough order of value:
+a patch. What is left in it:
 
-- **`input$location`** — a throttled location read-back, so a Shiny server can
-  recompute for the visible region. Today the only signal out is the selected
-  feature. `createLinearGenomeView` already takes `onLocationChange`; wire it in
-  `srcjs/index.ts` next to the existing `featureSelectHandler(el)`, following the
-  same `<outputId>_` namespacing.
 - **`JBrowseRApp(session = )` plus `input$session`** — a session snapshot in and
   out, so a Shiny app can offer "save this layout" and reopen it. The sibling
   anywidget has this working (`session` in, `current_session` out — two traits

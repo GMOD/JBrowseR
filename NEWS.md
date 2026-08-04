@@ -1,66 +1,63 @@
 # JBrowseR 0.11.0
 
+- Upgraded to the GPU-accelerated JBrowse 2 v5 linear genome view
+  (`@jbrowse/react-linear-genome-view2`), driven through the shared
+  framework-agnostic `@jbrowse/embedded-linear-genome-view` controller.
+- New declarative API. `JBrowseR("hg38", location = "BRCA1")` loads a whole
+  hosted genome — assembly, reference-name aliases, cytobands, gene search — in
+  one line.
+- The config builders are gone, and nothing replaces them: a JBrowse config is
+  an R list already. `assembly()`, `track()`, `tracks()`, `text_index()`,
+  `theme()`, `json_config()`, `view()`, `linear_view()`, `synteny_view()`,
+  `dotplot_view()` and `synteny_track()` each returned a list literal, and each
+  had to grow whenever JBrowse gained a type. Write the list the
+  [config guide](https://jbrowse.org/jb2/docs/config_guide/) documents instead —
+  a view type, adapter or display JBrowse adds now needs no new R function. One
+  trap the builders had been hiding: a length-1 vector serializes to a JSON
+  scalar, so fields JBrowse reads as arrays need `list()` —
+  `assemblyNames = list("hg38")`, not `"hg38"`.
+- Dropping `theme()` also stops the package masking `ggplot2::theme()`, which
+  any Shiny app that plots was hitting.
+- New `JBrowseRApp()` renders the full JBrowse 2 app — any number of views of
+  any type — from a `views` list of `list(type = , init = )` specs, the same
+  vocabulary JBrowse Web serializes into its `?session=spec-…` URLs, so
+  comparative genomics (linear synteny, dotplots) is reachable from R. It loads
+  a separate widget bundle, so the single-view `JBrowseR()` stays lean.
+- Panning or zooming now sets `input[[paste0(outputId, "_location")]]` to the
+  visible region, so a Shiny server can recompute for what the user is looking
+  at — the selected feature was previously the only signal out. It settles
+  after the gesture rather than firing per frame. See the interactive peak
+  calling example app.
 - Clicking a feature now also sets `input[[paste0(outputId,
   "_selected_feature")]]`, namespaced per output, so several browsers on one page
   no longer overwrite each other's selection and the value is reachable from
   inside a Shiny module. The global `input$selectedFeature` still fires.
 - A browser that fails to load now reports the error in place instead of
   rendering a blank widget with the reason only in the devtools console.
+- `track_data_frame()` survives the cull, because a data frame is the one thing
+  config JSON cannot express. It carries every column beyond
+  `chrom`/`start`/`end`/`name` onto each feature (previously only `score` and
+  `additional`), so any column you computed shows in the feature details.
+- `tracks` entries accept a bare data-file URL or a `list(uri = , index = )`
+  spec as well as a full config. Track type, adapter and index sibling are
+  inferred by JBrowse core at display time, using the same format plugins the
+  "Add track" flow uses, so any format a bundled plugin recognizes works
+  (`.bam`/`.cram`, `.vcf`, `.gff`/`.gff3`/`.gtf`/`.bed` plain or bgzipped,
+  `.bb`/`.bigWig`, `.hic`, …) rather than a fixed R-side list. Entries missing
+  `assemblyNames` are backfilled with the assembly's name by the view.
+- `assembly` also accepts a bare sequence-file URL (`".../genome.fa.gz"`, or a
+  `.2bit`); the view builds the assembly from it, deriving the name from the
+  file.
+- `config =` takes the path, URL or JSON text of a `config.json` directly, as
+  well as a list, so reading the file is no longer a separate step.
 - Removed `serve_data()` and its hand-rolled HTTP server. Serve local files with
   any static server that supports CORS and range requests (e.g.
   `npx http-server --cors`); see the "Hosting data" vignette. This drops the
   `httpuv`, `mime`, `cli`, and `stringr` dependencies, leaving `htmlwidgets` as
   the package's only import.
-- New `JBrowseRApp()` renders the full JBrowse 2 app — any number of views of any
-  type — from a declarative `views` list. Each entry is a `list(type, init)`
-  spec built with `linear_view()`, `synteny_view()`, or `dotplot_view()`, the
-  same vocabulary JBrowse Web serializes into its `?session=spec-…` URLs, so
-  comparative genomics (linear synteny, dotplots) is now reachable from R.
-  `synteny_track()` builds the PAF track config. It loads a separate widget
-  bundle, so the single-view `JBrowseR()` stays lean.
-- New `view(type, ...)` builds the `list(type, init)` spec for any view type,
-  including one a runtime `plugins` entry registers — its init fields are the
-  plugin's own, so nothing in JBrowseR has to keep up with them. The three view
-  helpers are thin wrappers over it, and `NULL` fields are dropped.
-- `track_data_frame()` carries every column beyond `chrom`/`start`/`end`/`name`
-  onto each feature (previously only `score` and `additional`), so any column
-  you computed shows in the feature details.
-- `assembly()` accepts a `.2bit` URL (`TwoBitAdapter`) in addition to FASTA.
-- Removed `json_config()`. `config =` takes the path or URL of a `config.json`
-  directly (as well as a list or JSON text), so reading the file is no longer a
-  separate step.
-
-- Upgraded to the GPU-accelerated JBrowse 2 v5 linear genome view
-  (`@jbrowse/react-linear-genome-view2`), driven through the shared
-  framework-agnostic `@jbrowse/embedded-linear-genome-view` controller.
-- New declarative API. `JBrowseR("hg38", location = "BRCA1")` loads a whole
-  hosted genome (assembly, reference-name aliases, cytobands, gene search) in one
-  line. Build custom browsers from plain values with `assembly()`, `track()`
-  (track type and index files inferred from the URL), `tracks()`, `text_index()`,
-  and `theme()`, which now return lists rather than JSON strings.
-- `tracks` entries also accept a bare data-URL string or a `c(url, index)` pair,
-  not just a `track()` config, so a whole browser can skip the constructor.
-- Track-type/adapter inference is delegated to JBrowse core: `track()` now
-  returns a loose `list(uri = ...)` spec that the view expands at display time
-  with the same format plugins the "Add track" flow uses. So any format a bundled
-  plugin recognizes works (`.bam`/`.cram`, `.vcf`, `.gff`/`.gff3`/`.gtf`/`.bed`
-  plain or bgzipped, `.bb`/`.bigWig`, `.hic`, …) — not a fixed R-side list — and
-  a bgzipped file resolves to its indexed tabix adapter, a plain one to the
-  whole-file adapter. `track()` no longer takes `type`/`adapter_type`; pass
-  overrides as extra `...` arguments, or a full config list for a specific
-  adapter.
-- `track(url, index = ...)` names a non-sibling index (a `.csi` index is
-  detected by extension).
-- `assembly` also accepts a bare sequence-file URL (`".../genome.fa.gz"`, or a
-  `.2bit`); the view builds the assembly from it, deriving the name from the
-  file, so `assembly()` is only needed for reference-name aliases or a
-  non-sibling index.
 - The old string-building helpers (`track_alignments()`, `track_variant()`,
   `track_wiggle()`, `track_feature()`, `default_session()`) and the `view=`
   first argument (`"View"`/`"JsonView"`/`"ViewHg19"`/`"ViewHg38"`) are removed.
-  Pass a hub name or `assembly()` config directly; use `config =` for a full
-  JBrowse config.
-- Build switched to Vite + pnpm; reactR is no longer a dependency.
 
 # JBrowseR 0.10.2
 

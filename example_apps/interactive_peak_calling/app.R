@@ -33,6 +33,34 @@ call_peaks <- function(z_threshold) {
   )
 }
 
+# The location read-back is the string the location box shows, so it is grouped
+# for reading ("chr17:43,044,295..43,125,483") and has to have its commas
+# stripped before it is arithmetic. Returns NULL for anything that isn't one
+# plain region, and hands back 0-based half-open coordinates to match what
+# track_data_frame() takes.
+#
+# The refName it gives is the assembly's own — hg38 says "chr17" — which need
+# not be what your data frame calls it. JBrowse aliases the two for display, so
+# the track renders and only a string comparison in R notices. `bare_ref` is
+# how this app reconciles its "17" with the browser's "chr17".
+parse_locstring <- function(loc) {
+  # a view split across several regions gives them space-separated
+  if (grepl(" ", loc, fixed = TRUE)) {
+    return(NULL)
+  }
+  # a view spanning several assemblies prefixes the refName with {assemblyName}
+  loc <- sub("^\\{[^}]*\\}", "", loc)
+  m <- regmatches(loc, regexec("^(.+):([0-9,]+)\\.\\.([0-9,]+)$", loc))[[1]]
+  if (length(m) != 4) {
+    return(NULL)
+  }
+  num <- function(x) as.numeric(gsub(",", "", x))
+  # the printed start is 1-based inclusive
+  list(ref_name = m[2], start = num(m[3]) - 1, end = num(m[4]))
+}
+
+bare_ref <- function(x) sub("^chr", "", x)
+
 ui <- page_sidebar(
   theme = bs_theme(version = 5),
   title = "JBrowseR: interactive peak calling",
@@ -41,6 +69,9 @@ ui <- page_sidebar(
       min = 1, max = 5, value = 2, step = 0.1
     ),
     textOutput("npeaks"),
+    hr(),
+    strong("In view"),
+    verbatimTextOutput("in_view"),
     hr(),
     strong("Clicked peak"),
     verbatimTextOutput("selected")
@@ -58,6 +89,26 @@ server <- function(input, output, session) {
     tracks = list(track_data_frame(peaks(), "called_peaks")),
     location = "17:43,000,000..43,125,000"
   ))
+
+  # Panning or zooming the browser sets `<outputId>_location`. Reading it drives
+  # a *different* output here on purpose: feeding it back into the reactive
+  # behind renderJBrowseR() would rebuild the widget on every pan, and a rebuild
+  # resets the very view that produced the value.
+  output$in_view <- renderPrint({
+    req(input$browserOutput_location)
+    region <- parse_locstring(input$browserOutput_location)
+    if (is.null(region)) {
+      cat(input$browserOutput_location) # split view: several regions at once
+    } else {
+      p <- peaks()
+      inside <- bare_ref(p$chrom) == bare_ref(region$ref_name) &
+        p$end > region$start & p$start < region$end
+      cat(sprintf(
+        "%s\n%s of %s peaks visible",
+        input$browserOutput_location, sum(inside), nrow(p)
+      ))
+    }
+  })
 
   output$selected <- renderPrint({
     req(input$selectedFeature)
