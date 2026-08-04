@@ -128,6 +128,21 @@ is useful if you want to save an expression in a variable.</p></dd>
 which is namespaced per output and so is safe with several browsers on a
 page or inside a Shiny module. It also sets the global <code>input$selectedFeature</code>
 for backwards compatibility; prefer the per-output id in new apps.</p>
+<p>Panning or zooming sets <code>input[[paste0(outputId, "_location")]]</code> to the
+visible region, so the server can recompute for what the user is looking at.
+It settles after the gesture rather than firing per frame, and there is no
+global twin — use the namespaced id:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">output</span><span class="op">$</span><span class="va">browser</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JBrowseR-shiny.html">renderJBrowseR</a></span><span class="op">(</span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">output</span><span class="op">$</span><span class="va">region</span> <span class="op">&lt;-</span> <span class="fu">renderText</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">browser_location</span><span class="op">)</span></span></code></pre><p></p></div>
+<p>The value is the same string the location box displays, which means it is
+formatted for reading rather than for parsing: coordinates carry thousand
+separators (<code>"17:43,044,295..43,125,483"</code>), and a view showing several
+regions gives them space-separated. Strip the commas before doing arithmetic
+with it — <code>as.numeric(gsub(",", "", x))</code>. It feeds straight back into
+<code>location =</code> unchanged, though (JBrowse parses what it prints).</p>
+<p>Note that reading it in a reactive that also feeds <code>renderJBrowseR()</code> builds
+a loop: the widget rebuilds on every change, and a rebuild resets the view.
+Read it to drive <em>other</em> outputs.</p>
     </div>
 
   </div>
