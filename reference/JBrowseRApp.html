@@ -89,6 +89,7 @@ dotplot, and more.</p>
 <span>  assemblies <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  views <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  session <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  plugins <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  config <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -114,6 +115,15 @@ assemblies, so it names both in <code>assemblyNames</code> and in its adapter.</
 
 <dt id="arg-views">views<a class="anchor" aria-label="anchor" href="#arg-views"></a></dt>
 <dd><p>A list of <code>list(type = , init = )</code> view specs.</p></dd>
+
+
+<dt id="arg-session">session<a class="anchor" aria-label="anchor" href="#arg-session"></a></dt>
+<dd><p>A previously saved session to restore instead of <code>views</code> —
+the value a running app reported as
+<code>input[[paste0(outputId, "_session")]]</code>. Unlike <code>views</code>, which describes
+what to open, this carries the state the user built: navigation, open
+tracks, per-display settings, widgets. <code>views</code> still describes what
+File → New session returns to.</p></dd>
 
 
 <dt id="arg-plugins">plugins<a class="anchor" aria-label="anchor" href="#arg-plugins"></a></dt>
