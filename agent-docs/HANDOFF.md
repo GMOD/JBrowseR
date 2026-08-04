@@ -77,12 +77,23 @@ then `node tools/screenshot_examples.mjs`.
 
 ## Known broken / unresolved
 
-- ~~CI never builds the bundle~~ — done, in `.github/workflows/bundle.yaml`
-  (`bundle` + `typecheck`, on push/PR and a nightly cron). What it still lacks
-  is a browser render job: `tools/screenshot_examples.mjs` exists and is what
-  proves a config change is semantically right, but it needs real network and
-  puppeteer resolved from the sibling checkout, so it is the flaky one.
-  Nightly-only would suit it.
+- **`typecheck` is red on upstream's source, not ours.** The job checks out
+  `GMOD/jbrowse-components` main, and `tsc` follows the `link:` deps into it, so
+  it typechecks that tree too. Upstream main still has `typeof jest` guards in
+  `packages/core/src/util/environment.ts`, `packages/app-core/.../ViewHeader.tsx`,
+  `useAssemblySelection.ts` and `useRecentLocations.ts`; the local monorepo
+  checkout — ~360 commits ahead of upstream and unpushed — has already deleted
+  them, which is why this passes here and fails there. Four
+  `Cannot find name 'jest'` errors, and they clear when the monorepo commits are
+  pushed. Do **not** fix it by loosening `"types": []` in `tsconfig.json`: that
+  setting is deliberate (see the comment there), and the shim would outlive the
+  problem. `bundle` itself passes — the JS this repo needs is all upstream
+  already, which is not true of the sibling anywidget.
+- **No browser render job in CI.** `.github/workflows/bundle.yaml` builds and
+  typechecks; nothing renders. `tools/screenshot_examples.mjs` is what proves a
+  config change is semantically right, but it needs real network and puppeteer
+  resolved from the sibling checkout, so it is the flaky one. Nightly-only would
+  suit it.
 
 ## Work that exists but did not land
 
