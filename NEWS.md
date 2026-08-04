@@ -23,6 +23,20 @@
   vocabulary JBrowse Web serializes into its `?session=spec-…` URLs, so
   comparative genomics (linear synteny, dotplots) is reachable from R. It loads
   a separate widget bundle, so the single-view `JBrowseR()` stays lean.
+- `JBrowseRApp()` gained Shiny bindings — `JBrowseRAppOutput()` and
+  `renderJBrowseRApp()` — so the multi-view app is usable in a Shiny app at all.
+  It could not share `JBrowseROutput()`: htmlwidgets dispatches on the output
+  element's class, so the app rendered into one loaded the single-view bundle
+  and failed to build.
+- A layout saves and reopens. `JBrowseRApp()` takes `session = `, and a running
+  app reports whatever the user built — navigation, open tracks, added or
+  rearranged views — as `input[[paste0(outputId, "_session")]]` in that same
+  shape. So "save this layout" is storing that value and reopening it is handing
+  it back; a restored session takes precedence over `views`, which still
+  describes what File → New session returns to. The read-back rides a coarse
+  signal (which views exist, what each has open, where each is looking), so it
+  settles after a gesture instead of pushing a snapshot per frame. See the
+  `save_session` example app.
 - Panning or zooming now sets `input[[paste0(outputId, "_location")]]` to the
   visible region, so a Shiny server can recompute for what the user is looking
   at — the selected feature was previously the only signal out. It settles

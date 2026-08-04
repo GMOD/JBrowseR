@@ -2,7 +2,9 @@
 
 export(JBrowseR)
 export(JBrowseRApp)
+export(JBrowseRAppOutput)
 export(JBrowseROutput)
 export(renderJBrowseR)
+export(renderJBrowseRApp)
 export(track_data_frame)
 import(htmlwidgets)

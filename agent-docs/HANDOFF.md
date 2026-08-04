@@ -104,19 +104,3 @@ then `node tools/screenshot_examples.mjs`.
   resolved from the sibling checkout, so it is the flaky one. Nightly-only would
   suit it.
 
-## Work that exists but did not land
-
-Tagged locally as **`wip/embedded-session-work`** (`d6979d6`), cut before main
-diverged, so it does *not* apply cleanly — it predates the TypeScript entrypoint
-migration, the namespaced Shiny inputs and the generic `view()`. Reference, not
-a patch. What is left in it:
-
-- **`JBrowseRApp(session = )` plus `input$session`** — a session snapshot in and
-  out, so a Shiny app can offer "save this layout" and reopen it. The sibling
-  anywidget has this working (`session` in, `current_session` out — two traits
-  because one would echo). Use `getSessionSnapshot(viewState)` from
-  `@jbrowse/react-app2`, not a raw `getSnapshot`: promoted display-type defaults
-  live in the user's own browser, so a raw snapshot replays differently for
-  whoever opens it. Ride the read-back on a coarse signal (view ids + open
-  trackIds + the debounced `coarseVisibleLocStrings`) with the snapshot read
-  `untracked`, or a drag pushes kilobytes per pointer event.

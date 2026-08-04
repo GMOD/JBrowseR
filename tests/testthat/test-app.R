@@ -46,6 +46,43 @@ test_that("any view type opens with no change to this package", {
   expect_equal(w$x$views[[1]]$type, "CircularView")
 })
 
+test_that("a saved session rides along to be restored instead of views", {
+  # the round-trip's other half: what a running app reported as
+  # input$<id>_session goes back in as `session =`, and reaches the payload
+  # unchanged. Whether the session then wins over `views` is the app engine's
+  # rule, not this package's, and is covered by a browser render.
+  saved <- list(
+    name = "saved",
+    views = list(list(
+      id = "v1", type = "LinearGenomeView", bpPerPx = 73.27, offsetPx = 587433
+    ))
+  )
+  w <- JBrowseRApp(
+    assemblies = list(list(name = "hg38")),
+    views = list(list(type = "LinearGenomeView", init = list(assembly = "hg38"))),
+    session = saved
+  )
+  expect_equal(w$x$session$views[[1]]$offsetPx, 587433)
+  # `views` is still sent: it is what File -> New session returns to
+  expect_equal(w$x$views[[1]]$type, "LinearGenomeView")
+})
+
+test_that("no session field is sent when none was given", {
+  # drop_null keeps the payload free of a null the app would have to interpret
+  w <- JBrowseRApp(assemblies = list(list(name = "hg38")))
+  expect_false("session" %in% names(w$x))
+})
+
+test_that("the app has its own Shiny bindings", {
+  # htmlwidgets dispatches on the output element's class, so the app cannot
+  # share JBrowseROutput: that emits a JBrowseR-classed div, which loads the
+  # single-view bundle and fails to build an app payload
+  expect_match(
+    as.character(JBrowseRAppOutput("app")),
+    'class="JBrowseRApp html-widget'
+  )
+})
+
 test_that("id fields stay JSON arrays at length one", {
   # the one R-specific trap: a length-1 character vector auto-unboxes to a JSON
   # scalar, so ids that JBrowse reads as arrays are written with list()

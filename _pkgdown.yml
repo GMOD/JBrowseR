@@ -23,3 +23,5 @@ reference:
     desc: 'Render the full app with several views of any type'
   - contents:
       - JBrowseRApp
+      - renderJBrowseRApp
+      - JBrowseRAppOutput

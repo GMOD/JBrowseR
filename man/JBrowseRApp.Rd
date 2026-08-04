@@ -8,6 +8,7 @@ JBrowseRApp(
   assemblies = NULL,
   tracks = NULL,
   views = NULL,
+  session = NULL,
   plugins = NULL,
   theme = NULL,
   config = NULL,
@@ -24,6 +25,13 @@ A synteny/dotplot view needs two or more.}
 assemblies, so it names both in \code{assemblyNames} and in its adapter.}
 
 \item{views}{A list of \code{list(type = , init = )} view specs.}
+
+\item{session}{A previously saved session to restore instead of \code{views} —
+the value a running app reported as
+\code{input[[paste0(outputId, "_session")]]}. Unlike \code{views}, which describes
+what to open, this carries the state the user built: navigation, open
+tracks, per-display settings, widgets. \code{views} still describes what
+File → New session returns to.}
 
 \item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
 
