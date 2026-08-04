@@ -1,18 +1,3 @@
-test_that("theme() nests palette colors, omitting absent ones", {
-  th <- theme("#311b92", "#0097a7")
-  expect_equal(th$palette$primary$main, "#311b92")
-  expect_equal(th$palette$secondary$main, "#0097a7")
-  expect_null(th$palette$tertiary)
-})
-
-test_that("text_index() builds a Trix aggregate adapter", {
-  ix <- text_index("a.ix", "a.ixx", "meta.json", "hg19")
-  expect_equal(ix$type, "TrixTextSearchAdapter")
-  expect_equal(ix$textSearchAdapterId, "hg19-index")
-  expect_equal(ix$ixFilePath$uri, "a.ix")
-  expect_equal(ix$assemblyNames[[1]], "hg19")
-})
-
 test_that("track_data_frame() emits FromConfigAdapter features", {
   df <- data.frame(
     chrom = c("1", "2"),

@@ -41,11 +41,13 @@ server <- function(input, output, session) {
   observeEvent(input$tp53, loc("TP53"))
   observeEvent(input$brca2, loc("BRCA2"))
 
-  genes <- track(
+  genes <- list(
+    uri =
     "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
     name = "NCBI RefSeq Genes"
   )
-  variants <- track(
+  variants <- list(
+    uri =
     "https://jbrowse.org/genomes/GRCh38/variants/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz",
     name = "1000 Genomes Variants"
   )

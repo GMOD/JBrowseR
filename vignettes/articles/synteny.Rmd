@@ -14,9 +14,9 @@ library(JBrowseR)
 dotplots, breakpoint-split — `JBrowseRApp()` drives the full JBrowse 2 app, and a
 `views` list describes what to open. Each entry is a `list(type, init)` spec, the
 same vocabulary JBrowse Web serializes into its
-[`?session=spec-…` URLs](https://jbrowse.org/jb2/docs/urlparams/), built with
-`linear_view()`, `synteny_view()`, or `dotplot_view()`. The fields each `init`
-accepts come from the view's
+[`?session=spec-…` URLs](https://jbrowse.org/jb2/docs/urlparams/) — a plain
+list, with no R builder in the way. The fields each `init` accepts come from the
+view's
 [state-model docs](https://jbrowse.org/jb2/docs/models/) — see
 [LinearSyntenyView](https://jbrowse.org/jb2/docs/models/linearsyntenyview/) — and
 the PAF track is a
@@ -28,40 +28,72 @@ them follows.
 ## Linear synteny
 
 Two `volvox` assemblies (one carries a deletion) are tied together by a PAF
-track and shown as a linear synteny view. `assembly()` handles the `.2bit` and
-FASTA sequences; `synteny_track()` builds the PAF track that spans both.
+track and shown as a linear synteny view. Each assembly is a `list(name=, uri=)`
+that core expands; the PAF track spans both and so names them in order.
 
 ```{r synteny}
 base <- "https://jbrowse.org/code/jb2/main/test_data/volvox/"
 
 JBrowseRApp(
   assemblies = list(
-    assembly(paste0(base, "volvox.2bit"), name = "volvox"),
-    assembly(paste0(base, "volvox_del.fa"), name = "volvox_del")
+    list(name = "volvox", uri = paste0(base, "volvox.2bit")),
+    list(name = "volvox_del", uri = paste0(base, "volvox_del.fa"))
   ),
   tracks = list(
-    synteny_track(paste0(base, "volvox_del.paf"), "volvox", "volvox_del",
-      track_id = "volvox_del_paf")
+    list(
+      type = "SyntenyTrack",
+      trackId = "volvox_del_paf",
+      name = "volvox_del.paf",
+      assemblyNames = list("volvox", "volvox_del"),
+      adapter = list(
+        type = "PAFAdapter",
+        targetAssembly = "volvox",
+        queryAssembly = "volvox_del",
+        uri = paste0(base, "volvox_del.paf")
+      )
+    )
   ),
-  views = list(synteny_view(c("volvox", "volvox_del"), tracks = "volvox_del_paf"))
+  views = list(list(
+    type = "LinearSyntenyView",
+    init = list(
+      views = list(list(assembly = "volvox"), list(assembly = "volvox_del")),
+      tracks = list("volvox_del_paf")
+    )
+  ))
 )
 ```
 
 ## Dotplot
 
-The same assemblies and PAF render as a dotplot with one function call
-different — `dotplot_view()` in place of `synteny_view()`:
+The same assemblies and PAF render as a dotplot with one field different —
+`"DotplotView"` in place of `"LinearSyntenyView"`:
 
 ```{r dotplot}
 JBrowseRApp(
   assemblies = list(
-    assembly(paste0(base, "volvox.2bit"), name = "volvox"),
-    assembly(paste0(base, "volvox_del.fa"), name = "volvox_del")
+    list(name = "volvox", uri = paste0(base, "volvox.2bit")),
+    list(name = "volvox_del", uri = paste0(base, "volvox_del.fa"))
   ),
   tracks = list(
-    synteny_track(paste0(base, "volvox_del.paf"), "volvox", "volvox_del",
-      track_id = "volvox_del_paf")
+    list(
+      type = "SyntenyTrack",
+      trackId = "volvox_del_paf",
+      name = "volvox_del.paf",
+      assemblyNames = list("volvox", "volvox_del"),
+      adapter = list(
+        type = "PAFAdapter",
+        targetAssembly = "volvox",
+        queryAssembly = "volvox_del",
+        uri = paste0(base, "volvox_del.paf")
+      )
+    )
   ),
-  views = list(dotplot_view(c("volvox", "volvox_del"), tracks = "volvox_del_paf"))
+  views = list(list(
+    type = "DotplotView",
+    init = list(
+      views = list(list(assembly = "volvox"), list(assembly = "volvox_del")),
+      tracks = list("volvox_del_paf")
+    )
+  ))
 )
 ```

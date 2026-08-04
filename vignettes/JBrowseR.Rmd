@@ -40,15 +40,16 @@ ships a search index, a gene name like `"BRCA1"`. Other hubs work the same way �
 
 ## Adding tracks
 
-Add tracks by URL with `track()`. The track type and its index files
+Add tracks by URL with `list(uri = )`. The track type and its index files
 (`.bai`/`.crai`/`.tbi`) are inferred from the file extension, so a data URL is
-usually all you need. `tracks()` gathers several together.
+usually all you need. `list()` gathers several together.
 
 ```{r}
 JBrowseR(
   "hg38",
-  tracks = tracks(
-    track(
+  tracks = list(
+    list(
+    uri =
       "https://jbrowse.org/genomes/GRCh38/alignments/NA12878/NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram",
       name = "NA12878 Exome"
     )
@@ -73,11 +74,11 @@ Recognized extensions cover the common genomics types:
 The list isn't hard-coded in R — the view infers the adapter with JBrowse's own
 format plugins, so any format a bundled plugin recognizes works. Anything the
 inference gets wrong, or a track needing a specific adapter, is a plain config
-list (the full JBrowse track JSON); extra arguments to `track()` (e.g.
+list (the full JBrowse track JSON); extra arguments to `list(uri = )` (e.g.
 `type = "AlignmentsTrack"`) ride onto the track and override the inferred
 defaults.
 
-When you only need the defaults, a bare URL string is a track — `track()` is
+When you only need the defaults, a bare URL string is a track — `list(uri = )` is
 just the same thing with room for `name=` and extra config. So a whole browser
 can skip the constructor entirely:
 
@@ -97,7 +98,7 @@ data URL. When yours lives elsewhere — or is a `.csi` index — name it with
 `index=`, or as the second element of a `c(url, index)` pair in `tracks`:
 
 ```{r}
-track("https://example.com/reads.bam", index = "https://example.com/reads.bai")
+list(uri = "https://example.com/reads.bam", index = "https://example.com/reads.bai")
 ```
 
 ## A gallery
@@ -111,7 +112,8 @@ limits. Every one of them is also on the website as a
 ```{r}
 JBrowseR(
   "hg38",
-  tracks = tracks(track(
+  tracks = list(list(
+    uri =
     "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
     name = "NCBI RefSeq Genes"
   )),
@@ -126,7 +128,8 @@ JBrowseR(
 ```{r}
 JBrowseR(
   "hg38",
-  tracks = tracks(track(
+  tracks = list(list(
+    uri =
     "https://jbrowse.org/genomes/GRCh38/variants/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz",
     name = "1000 Genomes Variants"
   )),
@@ -141,7 +144,8 @@ JBrowseR(
 ```{r}
 JBrowseR(
   "hg38",
-  tracks = tracks(track(
+  tracks = list(list(
+    uri =
     "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
     name = "phyloP100way Conservation"
   )),
@@ -208,12 +212,14 @@ Sniffles track and the long reads carry it below.
 ```{r}
 JBrowseR(
   "hg19",
-  tracks = tracks(
-    track(
+  tracks = list(
+    list(
+    uri =
       "https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz",
       name = "Sniffles SV calls"
     ),
-    track(
+    list(
+    uri =
       "https://jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
       name = "SKBR3 PacBio long reads"
     )
@@ -231,7 +237,8 @@ many reads.
 ```{r}
 JBrowseR(
   "hg38",
-  tracks = tracks(track(
+  tracks = list(list(
+    uri =
     "https://jbrowse.org/demos/cgiab/HG008-T_chr10_CUZD1_deletion.bam",
     name = "HG008-T PacBio HiFi"
   )),
@@ -241,16 +248,24 @@ JBrowseR(
 
 ![HG008 tumor somatic deletion at CUZD1](../man/figures/demo-cancer-deletion.png)
 
-**A custom theme.** `theme()` recolors the browser.
+**A custom theme.** The `theme` config recolors the browser; it is the
+[MUI palette](https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme)
+JBrowse takes.
 
 ```{r}
 JBrowseR(
   "hg38",
-  tracks = tracks(track(
+  tracks = list(list(
+    uri =
     "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
     name = "NCBI RefSeq Genes"
   )),
-  theme = theme("#311b92", "#0097a7"),
+  theme = list(
+    palette = list(
+      primary = list(main = "#311b92"),
+      secondary = list(main = "#0097a7")
+    )
+  ),
   location = "BRCA1"
 )
 ```

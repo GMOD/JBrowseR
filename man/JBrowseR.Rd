@@ -22,12 +22,13 @@ JBrowseR(
 \item{assembly}{A hub name understood by jbrowse.org (e.g. \code{"hg38"}, \code{"hg19"},
 or a GenArk accession like \code{"GCF_000001405.40"}), a sequence-file URL the
 view builds an assembly from (\code{".../hg38.fa.gz"}, \verb{.2bit}), or an assembly
-config list from \code{\link[=assembly]{assembly()}} (needed only for aliases or a non-sibling
-index).}
+config list — \code{list(name = , uri = )}, plus \code{aliases} or \code{refNameAliases}
+when needed.}
 
-\item{tracks}{A list of track entries: a bare data-file URL, a spec from
-\code{\link[=track]{track()}} / \code{\link[=track_data_frame]{track_data_frame()}}, or a full track config. Entries missing
-\code{assemblyNames} are backfilled with the assembly's name by the view.}
+\item{tracks}{A list of track entries: a bare data-file URL, a
+\code{list(uri = )} spec the view expands, a config from \code{\link[=track_data_frame]{track_data_frame()}},
+or a full track config. Entries missing \code{assemblyNames} are backfilled with
+the assembly's name by the view.}
 
 \item{location}{A region string (\code{"chr1:1-1000"}) or, when the assembly hub
 provides a gene-name search index, a gene name (\code{"BRCA1"}).}
@@ -35,10 +36,12 @@ provides a gene-name search index, a gene name (\code{"BRCA1"}).}
 \item{default_session}{An optional serialized session (advanced); when given
 it owns the initial track layout instead of \code{tracks}.}
 
-\item{text_search}{One or more aggregate text-search adapters from
-\code{\link[=text_index]{text_index()}}, enabling gene-name search.}
+\item{text_search}{One or more aggregate text-search adapter configs (e.g. a
+\code{TrixTextSearchAdapter}), enabling gene-name search.}
 
-\item{theme}{A theme config from \code{\link[=theme]{theme()}}.}
+\item{theme}{A theme config, the
+\href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
+palette} JBrowse takes: \code{list(palette = list(primary = list(main = )))}.}
 
 \item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
 
@@ -57,9 +60,18 @@ htmlwidget for use in R Markdown documents, Shiny apps, or the interactive R
 console.
 }
 \details{
-The API is declarative: describe the browser with plain values and the
-helper constructors (\code{\link[=assembly]{assembly()}}, \code{\link[=track]{track()}}, \code{\link[=tracks]{tracks()}}, \code{\link[=text_index]{text_index()}},
-\code{\link[=theme]{theme()}}). Nothing is imperative and no JSON strings are assembled by hand.
+The API is declarative, and the thing you describe it with is JBrowse's own
+config: assemblies, tracks and sessions are the same
+\href{https://jbrowse.org/jb2/docs/config_guide/}{JSON objects} a
+\code{config.json} holds, written as R lists. There are deliberately no
+constructors for them — what you write here is what the config file holds,
+and nothing in this package has to grow when JBrowse gains a track type, an
+adapter or a display. The one exception is \code{\link[=track_data_frame]{track_data_frame()}}, for the one
+thing config JSON cannot express: an R data frame.
+
+One R-specific trap: a length-1 vector serializes to a JSON scalar, so fields
+JBrowse reads as arrays (\code{assemblyNames}, \code{aliases}) are written with
+\code{list()} — \code{assemblyNames = list("hg38")}, not \code{"hg38"}.
 }
 \examples{
 # a whole human genome browser in one line (gene search included)

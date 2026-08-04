@@ -21,27 +21,30 @@ library(JBrowseR)
 
 ## Describe the assembly
 
-`assembly()` builds the reference from a FASTA URL. JBrowse derives the index
+An assembly is a list with a `name` and a `uri`. JBrowse derives the index
 locations (`.fai`, plus `.gzi` for bgzipped FASTA) from the URL, so you only
 point at the FASTA itself. Add reference-name aliases so `chr1`/`1` both resolve.
 
 ```{r}
-hg19 <- assembly(
-  "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
-  aliases = "GRCh37",
-  refname_aliases = "https://jbrowse.org/genomes/hg19/hg19_aliases.txt"
+hg19 <- list(
+  name = "hg19",
+  uri = "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+  aliases = list("GRCh37"),
+  refNameAliases = list(uri = "https://jbrowse.org/genomes/hg19/hg19_aliases.txt")
 )
 ```
 
 ## Add tracks
 
-`track()` infers the track type and adapter from the file extension. Group your
-tracks with `tracks()`. You do not need to set `assemblyNames` on each track —
-`JBrowseR()` fills it in from the assembly you load.
+A track is a list too. `uri` alone is enough — the view infers the track type
+and adapter from the file extension, and derives the index location. You do not
+need to set `assemblyNames` on each track; the view fills it in from the
+assembly you load.
 
 ```{r}
-my_tracks <- tracks(
-  track(
+my_tracks <- list(
+  list(
+    uri =
     "https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
     name = "NCBI RefSeq Genes"
   )
@@ -51,15 +54,17 @@ my_tracks <- tracks(
 ## Enable gene-name search
 
 Hub assemblies include search; for a custom assembly, point at your own Trix
-index files with `text_index()` and pass it as `text_search`. Now `location` can
+index files with a Trix adapter and pass it as `text_search`. Now `location` can
 be a gene name.
 
 ```{r}
-hg19_search <- text_index(
-  "https://jbrowse.org/genomes/hg19/trix/hg19.ix",
-  "https://jbrowse.org/genomes/hg19/trix/hg19.ixx",
-  "https://jbrowse.org/genomes/hg19/trix/meta.json",
-  "hg19"
+hg19_search <- list(
+  type = "TrixTextSearchAdapter",
+  textSearchAdapterId = "hg19-index",
+  assemblyNames = list("hg19"),
+  ixFilePath = list(uri = "https://jbrowse.org/genomes/hg19/trix/hg19.ix"),
+  ixxFilePath = list(uri = "https://jbrowse.org/genomes/hg19/trix/hg19.ixx"),
+  metaFilePath = list(uri = "https://jbrowse.org/genomes/hg19/trix/meta.json")
 )
 ```
 
@@ -70,7 +75,7 @@ JBrowseR(
   assembly = hg19,
   tracks = my_tracks,
   text_search = hg19_search,
-  theme = theme("#311b92", "#0097a7"),
+  theme = list(palette = list(primary = list(main = "#311b92"))),
   location = "MYC"
 )
 ```

@@ -28,7 +28,8 @@ hub's search index.
 ```{r hub}
 JBrowseR(
   "hg38",
-  tracks = tracks(track(
+  tracks = list(list(
+    uri =
     paste0(
       "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/",
       "GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"

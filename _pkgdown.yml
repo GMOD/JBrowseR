@@ -15,21 +15,11 @@ reference:
       - JBrowseR
       - renderJBrowseR
       - JBrowseROutput
-  - title: 'Describing a browser'
-    desc: 'Declarative constructors for assemblies, tracks, search, and theme'
+  - title: 'Your R data on the genome'
+    desc: 'The one thing a JBrowse config cannot express itself'
   - contents:
-      - assembly
-      - track
-      - tracks
       - track_data_frame
-      - text_index
-      - theme
   - title: 'Multiple views (synteny, dotplots)'
     desc: 'Render the full app with several views of any type'
   - contents:
       - JBrowseRApp
-      - view
-      - linear_view
-      - synteny_view
-      - dotplot_view
-      - synteny_track

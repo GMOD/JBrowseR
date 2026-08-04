@@ -4,25 +4,37 @@
 #' htmlwidget for use in R Markdown documents, Shiny apps, or the interactive R
 #' console.
 #'
-#' The API is declarative: describe the browser with plain values and the
-#' helper constructors ([assembly()], [track()], [tracks()], [text_index()],
-#' [theme()]). Nothing is imperative and no JSON strings are assembled by hand.
+#' The API is declarative, and the thing you describe it with is JBrowse's own
+#' config: assemblies, tracks and sessions are the same
+#' \href{https://jbrowse.org/jb2/docs/config_guide/}{JSON objects} a
+#' `config.json` holds, written as R lists. There are deliberately no
+#' constructors for them — what you write here is what the config file holds,
+#' and nothing in this package has to grow when JBrowse gains a track type, an
+#' adapter or a display. The one exception is [track_data_frame()], for the one
+#' thing config JSON cannot express: an R data frame.
+#'
+#' One R-specific trap: a length-1 vector serializes to a JSON scalar, so fields
+#' JBrowse reads as arrays (`assemblyNames`, `aliases`) are written with
+#' `list()` — `assemblyNames = list("hg38")`, not `"hg38"`.
 #'
 #' @param assembly A hub name understood by jbrowse.org (e.g. `"hg38"`, `"hg19"`,
 #'   or a GenArk accession like `"GCF_000001405.40"`), a sequence-file URL the
 #'   view builds an assembly from (`".../hg38.fa.gz"`, `.2bit`), or an assembly
-#'   config list from [assembly()] (needed only for aliases or a non-sibling
-#'   index).
-#' @param tracks A list of track entries: a bare data-file URL, a spec from
-#'   [track()] / [track_data_frame()], or a full track config. Entries missing
-#'   `assemblyNames` are backfilled with the assembly's name by the view.
+#'   config list — `list(name = , uri = )`, plus `aliases` or `refNameAliases`
+#'   when needed.
+#' @param tracks A list of track entries: a bare data-file URL, a
+#'   `list(uri = )` spec the view expands, a config from [track_data_frame()],
+#'   or a full track config. Entries missing `assemblyNames` are backfilled with
+#'   the assembly's name by the view.
 #' @param location A region string (`"chr1:1-1000"`) or, when the assembly hub
 #'   provides a gene-name search index, a gene name (`"BRCA1"`).
 #' @param default_session An optional serialized session (advanced); when given
 #'   it owns the initial track layout instead of `tracks`.
-#' @param text_search One or more aggregate text-search adapters from
-#'   [text_index()], enabling gene-name search.
-#' @param theme A theme config from [theme()].
+#' @param text_search One or more aggregate text-search adapter configs (e.g. a
+#'   `TrixTextSearchAdapter`), enabling gene-name search.
+#' @param theme A theme config, the
+#'   \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
+#'   palette} JBrowse takes: `list(palette = list(primary = list(main = )))`.
 #' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
 #' @param config Escape hatch: a whole JBrowse config forming the payload base
 #'   that explicit arguments override — a list, or the path, URL, or JSON text of

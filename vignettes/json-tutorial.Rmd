@@ -48,12 +48,14 @@ return plain lists.
 
 ```{r}
 cfg <- list(
-  assembly = assembly(
-    "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
-    aliases = "GRCh37"
+  assembly = list(
+    name = "hg19",
+    uri = "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
+    aliases = list("GRCh37")
   ),
-  tracks = tracks(
-    track(
+  tracks = list(
+    list(
+    uri =
       "https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
       name = "NCBI RefSeq Genes"
     )

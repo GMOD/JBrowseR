@@ -29,7 +29,8 @@ specs <- list(
   "demo-alignments" = lgv(
     "NA12878 exome CRAM on hg38",
     "hg38",
-    tracks = tracks(track(
+    tracks = list(list(
+    uri =
       paste0(
         "https://jbrowse.org/genomes/GRCh38/alignments/NA12878/",
         "NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram"
@@ -41,13 +42,14 @@ specs <- list(
   "demo-genes" = lgv(
     "NCBI RefSeq genes at BRCA1",
     "hg38",
-    tracks = tracks(track(refseq_gff, name = "NCBI RefSeq Genes")),
+    tracks = list(list(uri = refseq_gff, name = "NCBI RefSeq Genes")),
     location = "BRCA1"
   ),
   "demo-variants" = lgv(
     "1000 Genomes variants",
     "hg38",
-    tracks = tracks(track(
+    tracks = list(list(
+    uri =
       paste0(
         "https://jbrowse.org/genomes/GRCh38/variants/",
         "ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz"
@@ -59,7 +61,7 @@ specs <- list(
   "demo-conservation" = lgv(
     "phyloP100way conservation bigWig",
     "hg38",
-    tracks = tracks(track(phylop_bw, name = "phyloP100way Conservation")),
+    tracks = list(list(uri = phylop_bw, name = "phyloP100way Conservation")),
     location = "17:43,044,295..43,048,000"
   ),
   "demo-dataframe" = lgv(
@@ -71,15 +73,17 @@ specs <- list(
   "demo-skbr3" = lgv(
     "SKBR3 long-read structural variants",
     "hg19",
-    tracks = tracks(
-      track(
+    tracks = list(
+      list(
+    uri =
         paste0(
           "https://jbrowse.org/genomes/hg19/SKBR3/",
           "reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz"
         ),
         name = "Sniffles SV calls"
       ),
-      track(
+      list(
+    uri =
         paste0(
           "https://jbrowse.org/genomes/hg19/skbr3/",
           "reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam"
@@ -94,7 +98,8 @@ specs <- list(
   "demo-cancer-deletion" = lgv(
     "HG008-T PacBio HiFi somatic deletion at CUZD1",
     "hg38",
-    tracks = tracks(track(
+    tracks = list(list(
+    uri =
       "https://jbrowse.org/demos/cgiab/HG008-T_chr10_CUZD1_deletion.bam",
       name = "HG008-T PacBio HiFi"
     )),
@@ -121,8 +126,11 @@ specs <- list(
   "demo-theme" = lgv(
     "custom-themed browser",
     "hg38",
-    tracks = tracks(track(refseq_gff, name = "NCBI RefSeq Genes")),
-    theme = theme("#311b92", "#0097a7"),
+    tracks = list(list(uri = refseq_gff, name = "NCBI RefSeq Genes")),
+    theme = list(palette = list(
+      primary = list(main = "#311b92"),
+      secondary = list(main = "#0097a7")
+    )),
     location = "BRCA1"
   )
 )
@@ -152,11 +160,14 @@ specs[["demo-synteny"]] <- spec(
     assemblies = assemblies,
     tracks = list(ecoli_ava),
     views = list(
-      synteny_view(
-        as.list(strains),
-        tracks = list(list("ecoli_ava"), list("ecoli_ava"), list("ecoli_ava")),
-        drawCurves = FALSE,
-        minAlignmentLength = 10000
+      list(
+        type = "LinearSyntenyView",
+        init = list(
+          views = lapply(strains, \(s) list(assembly = s)),
+          tracks = list(list("ecoli_ava"), list("ecoli_ava"), list("ecoli_ava")),
+          drawCurves = FALSE,
+          minAlignmentLength = 10000
+        )
       )
     )
   )$x
@@ -168,7 +179,13 @@ specs[["demo-dotplot"]] <- spec(
   JBrowseRApp(
     assemblies = assemblies[1:2],
     tracks = list(ecoli_ava),
-    views = list(dotplot_view(list("K12", "Sakai"), tracks = list("ecoli_ava")))
+    views = list(list(
+      type = "DotplotView",
+      init = list(
+        views = list(list(assembly = "K12"), list(assembly = "Sakai")),
+        tracks = list("ecoli_ava")
+      )
+    ))
   )$x
 )
 

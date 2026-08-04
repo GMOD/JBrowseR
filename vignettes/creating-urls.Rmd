@@ -71,7 +71,7 @@ there, so co-locating the data gives faster performance.
 ## Viewing local files
 
 To view files from your own machine, serve the directory with any static server
-that supports range requests and CORS, then point `assembly()` / `track()` at
+that supports range requests and CORS, then point the assembly and track configs at
 the resulting `http://localhost:...` URLs. For example, with
 [http-server](https://www.npmjs.com/package/http-server):
 
@@ -81,8 +81,8 @@ npx http-server --cors -p 5000 ~/path/to/my-data
 
 ```{r}
 JBrowseR(
-  assembly = assembly("http://127.0.0.1:5000/genome.fa.gz"),
-  tracks = tracks(track("http://127.0.0.1:5000/genes.gff.gz", name = "Genes")),
+  assembly = list(name = "mine", uri = "http://127.0.0.1:5000/genome.fa.gz"),
+  tracks = list(list(uri = "http://127.0.0.1:5000/genes.gff.gz", name = "Genes")),
   location = "chr1:1-10000"
 )
 ```

@@ -27,9 +27,12 @@ genome view as an [htmlwidget](https://www.htmlwidgets.org/), so you can embed a
 full genome browser in an **R Markdown** document, a **Shiny** app, or straight
 from the **R console**.
 
-The API is declarative: you describe the browser with plain values, and helper
-constructors build the config. There are no JSON strings to assemble and nothing
-imperative to wire up.
+The API is declarative, and what you describe it with is JBrowse's own config:
+assemblies, tracks and sessions are the same
+[JSON objects](https://jbrowse.org/jb2/docs/config_guide/) a `config.json`
+holds, written as R lists. There are no constructors to learn and nothing
+imperative to wire up — so what you write here is what the config file holds,
+and a track type or view type JBrowse gains needs nothing added to the package.
 
 ```r
 library(JBrowseR)
@@ -62,8 +65,9 @@ index files are inferred automatically.
 ```r
 JBrowseR(
   "hg38",
-  tracks = tracks(
-    track(
+  tracks = list(
+    list(
+    uri =
       "https://jbrowse.org/genomes/GRCh38/alignments/NA12878/NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram",
       name = "NA12878 Exome"
     )

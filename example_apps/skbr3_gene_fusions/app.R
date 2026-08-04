@@ -26,12 +26,14 @@ server <- function(input, output, session) {
 
   output$browserOutput <- renderJBrowseR(JBrowseR(
     "hg19",
-    tracks = tracks(
-      track(
+    tracks = list(
+      list(
+    uri =
         "https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz",
         name = "Sniffles SV calls"
       ),
-      track(
+      list(
+    uri =
         "https://jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam",
         name = "SKBR3 PacBio long reads"
       )

@@ -128,7 +128,7 @@ server <- function(input, output, session) {
 
   output$search <- renderJBrowseR(JBrowseR(
     "hg38",
-    tracks = tracks(track(refseq_hg38, name = "NCBI RefSeq Genes")),
+    tracks = list(list(uri = refseq_hg38, name = "NCBI RefSeq Genes")),
     location = "BRCA1"
   ))
 
@@ -170,15 +170,17 @@ server <- function(input, output, session) {
   observeEvent(input$erbb2, loc("17:37,686,000..37,730,000"))
   output$sv <- renderJBrowseR(JBrowseR(
     "hg19",
-    tracks = tracks(
-      track(
+    tracks = list(
+      list(
+    uri =
         paste0(
           "https://jbrowse.org/genomes/hg19/SKBR3/",
           "reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz"
         ),
         name = "Sniffles SV calls"
       ),
-      track(
+      list(
+    uri =
         paste0(
           "https://jbrowse.org/genomes/hg19/skbr3/",
           "reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam"

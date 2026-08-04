@@ -17,18 +17,19 @@ JBrowseRApp(
 )
 }
 \arguments{
-\item{assemblies}{A list of assembly configs (each from \code{\link[=assembly]{assembly()}}, or a
-plain config list). A synteny/dotplot view needs two or more.}
+\item{assemblies}{A list of assembly configs — \code{list(name = , uri = )} each.
+A synteny/dotplot view needs two or more.}
 
-\item{tracks}{A list of full track config lists. Because a synteny track
-spans two assemblies there is no single-assembly shorthand; \code{\link[=synteny_track]{synteny_track()}}
-builds the common PAF case.}
+\item{tracks}{A list of full track config lists. A synteny track spans two
+assemblies, so it names both in \code{assemblyNames} and in its adapter.}
 
-\item{views}{A list of view specs, e.g. from \code{\link[=synteny_view]{synteny_view()}} / \code{\link[=linear_view]{linear_view()}}.}
+\item{views}{A list of \code{list(type = , init = )} view specs.}
 
 \item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
 
-\item{theme}{A theme config from \code{\link[=theme]{theme()}}.}
+\item{theme}{A theme config, the
+\href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
+palette} JBrowse takes.}
 
 \item{config}{Escape hatch: a whole JBrowse config forming the payload base
 that explicit arguments override — a list, or the path, URL, or JSON text of
@@ -42,17 +43,47 @@ an htmlwidget of the JBrowse 2 app
 \description{
 Where \code{\link[=JBrowseR]{JBrowseR()}} shows a single linear genome view, \code{JBrowseRApp()} drives
 the whole app engine, so \code{views} can mix a linear view, a synteny view, a
-dotplot, and more. Each \code{views} entry is a \code{list(type = ..., init = ...)}
-spec — the same vocabulary JBrowse Web serializes into its \verb{?session=spec-…}
-URLs — built most easily with \code{\link[=linear_view]{linear_view()}}, \code{\link[=synteny_view]{synteny_view()}}, and
-\code{\link[=dotplot_view]{dotplot_view()}}.
+dotplot, and more.
+}
+\details{
+Each \code{views} entry is a \code{list(type = ..., init = ...)} spec — the same
+vocabulary JBrowse Web serializes into its
+\href{https://jbrowse.org/jb2/docs/urlparams/}{\verb{?session=spec-…} URLs}, and
+the \code{init} fields are that view's own
+\href{https://jbrowse.org/jb2/docs/models/}{state-model options}. There is no
+R constructor for it, so every view type JBrowse has — including one a
+runtime \code{plugins} entry registers — opens with nothing added to this package.
+
+A comparative view's panels are \code{list(assembly = , loc = )}, one per side.
+Note that fields JBrowse reads as arrays need \code{list()}, since a length-1
+vector would serialize as a JSON scalar.
 }
 \examples{
 \dontrun{
 JBrowseRApp(
-  assemblies = list(assembly(hg38_fa), assembly(mm39_fa)),
-  tracks = list(synteny_track(paf_url, "hg38", "mm39")),
-  views = list(synteny_view(c("hg38", "mm39"), tracks = "hg38-mm39"))
+  assemblies = list(
+    list(name = "hg38", uri = hg38_fa),
+    list(name = "mm39", uri = mm39_fa)
+  ),
+  tracks = list(list(
+    type = "SyntenyTrack",
+    trackId = "hg38_mm39",
+    name = "hg38 vs mm39",
+    assemblyNames = list("hg38", "mm39"),
+    adapter = list(
+      type = "PAFAdapter",
+      targetAssembly = "hg38",
+      queryAssembly = "mm39",
+      uri = paf_url
+    )
+  )),
+  views = list(list(
+    type = "LinearSyntenyView",
+    init = list(
+      views = list(list(assembly = "hg38"), list(assembly = "mm39")),
+      tracks = list("hg38_mm39")
+    )
+  ))
 )
 }
 }
