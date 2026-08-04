@@ -22,6 +22,10 @@ jobs:
   render:
     name: the bundles actually draw
     runs-on: ubuntu-latest
+    # a nightly with no timeout inherits GitHub's 6-hour default, so anything
+    # that hangs burns a runner all night, every night. Well clear of the ~15
+    # minutes this takes when it is behaving.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,9 +59,16 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+      # hard deps only (Depends/Imports/LinkingTo). This job renders; it does
+      # not run tests or build vignettes, and gen_screenshot_specs.R needs
+      # nothing beyond JBrowseR itself and jsonlite. Taking the default of
+      # "all" pulls the whole Suggests tree — testthat, and knitr/rmarkdown via
+      # VignetteBuilder, which drags in pandoc — and that is what made the
+      # first run sit in this step for 45 minutes before it was cancelled.
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           working-directory: JBrowseR
+          dependencies: '"hard"'
 
       # installed, not loaded: gen_screenshot_specs.R opens with
       # library(JBrowseR). Only the R side needs this — the harness serves the
