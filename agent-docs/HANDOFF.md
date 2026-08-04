@@ -93,14 +93,15 @@ after a verification run.
 **Verify config changes by rendering, not by reading.** The 11 figures in
 `tools/screenshot_specs.json` exercise real configs end-to-end, which is what
 caught that the raw-list rewrites of the theme, synteny and dotplot specs were
-semantically right and not just syntactically. `Rscript -e 'source("tools/gen_screenshot_specs.R")'`
-then `node tools/screenshot_examples.mjs`.
+semantically right and not just syntactically. `Rscript tools/gen_screenshot_specs.R`
+then `node tools/screenshot_examples.mjs`. The `render` workflow does exactly
+this nightly, and by `workflow_dispatch` when you want it on demand — it is
+deliberately not on push/PR, because it needs real network and links against
+jbrowse-components `main`, so it fails for reasons unrelated to the commit that
+triggered it. It fails the run if any example never paints a canvas, and
+uploads the figures as an artifact either way.
 
 ## Known broken / unresolved
 
-- **No browser render job in CI.** `.github/workflows/bundle.yaml` builds and
-  typechecks; nothing renders. `tools/screenshot_examples.mjs` is what proves a
-  config change is semantically right, but it needs real network and puppeteer
-  resolved from the sibling checkout, so it is the flaky one. Nightly-only would
-  suit it.
+Nothing outstanding.
 

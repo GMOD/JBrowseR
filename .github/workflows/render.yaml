@@ -1,0 +1,92 @@
+# Render the widget bundles in a real browser, nightly.
+#
+# `bundle` proves the JavaScript builds and `typecheck` proves it type-checks;
+# neither proves it *draws*. This does: it builds the widgets, renders all 11
+# example configs headless, and fails if any of them never paints a canvas. It
+# is what catches a config change that is syntactically fine and semantically
+# wrong, and a monorepo change that breaks rendering without breaking the build.
+#
+# Nightly rather than on push/PR, deliberately: it needs real network to
+# jbrowse.org and UCSC, and it links against jbrowse-components `main`, so it
+# fails for reasons that have nothing to do with the commit that triggered it.
+# A flaky required check gets ignored, and then it is worth nothing. Run it by
+# hand from the Actions tab when a config change needs proving.
+on:
+  schedule:
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+
+name: render
+
+jobs:
+  render:
+    name: the bundles actually draw
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: JBrowseR
+      # the `link:` deps and puppeteer both resolve from this checkout; the
+      # harness also imports its readiness waits from the monorepo's
+      # browser-test-utils, so a capture uses the same signals as jbrowse-web's
+      # own browser tests rather than a bespoke sleep
+      - uses: actions/checkout@v4
+        with:
+          repository: GMOD/jbrowse-components
+          path: jbrowse-components
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      # node 24 strips TypeScript natively, which the harness needs: it imports
+      # browser-test-utils' waits.ts directly, as source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - run: pnpm install --frozen-lockfile=false
+        working-directory: jbrowse-components
+      - run: pnpm install --frozen-lockfile=false
+        working-directory: JBrowseR
+      # render what the source builds today, not the committed bundle: the
+      # break this job exists to find normally comes from the monorepo
+      - run: pnpm build
+        working-directory: JBrowseR
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: JBrowseR
+
+      # installed, not loaded: gen_screenshot_specs.R opens with
+      # library(JBrowseR). Only the R side needs this — the harness serves the
+      # bundle out of the checkout's inst/htmlwidgets, which `pnpm build` above
+      # has already written, not out of the installed library.
+      - name: install the package
+        working-directory: JBrowseR
+        run: R CMD INSTALL .
+
+      # the specs are the payloads real JBrowseR() calls produce, so they are
+      # generated from the package rather than committed (and .gitignored)
+      - name: generate the specs
+        working-directory: JBrowseR
+        run: Rscript tools/gen_screenshot_specs.R
+
+      - name: render every example
+        working-directory: JBrowseR
+        env:
+          PUPPETEER_FROM: ${{ github.workspace }}/jbrowse-components/package.json
+        run: node tools/screenshot_examples.mjs
+
+      # The figures are the evidence, so they are worth keeping whichever way it
+      # went — on success to eyeball, on failure to see how far it got. They are
+      # NOT committed: re-rendering produces byte-different PNGs even with no
+      # code change, so committing them would be pure churn.
+      - name: upload the figures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: figures
+          path: JBrowseR/man/figures/*.png
+          if-no-files-found: error
