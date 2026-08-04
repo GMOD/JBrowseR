@@ -50,6 +50,17 @@ JBrowse aliases the two, so the track still renders and only a string
 comparison in R notices. `example_apps/interactive_peak_calling/app.R` has the
 parser (`parse_locstring`/`bare_ref`) worked out; copy it rather than rederive.
 
+**CI builds against upstream `main`; you build against your checkout.** The
+`link:` deps point at a sibling `jbrowse-components` working tree, and `tsc`
+follows them into its *source* — so `pnpm build` and `pnpm typecheck` passing
+here says nothing about CI, which clones `GMOD/jbrowse-components` main
+instead. Anything you just added to the monorepo has to be pushed before this
+repo's jobs can go green, and the failure names the missing export rather than
+the cause. This is not hypothetical: the whole embedded API (`localFiles`,
+`getSessionSnapshot`, `setSession`) sat unpushed while both sibling repos'
+`bundle`/`typecheck` jobs were red for it. Check `git log origin/main..HEAD` in
+the monorepo before concluding a job is broken.
+
 **`resolve.dedupe` makes this repo's version win.** `mobx` is deduped against the
 linked monorepo checkout, so the version in `package.json` is not a local
 preference — it must track the monorepo's. A monorepo bump breaks `pnpm build`
@@ -87,18 +98,6 @@ then `node tools/screenshot_examples.mjs`.
 
 ## Known broken / unresolved
 
-- **`typecheck` is red on upstream's source, not ours.** The job checks out
-  `GMOD/jbrowse-components` main, and `tsc` follows the `link:` deps into it, so
-  it typechecks that tree too. Upstream main still has `typeof jest` guards in
-  `packages/core/src/util/environment.ts`, `packages/app-core/.../ViewHeader.tsx`,
-  `useAssemblySelection.ts` and `useRecentLocations.ts`; the local monorepo
-  checkout — ~360 commits ahead of upstream and unpushed — has already deleted
-  them, which is why this passes here and fails there. Four
-  `Cannot find name 'jest'` errors, and they clear when the monorepo commits are
-  pushed. Do **not** fix it by loosening `"types": []` in `tsconfig.json`: that
-  setting is deliberate (see the comment there), and the shim would outlive the
-  problem. `bundle` itself passes — the JS this repo needs is all upstream
-  already, which is not true of the sibling anywidget.
 - **No browser render job in CI.** `.github/workflows/bundle.yaml` builds and
   typechecks; nothing renders. `tools/screenshot_examples.mjs` is what proves a
   config change is semantically right, but it needs real network and puppeteer
