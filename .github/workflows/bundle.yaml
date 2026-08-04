@@ -1,0 +1,97 @@
+# R-CMD-check covers the R package; nothing there touches the JavaScript. This
+# does. The htmlwidget bundle in inst/htmlwidgets/ is committed so that CRAN and
+# `remotes::install_github` need no JS toolchain, which means nothing else ever
+# rebuilds it — and it links against jbrowse-components `main`, which moves on
+# its own. A break here is normally caused by a commit *there*, which fires no
+# event in this repo, so the nightly run is the one that finds it. A mobx major
+# went undetected this way for two weeks.
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+name: bundle
+
+jobs:
+  bundle:
+    name: bundle builds against jbrowse-components main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: JBrowseR
+      # the `link:` deps resolve to a sibling jbrowse-components checkout, as
+      # the README's "For developers" section describes
+      - uses: actions/checkout@v4
+        with:
+          repository: GMOD/jbrowse-components
+          path: jbrowse-components
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # install in the monorepo first: the linked packages resolve react/mobx
+      # from that tree, and `resolve.dedupe` makes this repo's copies of those
+      # win — which is why the versions here have to track the monorepo's
+      - run: pnpm install --frozen-lockfile=false
+        working-directory: jbrowse-components
+      - run: pnpm install --frozen-lockfile=false
+        working-directory: JBrowseR
+      - run: pnpm build
+        working-directory: JBrowseR
+
+      # The bundle ships with no Node polyfills: it has no Buffer, and every
+      # `process` read sits behind a `typeof process` guard, so only NODE_ENV
+      # needs substituting. Both halves are worth asserting — a dependency that
+      # starts reaching for Buffer, or a vite config change that drops the
+      # `define`, would otherwise surface only as a blank browser in a Shiny app.
+      - name: no unpolyfilled Node globals in the bundle
+        working-directory: JBrowseR/inst/htmlwidgets
+        run: |
+          fail=0
+          for f in JBrowseR.js JBrowseRApp.js; do
+            # word boundary: ArrayBuffer.isView and any fooBuffer.bar are fine
+            if grep -qE '(^|[^A-Za-z0-9_$])Buffer\.' "$f"; then
+              echo "::error file=$f::Buffer is used but not polyfilled"
+              fail=1
+            fi
+            if grep -q 'process\.env\.NODE_ENV' "$f"; then
+              echo "::error file=$f::process.env.NODE_ENV was not substituted (vite define missing?)"
+              fail=1
+            fi
+          done
+          exit $fail
+
+  # Separate from `bundle` because it catches a different class of break:
+  # esbuild does not typecheck, so `pnpm build` passing proves nothing about
+  # types and a missing import ships happily and fails at runtime.
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: JBrowseR
+      - uses: actions/checkout@v4
+        with:
+          repository: GMOD/jbrowse-components
+          path: jbrowse-components
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install --frozen-lockfile=false
+        working-directory: jbrowse-components
+      - run: pnpm install --frozen-lockfile=false
+        working-directory: JBrowseR
+      # tsc follows the linked packages into that checkout's TypeScript source,
+      # so this typechecks against the monorepo as it actually is today
+      - run: pnpm typecheck
+        working-directory: JBrowseR

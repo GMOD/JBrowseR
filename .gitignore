@@ -4,3 +4,6 @@ node_modules
 docs
 inst/doc
 tools/screenshot_specs.json
+
+# tsc --noEmit still writes this via the inherited incremental config
+tsconfig.tsbuildinfo

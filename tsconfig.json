@@ -7,7 +7,11 @@
   "extends": "../jbrowse-components/tsconfig.json",
   "compilerOptions": {
     "rootDir": "srcjs",
-    "noEmit": true
+    "noEmit": true,
+    // the inherited config asks for @types/jest, for its own test files; those
+    // resolve from that checkout's node_modules and are unresolvable from this
+    // project's typeRoots. Nothing here compiles needs ambient test types.
+    "types": []
   },
   "include": ["srcjs"]
 }
