@@ -119,9 +119,8 @@ comparative — synteny, dotplots, breakpoint-split —
 <code>views</code> list describes what to open. Each entry is a
 <code>list(type, init)</code> spec, the same vocabulary JBrowse Web
 serializes into its <a href="https://jbrowse.org/jb2/docs/urlparams/" class="external-link"><code>?session=spec-…</code>
-URLs</a>, built with <code><a href="../reference/linear_view.html">linear_view()</a></code>,
-<code><a href="../reference/synteny_view.html">synteny_view()</a></code>, or <code><a href="../reference/dotplot_view.html">dotplot_view()</a></code>. The fields
-each <code>init</code> accepts come from the view’s <a href="https://jbrowse.org/jb2/docs/models/" class="external-link">state-model docs</a> — see
+URLs</a> — a plain list, with no R builder in the way. The fields each
+<code>init</code> accepts come from the view’s <a href="https://jbrowse.org/jb2/docs/models/" class="external-link">state-model docs</a> — see
 <a href="https://jbrowse.org/jb2/docs/models/linearsyntenyview/" class="external-link">LinearSyntenyView</a>
 — and the PAF track is a <a href="https://jbrowse.org/jb2/docs/config/pafadapter/" class="external-link"><code>PAFAdapter</code></a>.</p>
 <p>The browser below is <strong>live</strong> — drag either genome to
@@ -130,47 +129,78 @@ pan; the ribbon between them follows.</p>
 <h2 id="linear-synteny">Linear synteny<a class="anchor" aria-label="anchor" href="#linear-synteny"></a>
 </h2>
 <p>Two <code>volvox</code> assemblies (one carries a deletion) are tied
-together by a PAF track and shown as a linear synteny view.
-<code><a href="../reference/assembly.html">assembly()</a></code> handles the <code>.2bit</code> and FASTA
-sequences; <code><a href="../reference/synteny_track.html">synteny_track()</a></code> builds the PAF track that spans
-both.</p>
+together by a PAF track and shown as a linear synteny view. Each
+assembly is a <code>list(name=, uri=)</code> that core expands; the PAF
+track spans both and so names them in order.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">base</span> <span class="op">&lt;-</span> <span class="st">"https://jbrowse.org/code/jb2/main/test_data/volvox/"</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/JBrowseRApp.html">JBrowseRApp</a></span><span class="op">(</span></span>
 <span>  assemblies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox.2bit"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"volvox"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox_del.fa"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"volvox_del"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"volvox"</span>, uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox.2bit"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"volvox_del"</span>, uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox_del.fa"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/synteny_track.html">synteny_track</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox_del.paf"</span><span class="op">)</span>, <span class="st">"volvox"</span>, <span class="st">"volvox_del"</span>,</span>
-<span>      track_id <span class="op">=</span> <span class="st">"volvox_del_paf"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"SyntenyTrack"</span>,</span>
+<span>      trackId <span class="op">=</span> <span class="st">"volvox_del_paf"</span>,</span>
+<span>      name <span class="op">=</span> <span class="st">"volvox_del.paf"</span>,</span>
+<span>      assemblyNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"volvox"</span>, <span class="st">"volvox_del"</span><span class="op">)</span>,</span>
+<span>      adapter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        type <span class="op">=</span> <span class="st">"PAFAdapter"</span>,</span>
+<span>        targetAssembly <span class="op">=</span> <span class="st">"volvox"</span>,</span>
+<span>        queryAssembly <span class="op">=</span> <span class="st">"volvox_del"</span>,</span>
+<span>        uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox_del.paf"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/synteny_view.html">synteny_view</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"volvox"</span>, <span class="st">"volvox_del"</span><span class="op">)</span>, tracks <span class="op">=</span> <span class="st">"volvox_del_paf"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"LinearSyntenyView"</span>,</span>
+<span>    init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"volvox"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"volvox_del"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"volvox_del_paf"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="JBrowseRApp html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"assemblies":[{"name":"volvox","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox.2bit"},{"name":"volvox_del","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox_del.fa"}],"tracks":[{"type":"SyntenyTrack","trackId":"volvox_del_paf","name":"volvox_del","assemblyNames":["volvox","volvox_del"],"adapter":{"type":"PAFAdapter","targetAssembly":"volvox","queryAssembly":"volvox_del","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox_del.paf"}}],"views":[{"type":"LinearSyntenyView","init":{"views":[{"assembly":"volvox"},{"assembly":"volvox_del"}],"tracks":["volvox_del_paf"]}}]},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"assemblies":[{"name":"volvox","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox.2bit"},{"name":"volvox_del","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox_del.fa"}],"tracks":[{"type":"SyntenyTrack","trackId":"volvox_del_paf","name":"volvox_del.paf","assemblyNames":["volvox","volvox_del"],"adapter":{"type":"PAFAdapter","targetAssembly":"volvox","queryAssembly":"volvox_del","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox_del.paf"}}],"views":[{"type":"LinearSyntenyView","init":{"views":[{"assembly":"volvox"},{"assembly":"volvox_del"}],"tracks":["volvox_del_paf"]}}]},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level2">
 <h2 id="dotplot">Dotplot<a class="anchor" aria-label="anchor" href="#dotplot"></a>
 </h2>
-<p>The same assemblies and PAF render as a dotplot with one function
-call different — <code><a href="../reference/dotplot_view.html">dotplot_view()</a></code> in place of
-<code><a href="../reference/synteny_view.html">synteny_view()</a></code>:</p>
+<p>The same assemblies and PAF render as a dotplot with one field
+different — <code>"DotplotView"</code> in place of
+<code>"LinearSyntenyView"</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseRApp.html">JBrowseRApp</a></span><span class="op">(</span></span>
 <span>  assemblies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox.2bit"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"volvox"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox_del.fa"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"volvox_del"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"volvox"</span>, uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox.2bit"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"volvox_del"</span>, uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox_del.fa"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/synteny_track.html">synteny_track</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox_del.paf"</span><span class="op">)</span>, <span class="st">"volvox"</span>, <span class="st">"volvox_del"</span>,</span>
-<span>      track_id <span class="op">=</span> <span class="st">"volvox_del_paf"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"SyntenyTrack"</span>,</span>
+<span>      trackId <span class="op">=</span> <span class="st">"volvox_del_paf"</span>,</span>
+<span>      name <span class="op">=</span> <span class="st">"volvox_del.paf"</span>,</span>
+<span>      assemblyNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"volvox"</span>, <span class="st">"volvox_del"</span><span class="op">)</span>,</span>
+<span>      adapter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        type <span class="op">=</span> <span class="st">"PAFAdapter"</span>,</span>
+<span>        targetAssembly <span class="op">=</span> <span class="st">"volvox"</span>,</span>
+<span>        queryAssembly <span class="op">=</span> <span class="st">"volvox_del"</span>,</span>
+<span>        uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"volvox_del.paf"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/dotplot_view.html">dotplot_view</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"volvox"</span>, <span class="st">"volvox_del"</span><span class="op">)</span>, tracks <span class="op">=</span> <span class="st">"volvox_del_paf"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"DotplotView"</span>,</span>
+<span>    init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"volvox"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"volvox_del"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"volvox_del_paf"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="JBrowseRApp html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"assemblies":[{"name":"volvox","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox.2bit"},{"name":"volvox_del","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox_del.fa"}],"tracks":[{"type":"SyntenyTrack","trackId":"volvox_del_paf","name":"volvox_del","assemblyNames":["volvox","volvox_del"],"adapter":{"type":"PAFAdapter","targetAssembly":"volvox","queryAssembly":"volvox_del","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox_del.paf"}}],"views":[{"type":"DotplotView","init":{"views":[{"assembly":"volvox"},{"assembly":"volvox_del"}],"tracks":["volvox_del_paf"]}}]},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"assemblies":[{"name":"volvox","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox.2bit"},{"name":"volvox_del","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox_del.fa"}],"tracks":[{"type":"SyntenyTrack","trackId":"volvox_del_paf","name":"volvox_del.paf","assemblyNames":["volvox","volvox_del"],"adapter":{"type":"PAFAdapter","targetAssembly":"volvox","queryAssembly":"volvox_del","uri":"https://jbrowse.org/code/jb2/main/test_data/volvox/volvox_del.paf"}}],"views":[{"type":"DotplotView","init":{"views":[{"assembly":"volvox"},{"assembly":"volvox_del"}],"tracks":["volvox_del_paf"]}}]},"evals":[],"jsHooks":[]}</script>
 </div>
   </div>
 

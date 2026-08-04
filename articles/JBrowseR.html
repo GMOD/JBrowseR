@@ -137,15 +137,16 @@ gene name like <code>"BRCA1"</code>. Other hubs work the same way —
 <div class="section level2">
 <h2 id="adding-tracks">Adding tracks<a class="anchor" aria-label="anchor" href="#adding-tracks"></a>
 </h2>
-<p>Add tracks by URL with <code><a href="../reference/track.html">track()</a></code>. The track type and its
-index files (<code>.bai</code>/<code>.crai</code>/<code>.tbi</code>) are
-inferred from the file extension, so a data URL is usually all you need.
-<code><a href="../reference/tracks.html">tracks()</a></code> gathers several together.</p>
+<p>Add tracks by URL with <code>list(uri = )</code>. The track type and
+its index files (<code>.bai</code>/<code>.crai</code>/<code>.tbi</code>)
+are inferred from the file extension, so a data URL is usually all you
+need. <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> gathers several together.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>      <span class="st">"https://jbrowse.org/genomes/GRCh38/alignments/NA12878/NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram"</span>,</span>
 <span>      name <span class="op">=</span> <span class="st">"NA12878 Exome"</span></span>
 <span>    <span class="op">)</span></span>
@@ -218,11 +219,11 @@ inferred from the file extension, so a data URL is usually all you need.
 JBrowse’s own format plugins, so any format a bundled plugin recognizes
 works. Anything the inference gets wrong, or a track needing a specific
 adapter, is a plain config list (the full JBrowse track JSON); extra
-arguments to <code><a href="../reference/track.html">track()</a></code> (e.g.
+arguments to <code>list(uri = )</code> (e.g.
 <code>type = "AlignmentsTrack"</code>) ride onto the track and override
 the inferred defaults.</p>
 <p>When you only need the defaults, a bare URL string is a track —
-<code><a href="../reference/track.html">track()</a></code> is just the same thing with room for
+<code>list(uri = )</code> is just the same thing with room for
 <code>name=</code> and extra config. So a whole browser can skip the
 constructor entirely:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -240,7 +241,7 @@ elsewhere — or is a <code>.csi</code> index — name it with
 <code>index=</code>, or as the second element of a
 <code>c(url, index)</code> pair in <code>tracks</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span><span class="st">"https://example.com/reads.bam"</span>, index <span class="op">=</span> <span class="st">"https://example.com/reads.bai"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"https://example.com/reads.bam"</span>, index <span class="op">=</span> <span class="st">"https://example.com/reads.bai"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="a-gallery">A gallery<a class="anchor" aria-label="anchor" href="#a-gallery"></a>
@@ -253,7 +254,8 @@ assembly, navigated by name.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
@@ -266,7 +268,8 @@ assembly, navigated by name.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/variants/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"1000 Genomes Variants"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
@@ -279,7 +282,8 @@ assembly, navigated by name.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"phyloP100way Conservation"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
@@ -344,12 +348,14 @@ Sniffles track and the long reads carry it below.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg19"</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>      <span class="st">"https://jbrowse.org/genomes/hg19/SKBR3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.bam.sniffles1kb_auto_l8_s5_noalt.filtered.vcf.gz"</span>,</span>
 <span>      name <span class="op">=</span> <span class="st">"Sniffles SV calls"</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>      <span class="st">"https://jbrowse.org/genomes/hg19/skbr3/reads_lr_skbr3.fa_ngmlr-0.2.3_mapped.down.bam"</span>,</span>
 <span>      name <span class="op">=</span> <span class="st">"SKBR3 PacBio long reads"</span></span>
 <span>    <span class="op">)</span></span>
@@ -365,7 +371,8 @@ sample; its PacBio HiFi reads carry a ~1.8 kb somatic deletion in
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/demos/cgiab/HG008-T_chr10_CUZD1_deletion.bam"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"HG008-T PacBio HiFi"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
@@ -374,16 +381,23 @@ sample; its PacBio HiFi reads carry a ~1.8 kb somatic deletion in
 <div class="float">
 <img src="../reference/figures/demo-cancer-deletion.png" alt="HG008 tumor somatic deletion at CUZD1"><div class="figcaption">HG008 tumor somatic deletion at CUZD1</div>
 </div>
-<p><strong>A custom theme.</strong> <code><a href="../reference/theme.html">theme()</a></code> recolors the
-browser.</p>
+<p><strong>A custom theme.</strong> The <code>theme</code> config
+recolors the browser; it is the <a href="https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme" class="external-link">MUI
+palette</a> JBrowse takes.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
-<span>  theme <span class="op">=</span> <span class="fu"><a href="../reference/theme.html">theme</a></span><span class="op">(</span><span class="st">"#311b92"</span>, <span class="st">"#0097a7"</span><span class="op">)</span>,</span>
+<span>  theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      primary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"#311b92"</span><span class="op">)</span>,</span>
+<span>      secondary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"#0097a7"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"BRCA1"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="float">

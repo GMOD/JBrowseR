@@ -107,7 +107,7 @@
 <!-- badges: start -->
 
 <p>JBrowseR provides an R interface to the <a href="https://jbrowse.org/jb2/" class="external-link">JBrowse 2</a> genome browser. It renders the interactive, GPU-accelerated JBrowse 2 linear genome view as an <a href="https://www.htmlwidgets.org/" class="external-link">htmlwidget</a>, so you can embed a full genome browser in an <strong>R Markdown</strong> document, a <strong>Shiny</strong> app, or straight from the <strong>R console</strong>.</p>
-<p>The API is declarative: you describe the browser with plain values, and helper constructors build the config. There are no JSON strings to assemble and nothing imperative to wire up.</p>
+<p>The API is declarative, and what you describe it with is JBrowse’s own config: assemblies, tracks and sessions are the same <a href="https://jbrowse.org/jb2/docs/config_guide/" class="external-link">JSON objects</a> a <code>config.json</code> holds, written as R lists. There are no constructors to learn and nothing imperative to wire up — so what you write here is what the config file holds, and a track type or view type JBrowse gains needs nothing added to the package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span></span>
 <span></span>
@@ -132,8 +132,9 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="st">"hg38"</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="reference/tracks.html">tracks</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="reference/track.html">track</a></span><span class="op">(</span></span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>      <span class="st">"https://jbrowse.org/genomes/GRCh38/alignments/NA12878/NA12878.alt_bwamem_GRCh38DH.20150826.CEU.exome.cram"</span>,</span>
 <span>      name <span class="op">=</span> <span class="st">"NA12878 Exome"</span></span>
 <span>    <span class="op">)</span></span>
@@ -195,21 +196,21 @@
 </h2>
 <p>If you use JBrowseR in your research, please cite:</p>
 <p><a href="https://doi.org/10.1093/bioinformatics/btab459" class="external-link">Hershberg et al., 2021. JBrowseR: An R Interface to the JBrowse 2 Genome Browser</a></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="sc">@</span>article{hershberg2021jbrowser,</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  title<span class="ot">=</span>{JBrowseR<span class="sc">:</span> An R Interface to the JBrowse <span class="dv">2</span> Genome Browser},</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  author<span class="ot">=</span>{Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  journal<span class="ot">=</span>{Bioinformatics}</span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>@article{hershberg2021jbrowser,
+  title={JBrowseR: An R Interface to the JBrowse 2 Genome Browser},
+  author={Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},
+  journal={Bioinformatics}
+}</code></pre>
 </div>
 <div class="section level2">
 <h2 id="for-developers">For developers<a class="anchor" aria-label="anchor" href="#for-developers"></a>
 </h2>
 <p>The R package ships a prebuilt JavaScript bundle in <code>inst/htmlwidgets/</code>. To rebuild it against a local checkout of <a href="https://github.com/GMOD/jbrowse-components" class="external-link">jbrowse-components</a> (expected as a sibling directory), install <a href="https://pnpm.io" class="external-link">pnpm</a> and run:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>git clone https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>GMOD<span class="sc">/</span>JBrowseR</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>cd JBrowseR</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>pnpm install</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>pnpm build       <span class="co"># writes inst/htmlwidgets/JBrowseR.js and .css</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>R <span class="sc">-</span>e <span class="st">'devtools::install()'</span></span></code></pre></div>
+<pre><code>git clone https://github.com/GMOD/JBrowseR
+cd JBrowseR
+pnpm install
+pnpm build       # writes inst/htmlwidgets/JBrowseR.js and .css
+R -e 'devtools::install()'</code></pre>
 </div>
 </div>
   </div>

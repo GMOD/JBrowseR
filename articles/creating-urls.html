@@ -166,14 +166,14 @@ co-locating the data gives faster performance.</p>
 <h2 id="viewing-local-files">Viewing local files<a class="anchor" aria-label="anchor" href="#viewing-local-files"></a>
 </h2>
 <p>To view files from your own machine, serve the directory with any
-static server that supports range requests and CORS, then point
-<code><a href="../reference/assembly.html">assembly()</a></code> / <code><a href="../reference/track.html">track()</a></code> at the resulting
+static server that supports range requests and CORS, then point the
+assembly and track configs at the resulting
 <code>http://localhost:...</code> URLs. For example, with <a href="https://www.npmjs.com/package/http-server" class="external-link">http-server</a>:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">npx</span> http-server <span class="at">--cors</span> <span class="at">-p</span> 5000 ~/path/to/my-data</span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  assembly <span class="op">=</span> <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span><span class="st">"http://127.0.0.1:5000/genome.fa.gz"</span><span class="op">)</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span><span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span><span class="st">"http://127.0.0.1:5000/genes.gff.gz"</span>, name <span class="op">=</span> <span class="st">"Genes"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"mine"</span>, uri <span class="op">=</span> <span class="st">"http://127.0.0.1:5000/genome.fa.gz"</span><span class="op">)</span>,</span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"http://127.0.0.1:5000/genes.gff.gz"</span>, name <span class="op">=</span> <span class="st">"Genes"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"chr1:1-10000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>

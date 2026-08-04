@@ -108,14 +108,15 @@ console.</p>
 <dd><p>A hub name understood by jbrowse.org (e.g. <code>"hg38"</code>, <code>"hg19"</code>,
 or a GenArk accession like <code>"GCF_000001405.40"</code>), a sequence-file URL the
 view builds an assembly from (<code>".../hg38.fa.gz"</code>, <code>.2bit</code>), or an assembly
-config list from <code><a href="assembly.html">assembly()</a></code> (needed only for aliases or a non-sibling
-index).</p></dd>
+config list — <code>list(name = , uri = )</code>, plus <code>aliases</code> or <code>refNameAliases</code>
+when needed.</p></dd>
 
 
 <dt id="arg-tracks">tracks<a class="anchor" aria-label="anchor" href="#arg-tracks"></a></dt>
-<dd><p>A list of track entries: a bare data-file URL, a spec from
-<code><a href="track.html">track()</a></code> / <code><a href="track_data_frame.html">track_data_frame()</a></code>, or a full track config. Entries missing
-<code>assemblyNames</code> are backfilled with the assembly's name by the view.</p></dd>
+<dd><p>A list of track entries: a bare data-file URL, a
+<code>list(uri = )</code> spec the view expands, a config from <code><a href="track_data_frame.html">track_data_frame()</a></code>,
+or a full track config. Entries missing <code>assemblyNames</code> are backfilled with
+the assembly's name by the view.</p></dd>
 
 
 <dt id="arg-location">location<a class="anchor" aria-label="anchor" href="#arg-location"></a></dt>
@@ -129,12 +130,14 @@ it owns the initial track layout instead of <code>tracks</code>.</p></dd>
 
 
 <dt id="arg-text-search">text_search<a class="anchor" aria-label="anchor" href="#arg-text-search"></a></dt>
-<dd><p>One or more aggregate text-search adapters from
-<code><a href="text_index.html">text_index()</a></code>, enabling gene-name search.</p></dd>
+<dd><p>One or more aggregate text-search adapter configs (e.g. a
+<code>TrixTextSearchAdapter</code>), enabling gene-name search.</p></dd>
 
 
 <dt id="arg-theme">theme<a class="anchor" aria-label="anchor" href="#arg-theme"></a></dt>
-<dd><p>A theme config from <code><a href="theme.html">theme()</a></code>.</p></dd>
+<dd><p>A theme config, the
+<a href="https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme" class="external-link">MUI
+palette</a> JBrowse takes: <code>list(palette = list(primary = list(main = )))</code>.</p></dd>
 
 
 <dt id="arg-plugins">plugins<a class="anchor" aria-label="anchor" href="#arg-plugins"></a></dt>
@@ -157,9 +160,17 @@ a <code>config.json</code>.</p></dd>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The API is declarative: describe the browser with plain values and the
-helper constructors (<code><a href="assembly.html">assembly()</a></code>, <code><a href="track.html">track()</a></code>, <code><a href="tracks.html">tracks()</a></code>, <code><a href="text_index.html">text_index()</a></code>,
-<code><a href="theme.html">theme()</a></code>). Nothing is imperative and no JSON strings are assembled by hand.</p>
+    <p>The API is declarative, and the thing you describe it with is JBrowse's own
+config: assemblies, tracks and sessions are the same
+<a href="https://jbrowse.org/jb2/docs/config_guide/" class="external-link">JSON objects</a> a
+<code>config.json</code> holds, written as R lists. There are deliberately no
+constructors for them — what you write here is what the config file holds,
+and nothing in this package has to grow when JBrowse gains a track type, an
+adapter or a display. The one exception is <code><a href="track_data_frame.html">track_data_frame()</a></code>, for the one
+thing config JSON cannot express: an R data frame.</p>
+<p>One R-specific trap: a length-1 vector serializes to a JSON scalar, so fields
+JBrowse reads as arrays (<code>assemblyNames</code>, <code>aliases</code>) are written with
+<code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> — <code>assemblyNames = list("hg38")</code>, not <code>"hg38"</code>.</p>
     </div>
 
     <div id="ref-examples">

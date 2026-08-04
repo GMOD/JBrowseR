@@ -119,28 +119,30 @@ own tracks, gene-name search, and theme.</p>
 <div class="section level2">
 <h2 id="describe-the-assembly">Describe the assembly<a class="anchor" aria-label="anchor" href="#describe-the-assembly"></a>
 </h2>
-<p><code><a href="../reference/assembly.html">assembly()</a></code> builds the reference from a FASTA URL.
-JBrowse derives the index locations (<code>.fai</code>, plus
-<code>.gzi</code> for bgzipped FASTA) from the URL, so you only point at
-the FASTA itself. Add reference-name aliases so
-<code>chr1</code>/<code>1</code> both resolve.</p>
+<p>An assembly is a list with a <code>name</code> and a
+<code>uri</code>. JBrowse derives the index locations
+(<code>.fai</code>, plus <code>.gzi</code> for bgzipped FASTA) from the
+URL, so you only point at the FASTA itself. Add reference-name aliases
+so <code>chr1</code>/<code>1</code> both resolve.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hg19</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assembly.html">assembly</a></span><span class="op">(</span></span>
-<span>  <span class="st">"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>,</span>
-<span>  aliases <span class="op">=</span> <span class="st">"GRCh37"</span>,</span>
-<span>  refname_aliases <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"</span></span>
+<code class="sourceCode R"><span><span class="va">hg19</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">"hg19"</span>,</span>
+<span>  uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>,</span>
+<span>  aliases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"GRCh37"</span><span class="op">)</span>,</span>
+<span>  refNameAliases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/hg19_aliases.txt"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="add-tracks">Add tracks<a class="anchor" aria-label="anchor" href="#add-tracks"></a>
 </h2>
-<p><code><a href="../reference/track.html">track()</a></code> infers the track type and adapter from the file
-extension. Group your tracks with <code><a href="../reference/tracks.html">tracks()</a></code>. You do not need
-to set <code>assemblyNames</code> on each track —
-<code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> fills it in from the assembly you load.</p>
+<p>A track is a list too. <code>uri</code> alone is enough — the view
+infers the track type and adapter from the file extension, and derives
+the index location. You do not need to set <code>assemblyNames</code> on
+each track; the view fills it in from the assembly you load.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_tracks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tracks.html">tracks</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="../reference/track.html">track</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">my_tracks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
 <span>  <span class="op">)</span></span>
@@ -150,15 +152,17 @@ to set <code>assemblyNames</code> on each track —
 <h2 id="enable-gene-name-search">Enable gene-name search<a class="anchor" aria-label="anchor" href="#enable-gene-name-search"></a>
 </h2>
 <p>Hub assemblies include search; for a custom assembly, point at your
-own Trix index files with <code><a href="../reference/text_index.html">text_index()</a></code> and pass it as
+own Trix index files with a Trix adapter and pass it as
 <code>text_search</code>. Now <code>location</code> can be a gene
 name.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hg19_search</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/text_index.html">text_index</a></span><span class="op">(</span></span>
-<span>  <span class="st">"https://jbrowse.org/genomes/hg19/trix/hg19.ix"</span>,</span>
-<span>  <span class="st">"https://jbrowse.org/genomes/hg19/trix/hg19.ixx"</span>,</span>
-<span>  <span class="st">"https://jbrowse.org/genomes/hg19/trix/meta.json"</span>,</span>
-<span>  <span class="st">"hg19"</span></span>
+<code class="sourceCode R"><span><span class="va">hg19_search</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  type <span class="op">=</span> <span class="st">"TrixTextSearchAdapter"</span>,</span>
+<span>  textSearchAdapterId <span class="op">=</span> <span class="st">"hg19-index"</span>,</span>
+<span>  assemblyNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"hg19"</span><span class="op">)</span>,</span>
+<span>  ixFilePath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/trix/hg19.ix"</span><span class="op">)</span>,</span>
+<span>  ixxFilePath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/trix/hg19.ixx"</span><span class="op">)</span>,</span>
+<span>  metaFilePath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/trix/meta.json"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -169,7 +173,7 @@ name.</p>
 <span>  assembly <span class="op">=</span> <span class="va">hg19</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="va">my_tracks</span>,</span>
 <span>  text_search <span class="op">=</span> <span class="va">hg19_search</span>,</span>
-<span>  theme <span class="op">=</span> <span class="fu"><a href="../reference/theme.html">theme</a></span><span class="op">(</span><span class="st">"#311b92"</span>, <span class="st">"#0097a7"</span><span class="op">)</span>,</span>
+<span>  theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>primary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"#311b92"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"MYC"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
