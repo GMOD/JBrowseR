@@ -77,28 +77,12 @@ then `node tools/screenshot_examples.mjs`.
 
 ## Known broken / unresolved
 
-- **CI never builds the bundle.** `R-CMD-check` and `pkgdown` don't touch the
-  JavaScript, and the committed bundle in `inst/htmlwidgets/` means nothing else
-  rebuilds it — so a break caused by a monorepo commit is invisible. See below;
-  the sibling repo's IDEAS entry claims this is blocked by the `link:` dependency,
-  which is not true.
-
-## A bundle-build CI job
-
-```yaml
-- uses: actions/checkout@v4
-  with: {path: JBrowseR}
-- uses: actions/checkout@v4
-  with: {repository: GMOD/jbrowse-components, path: jbrowse-components}
-- run: pnpm install --frozen-lockfile=false
-  working-directory: jbrowse-components   # linked pkgs resolve react/mobx here
-- run: pnpm install --frozen-lockfile=false
-  working-directory: JBrowseR
-- run: pnpm build
-```
-
-Worth running on a **nightly cron**, not just push/PR: the break is normally
-caused by a monorepo commit, so no event in this repo would fire.
+- ~~CI never builds the bundle~~ — done, in `.github/workflows/bundle.yaml`
+  (`bundle` + `typecheck`, on push/PR and a nightly cron). What it still lacks
+  is a browser render job: `tools/screenshot_examples.mjs` exists and is what
+  proves a config change is semantically right, but it needs real network and
+  puppeteer resolved from the sibling checkout, so it is the flaky one.
+  Nightly-only would suit it.
 
 ## Work that exists but did not land
 
