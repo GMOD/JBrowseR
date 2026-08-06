@@ -8,7 +8,7 @@ JBrowseR(
   assembly = NULL,
   tracks = NULL,
   location = NULL,
-  default_session = NULL,
+  session = NULL,
   text_search = NULL,
   theme = NULL,
   plugins = NULL,
@@ -33,8 +33,10 @@ the assembly's name by the view.}
 \item{location}{A region string (\code{"chr1:1-1000"}) or, when the assembly hub
 provides a gene-name search index, a gene name (\code{"BRCA1"}).}
 
-\item{default_session}{An optional serialized session (advanced); when given
-it owns the initial track layout instead of \code{tracks}.}
+\item{session}{A saved session to open instead of \code{tracks} and \code{location} —
+the value a running \code{\link[=JBrowseRApp]{JBrowseRApp()}} reported as
+\code{input[[paste0(outputId, "_session")]]}, or one you stored. It owns the
+whole initial layout when given. Same argument name as \code{\link[=JBrowseRApp]{JBrowseRApp()}}'s.}
 
 \item{text_search}{One or more aggregate text-search adapter configs (e.g. a
 \code{TrixTextSearchAdapter}), enabling gene-name search.}

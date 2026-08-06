@@ -28,8 +28,10 @@
 #'   the assembly's name by the view.
 #' @param location A region string (`"chr1:1-1000"`) or, when the assembly hub
 #'   provides a gene-name search index, a gene name (`"BRCA1"`).
-#' @param default_session An optional serialized session (advanced); when given
-#'   it owns the initial track layout instead of `tracks`.
+#' @param session A saved session to open instead of `tracks` and `location` —
+#'   the value a running [JBrowseRApp()] reported as
+#'   `input[[paste0(outputId, "_session")]]`, or one you stored. It owns the
+#'   whole initial layout when given. Same argument name as [JBrowseRApp()]'s.
 #' @param text_search One or more aggregate text-search adapter configs (e.g. a
 #'   `TrixTextSearchAdapter`), enabling gene-name search.
 #' @param theme A theme config, the
@@ -50,7 +52,7 @@
 #' # a whole human genome browser in one line (gene search included)
 #' JBrowseR("hg38", location = "BRCA1")
 JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
-                     default_session = NULL, text_search = NULL, theme = NULL,
+                     session = NULL, text_search = NULL, theme = NULL,
                      plugins = NULL, config = NULL, width = NULL, height = NULL,
                      elementId = NULL) {
   if (is.null(assembly) && is.null(config)) {
@@ -60,7 +62,7 @@ JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
     assembly = assembly,
     tracks = tracks,
     location = location,
-    defaultSession = default_session,
+    session = session,
     aggregateTextSearchAdapters = as_adapter_list(text_search),
     configuration = configuration_from_theme(theme),
     plugins = plugins

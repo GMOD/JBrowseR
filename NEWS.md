@@ -20,6 +20,11 @@
   server. `_location` is a *list* there, one entry per open view, because the
   app holds any number of them.
 
+- **Breaking:** `JBrowseR()`'s `default_session` is now `session`, matching
+  [JBrowseRApp()] and the JS products. It was never a *default* the user's own
+  state layered on top of — it is the saved layout to open instead of `tracks`
+  and `location`, which is what the app's argument of that name already meant.
+
 - **Breaking:** the global `input$selectedFeature` is gone. Use the namespaced
   `input$<outputId>_selected_feature`, which has been set alongside it since
   0.11.0. The global could not be made correct: two browsers on a page overwrite
