@@ -1,3 +1,32 @@
+# JBrowseR 0.12.0
+
+- New `update_location(outputId, location)`: navigate a browser that is
+  already on the page instead of re-rendering it. Feeding a reactive `location`
+  into `renderJBrowseR()` rebuilds the whole browser, which refetches its tracks
+  and discards the user's zoom, track order, scroll position and feature
+  selection — so a Shiny app that moved the view was destroying state to do it.
+  This also settles the loop `input$<outputId>_location` used to create: reading
+  it in an `observeEvent()` that calls `update_location()` is not circular the
+  way reading it in the reactive that feeds the widget is.
+
+  Navigation is the only command, deliberately. A browser's tracks, assembly and
+  session can also be swapped live, but each of those has to answer what it does
+  to a track the user opened by hand or a layout they rearranged; rebuilding is
+  a defensible answer to those and is what re-rendering already does.
+
+- `JBrowseRApp()` now reports `input$<outputId>_selected_feature` and
+  `input$<outputId>_location`, the two read-backs `JBrowseR()` already had, so
+  an app that grows from one view to several does not have to rewrite its
+  server. `_location` is a *list* there, one entry per open view, because the
+  app holds any number of them.
+
+- **Breaking:** the global `input$selectedFeature` is gone. Use the namespaced
+  `input$<outputId>_selected_feature`, which has been set alongside it since
+  0.11.0. The global could not be made correct: two browsers on a page overwrite
+  each other's, and inside a Shiny module nothing can read it. The bundled
+  example apps show the change; `demos/` was the case in point, where two tabs
+  reading the global saw each other's clicks.
+
 # JBrowseR 0.11.0
 
 - Upgraded to the GPU-accelerated JBrowse 2 v5 linear genome view

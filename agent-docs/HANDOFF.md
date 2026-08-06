@@ -8,13 +8,15 @@ is the "what just changed, what will bite you" file.
 **R adds only what JSON cannot express itself.** Everything else is a plain list
 handed to JBrowse.
 
-The package exports five names:
+The package exports these names:
 
 | | why it survives |
 |---|---|
 | `JBrowseR`, `JBrowseRApp` | the widgets |
 | `JBrowseROutput`, `renderJBrowseR` | the Shiny bindings |
+| `JBrowseRAppOutput`, `renderJBrowseRApp` | the app's, which cannot be shared (htmlwidgets dispatches on the element's class) |
 | `track_data_frame` | a data frame is not JSON |
+| `update_location` | moving a rendered browser is not config |
 
 `assembly`, `track`, `tracks`, `text_index`, `theme`, `view`, `linear_view`,
 `synteny_view`, `dotplot_view`, `synteny_track` and `json_config` were all
@@ -101,7 +103,52 @@ jbrowse-components `main`, so it fails for reasons unrelated to the commit that
 triggered it. It fails the run if any example never paints a canvas, and
 uploads the figures as an artifact either way.
 
+## Why `update_location` is one function and not a proxy object
+
+`update_location(outputId, loc)` moves a rendered browser without rebuilding
+it. It is one exported name and one custom message — deliberately not the
+leaflet-style `proxy <- jbrowse_proxy(id)` object, which exists there to
+accumulate many calls and flush them, and here would only be a second exported
+name and a class to document in front of a single command. Before it, a Shiny app navigated by putting a
+reactive into `renderJBrowseR()`, which destroys and rebuilds the browser —
+refetching its tracks and discarding zoom, track order and selection. Four of
+the bundled example apps did exactly that.
+
+The controller also offers `setTracks`, `setAssembly`, `setSession`,
+`addTrack`, `removeTrack` and `addLocalFiles`, and none of them are wired.
+That is the decision recorded in `IDEAS.md`, unchanged: each has to answer what
+it does to a track the user opened by hand or a layout they rearranged, and
+"rebuild" is a defensible answer to those — which is what re-rendering the
+widget already does. Navigation has one meaning and is the interaction that
+repeats. If you wire another, wire it in the anywidget first; that repo has no
+CRAN cycle and exercises the semantics against real notebook use.
+
+**The seam is untyped, so it is pinned from both ends.**
+`tests/testthat/test-proxy.R` has what R sends; `tools/verify_proxy.mjs` drives
+the built bundle in a real browser and asserts what it does with it. Nothing
+type-checks `"jbrowser-call"` or the `{id, method, args}` shape across the two
+languages, so a rename on one side is otherwise silent. The verifier rides the
+nightly `render` workflow, which already has the browser, the built bundle and
+the network it needs.
+
+One thing that verifier exists to hold: **a proxy call can arrive mid-build**.
+`build` is async, so an `observe()` firing at app startup races the first
+render. The registry in `widget.ts` therefore stores the build *promise*, not
+the resolved controller — keyed to the controller, that call would be dropped
+with the browser looking perfectly fine.
+
+**The bundle in `inst/htmlwidgets/` is committed with this**, because nothing
+else ever rebuilds it (`bundle.yaml`'s header says why: CRAN and
+`remotes::install_github` have no JS toolchain). Committing R alone would ship
+an exported `update_location()` that silently does nothing for anyone who
+installs from GitHub. It is built against the *local* monorepo checkout, so
+rebuild it once the monorepo commits it needs are pushed.
+
 ## Known broken / unresolved
 
-Nothing outstanding.
+`JBrowseRApp()` has no proxy. Its controller has no `setLocation` at all, and
+the anywidget's `IDEAS.md` calls view identity the blocker — but that is now
+stale on both sides: `ManagedView` already carries an `id`, and `createApp`
+defaults one per view (`viewsToSession`), so `setViewLocation(id, loc)` is
+well-defined whenever someone wants to add it upstream.
 

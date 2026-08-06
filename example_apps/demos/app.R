@@ -144,8 +144,8 @@ server <- function(input, output, session) {
     location = "2:1..101200"
   ))
   output$dataframe_selected <- renderPrint({
-    req(input$selectedFeature)
-    input$selectedFeature$name
+    req(input$dataframe_selected_feature)
+    input$dataframe_selected_feature$name
   })
 
   peaks <- reactive(call_peaks(input$threshold))
@@ -156,18 +156,20 @@ server <- function(input, output, session) {
     location = "17:43,000,000..43,125,000"
   ))
   output$peak_selected <- renderPrint({
-    req(input$selectedFeature)
-    f <- input$selectedFeature
+    req(input$peaks_selected_feature)
+    f <- input$peaks_selected_feature
     cat(sprintf(
       "%s\n%s:%s..%s (%s bp)",
       f$name, f$refName, f$start, f$end, f$end - f$start
     ))
   })
 
-  loc <- reactiveVal("17:37,686,000..37,730,000")
-  observeEvent(input$klhdc2, loc("14:50,230,000..50,255,000"))
-  observeEvent(input$tatdn1, loc("8:125,490,000..125,560,000"))
-  observeEvent(input$erbb2, loc("17:37,686,000..37,730,000"))
+  # The three buttons move the browser through its proxy rather than through a
+  # reactive location, so the long-read track is not refetched and whatever the
+  # user had zoomed or opened survives the jump.
+  observeEvent(input$klhdc2, update_location("sv", "14:50,230,000..50,255,000"))
+  observeEvent(input$tatdn1, update_location("sv", "8:125,490,000..125,560,000"))
+  observeEvent(input$erbb2, update_location("sv", "17:37,686,000..37,730,000"))
   output$sv <- renderJBrowseR(JBrowseR(
     "hg19",
     tracks = list(
@@ -188,7 +190,7 @@ server <- function(input, output, session) {
         name = "SKBR3 PacBio long reads"
       )
     ),
-    location = loc()
+    location = "17:37,686,000..37,730,000"
   ))
 
   output$config <- renderJBrowseR(JBrowseR(

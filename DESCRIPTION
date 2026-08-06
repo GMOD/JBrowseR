@@ -1,6 +1,6 @@
 Package: JBrowseR
 Title: An R Interface to the JBrowse 2 Genome Browser
-Version: 0.11.0
+Version: 0.12.0
 Authors@R: 
     c(person(given = "Elliot",
              family = "Hershberg",
@@ -32,7 +32,8 @@ Imports:
 Suggests:
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    shiny
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0

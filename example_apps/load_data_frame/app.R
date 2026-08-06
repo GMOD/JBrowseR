@@ -27,8 +27,8 @@ server <- function(input, output, session) {
   ))
 
   output$selected <- renderPrint({
-    req(input$selectedFeature)
-    input$selectedFeature$name
+    req(input$widgetOutput_selected_feature)
+    input$widgetOutput_selected_feature$name
   })
 }
 

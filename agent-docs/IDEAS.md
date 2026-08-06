@@ -5,7 +5,11 @@ with enough context to pick up cold.
 
 ## Reactivity: updating a browser without rebuilding it
 
-Today every change rebuilds. `renderValue` in `srcjs/widget.ts` destroys the
+**Partly done.** `update_location()` shipped in 0.12.0 and
+navigation no longer rebuilds; see HANDOFF.md. What follows is the reasoning
+for the rest, which is unchanged and still deliberately not built.
+
+Today every other change rebuilds. `renderValue` in `srcjs/widget.ts` destroys the
 previous controller and calls `create*` again, so in Shiny any reactive input
 feeding `renderJBrowseR()` throws away the user's zoom, track order, scroll
 position, and feature selection. The only signal out is `onFeatureSelect`.
@@ -15,10 +19,10 @@ The controller can do better. `createLinearGenomeView` returns `setAssembly`,
 sibling anywidget (`~/src/jbrowse-anywidget`, `src/index.ts`) drives all of them
 from traitlets, so the mechanism is proven — the question is what belongs in R.
 
-The R-side shape would be htmlwidgets proxies, not anything anywidget-like:
-`jbrowse_proxy(outputId)` plus `session$sendCustomMessage`, dispatched in
-`widget.ts` to the live controller. Standard for the ecosystem (leaflet, plotly),
-and CRAN-safe.
+The R-side shape is `session$sendCustomMessage`, dispatched in `widget.ts` to
+the live controller — the mechanism leaflet's and plotly's proxies use
+underneath, without the proxy object, which buys nothing until there are enough
+commands to want to batch them.
 
 ### Why we stopped at one bug fix
 
@@ -39,7 +43,8 @@ instance of that.
 `update_location()` is the one that resolves cleanly — navigation is the repeated
 interaction, a full rebuild to move the locus is visibly wasteful, and location
 has one unambiguous meaning that `setLocation` already handles as a plain async
-call. Do that alone before anything else.
+call. Done: it is one custom message rather than an htmlwidgets proxy object per
+call, which is the same mechanism leaflet's proxies use underneath.
 
 `setTracks` / `setAssembly` / `setSession` should earn it in the anywidget first.
 That repo has no CRAN cycle and one maintainer, and it exercises them against
@@ -53,6 +58,12 @@ design, but it is the version where R, Python, and plain React all get the same
 answer.
 
 ## Feature selection from JBrowseRApp
+
+**Done in 0.12.0.** `createApp` grew `SessionObservers` (`onFeatureSelect`,
+`onLocationChange`, `onSessionChange`), so the app widget now reports
+`_selected_feature` and `_location` like the single-view one. What follows was
+the state before that landed, kept for the reasoning about reaching past the
+controller.
 
 `JBrowseR()` reports clicks via `onFeatureSelect`; `JBrowseRApp()` reports
 nothing, because `createApp` in `@jbrowse/react-app2` exposes no such option.
@@ -78,3 +89,32 @@ react/mobx dedupe for linked monorepo packages); if that drifts and only one cop
 gets the fix, the other breaks in a way that is annoying to rediscover. Revisit
 if a third embedding appears, or if the configs drift in substance rather than
 prose.
+
+## Read-backs: getters, not patches
+
+Colin, 2026-08-06, on where the value in a host API is: "the true value is in
+the full api surface of getters and stuff with observable", and "if a lot of
+effort is being dedicated to onpatch that is probably bad".
+
+Nothing here uses `onPatch`, and the read-backs this package rides are not
+patch-based: `observeSession` in product-core is two MobX autoruns over a
+deliberately coarse derived signal (per view: `id`, location, open trackIds),
+which is what makes `_location`/`_session`/`_selected_feature` settle after a
+gesture rather than firing per pointer event. That part is already the right
+shape.
+
+The thing the note is about lives upstream: `createViewState`'s
+`onChange?: (patch, reversePatch)` in both React products, wired straight to
+MST's `onPatch`. It streams raw JSON patches whose paths are the tree's internal
+shape, and the only documented example of it
+(`products/jbrowse-react-app/examples-site/src/docs/with-on-change.md`) ignores
+the patch and calls `getSnapshot(state.session)` in the handler — the API's own
+worked example does not use the API. Don't build a host read-back on it.
+
+Where this would go if picked up: one mechanism that mirrors *declared*
+observable reads into host state, instead of a callback per fact. The host names
+what it wants to watch; the JS side autoruns each and pushes the value. That
+generalizes `_location` and `_selected_feature` (each is one getter today) and
+reaches the rest of the model surface without a new option per thing. The open
+questions are how a host names a getter across the boundary, and what happens to
+a name whose model moved — the same versioning problem the session spec has.

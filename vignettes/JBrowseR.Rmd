@@ -279,5 +279,6 @@ JBrowseR(
 - Files on your own machine? See [serving local data](creating-urls.html).
 - Need full control? Pass a whole JBrowse config with the
   [`config` escape hatch](json-tutorial.html).
-- Embedding in Shiny? Use `JBrowseROutput()` and `renderJBrowseR()`, and read
-  the selected feature back with `input$selectedFeature`.
+- Embedding in Shiny? Use `JBrowseROutput()` and `renderJBrowseR()`, read the
+  selected feature back with `input$<outputId>_selected_feature`, and navigate
+  with `update_location("<outputId>", loc)`.

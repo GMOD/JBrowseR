@@ -36,12 +36,19 @@ defineWidget<AppPayload, { destroy: () => void }>(
       // same plain JSON `session =` takes, so a Shiny app can offer "save this
       // layout" and hand it straight back later. createApp settles it on a
       // coarse signal, so it lands after a gesture rather than during one.
-      //
-      // createApp also offers onLocationChange, which would give the app a
-      // `<outputId>_location` the way JBrowseR() has one. Left off until the
-      // roxygen for JBrowseRApp-shiny describes it.
       onSessionChange: session => {
         window.Shiny?.setInputValue(`${el.id}_session`, session)
+      },
+      // The same two read-backs JBrowseR() has, under the same input names, so
+      // an app that grows from one view to several does not have to rewrite its
+      // server. `_location` differs in shape and cannot not: this app has any
+      // number of views, so it reports a list rather than the single string a
+      // one-view widget can.
+      onLocationChange: locations => {
+        window.Shiny?.setInputValue(`${el.id}_location`, locations)
+      },
+      onFeatureSelect: feature => {
+        window.Shiny?.setInputValue(`${el.id}_selected_feature`, feature)
       },
     }),
 )

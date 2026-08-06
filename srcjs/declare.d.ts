@@ -17,5 +17,19 @@ interface Window {
   }
   Shiny?: {
     setInputValue(id: string, value: unknown): void
+    // Present only in a Shiny page; an Rmd or console widget has a Shiny
+    // global with neither method, which is why both are optional.
+    addCustomMessageHandler?(
+      type: string,
+      handler: (message: ProxyCall) => void,
+    ): void
   }
+}
+
+// What `update_*()` sends from the R server. `id` is the output element's id,
+// already namespaced by the R side when the caller is inside a Shiny module.
+interface ProxyCall {
+  id: string
+  method: string
+  args?: Record<string, unknown>
 }

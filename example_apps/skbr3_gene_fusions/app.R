@@ -18,11 +18,12 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  loc <- reactiveVal("17:37,686,000..37,730,000")
-
-  observeEvent(input$klhdc2, loc("14:50,230,000..50,255,000"))
-  observeEvent(input$tatdn1, loc("8:125,490,000..125,560,000"))
-  observeEvent(input$erbb2, loc("17:37,686,000..37,730,000"))
+  # The buttons move the rendered browser. Feeding a reactive location into
+  # renderJBrowseR() instead would rebuild the whole browser on every jump,
+  # refetching the BAM and dropping whatever the user had zoomed to.
+  observeEvent(input$klhdc2, update_location("browserOutput", "14:50,230,000..50,255,000"))
+  observeEvent(input$tatdn1, update_location("browserOutput", "8:125,490,000..125,560,000"))
+  observeEvent(input$erbb2, update_location("browserOutput", "17:37,686,000..37,730,000"))
 
   output$browserOutput <- renderJBrowseR(JBrowseR(
     "hg19",
@@ -38,7 +39,7 @@ server <- function(input, output, session) {
         name = "SKBR3 PacBio long reads"
       )
     ),
-    location = loc()
+    location = "17:37,686,000..37,730,000"
   ))
 }
 

@@ -11,19 +11,19 @@ import { type Payload, defineWidget } from './widget'
 
 // The clicked feature goes to `<outputId>_selected_feature` — el.id is the
 // output element's id, already namespaced by Shiny inside a module, so two
-// browsers on one page don't overwrite each other. The bare `selectedFeature`
-// every existing app observes is still set, and still global.
+// browsers on one page don't overwrite each other.
+//
+// A bare global `selectedFeature` was set alongside it until 0.12.0. It could
+// not be made correct: two browsers on a page overwrite each other's, and
+// inside a Shiny module the module cannot read it at all.
 function featureSelectHandler(el: HTMLElement) {
   return (feature: unknown) => {
     window.Shiny?.setInputValue(`${el.id}_selected_feature`, feature)
-    window.Shiny?.setInputValue('selectedFeature', feature)
   }
 }
 
 // The visible region goes to `<outputId>_location`, so a server can recompute
-// for what the user is actually looking at. No global twin: `selectedFeature`
-// has one only for apps written before the namespacing, and a second browser on
-// the page would fight over it.
+// for what the user is actually looking at.
 //
 // The view fires this with `coarseVisibleLocStrings`, which settles after a
 // pan/zoom rather than tracking every frame — a raw read would put a Shiny
@@ -46,4 +46,25 @@ defineWidget<Payload<CreateLinearGenomeViewOptions>, LinearGenomeViewController>
       onFeatureSelect: featureSelectHandler(el),
       onLocationChange: locationChangeHandler(el),
     }),
+  // What `update_location()` reaches. Navigation only, deliberately: the
+  // controller also offers setTracks/setAssembly/setSession, and each of those
+  // has to answer what it does to a track the user opened by hand or a layout
+  // they rearranged. Rebuilding is a defensible answer to those and is what
+  // re-rendering the widget already does; moving the locus has one meaning and
+  // is the interaction that repeats, so it is the one worth doing live.
+  (controller, call) => {
+    if (call.method === 'setLocation') {
+      const location = call.args?.location
+      if (typeof location === 'string') {
+        // async: the view resolves the string (a gene name goes through the
+        // search index) and may fail. Report it where the other build failures
+        // go rather than as an unhandled rejection.
+        controller.setLocation(location).catch((e: unknown) => {
+          console.error(e)
+        })
+      }
+    } else {
+      console.warn(`JBrowseR: unknown proxy call "${call.method}"`)
+    }
+  },
 )

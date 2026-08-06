@@ -36,8 +36,7 @@ applications and interactive Rmd documents.
 \details{
 Clicking a feature sets \code{input[[paste0(outputId, "_selected_feature")]]},
 which is namespaced per output and so is safe with several browsers on a
-page or inside a Shiny module. It also sets the global \code{input$selectedFeature}
-for backwards compatibility; prefer the per-output id in new apps.
+page or inside a Shiny module.
 
 Panning or zooming sets \code{input[[paste0(outputId, "_location")]]} to the
 visible region, so the server can recompute for what the user is looking at.
@@ -57,5 +56,6 @@ with it — \code{as.numeric(gsub(",", "", x))}. It feeds straight back into
 
 Note that reading it in a reactive that also feeds \code{renderJBrowseR()} builds
 a loop: the widget rebuilds on every change, and a rebuild resets the view.
-Read it to drive \emph{other} outputs.
+Read it to drive \emph{other} outputs, and navigate with \code{\link[=update_location]{update_location()}},
+which moves the browser in place instead of rebuilding it.
 }

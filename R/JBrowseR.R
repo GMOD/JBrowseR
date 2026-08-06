@@ -74,8 +74,7 @@ JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
 #'
 #' Clicking a feature sets `input[[paste0(outputId, "_selected_feature")]]`,
 #' which is namespaced per output and so is safe with several browsers on a
-#' page or inside a Shiny module. It also sets the global `input$selectedFeature`
-#' for backwards compatibility; prefer the per-output id in new apps.
+#' page or inside a Shiny module.
 #'
 #' Panning or zooming sets `input[[paste0(outputId, "_location")]]` to the
 #' visible region, so the server can recompute for what the user is looking at.
@@ -96,7 +95,8 @@ JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
 #'
 #' Note that reading it in a reactive that also feeds `renderJBrowseR()` builds
 #' a loop: the widget rebuilds on every change, and a rebuild resets the view.
-#' Read it to drive *other* outputs.
+#' Read it to drive *other* outputs, and navigate with [update_location()],
+#' which moves the browser in place instead of rebuilding it.
 #'
 #' @param outputId output variable to read from
 #' @param width Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.

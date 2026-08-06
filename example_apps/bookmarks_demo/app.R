@@ -36,10 +36,9 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  loc <- reactiveVal("CYP2C19")
-  observeEvent(input$cyp, loc("CYP2C19"))
-  observeEvent(input$tp53, loc("TP53"))
-  observeEvent(input$brca2, loc("BRCA2"))
+  observeEvent(input$cyp, update_location("browserOutput", "CYP2C19"))
+  observeEvent(input$tp53, update_location("browserOutput", "TP53"))
+  observeEvent(input$brca2, update_location("browserOutput", "BRCA2"))
 
   genes <- list(
     uri =
@@ -65,17 +64,22 @@ server <- function(input, output, session) {
     extra(list(track_data_frame(regions_df, "genes_of_interest")))
   })
 
+  # Adding the track is the one thing here that does rebuild the browser, since
+  # the track list is part of what it is built from. Reading the reported
+  # location under isolate() is what makes that survivable: the rebuild lands
+  # where the user was rather than back at the start, and isolating it keeps
+  # this from re-running every time they pan.
   output$browserOutput <- renderJBrowseR(JBrowseR(
     "hg38",
     tracks = c(list(genes, variants), extra()),
-    location = loc()
+    location = isolate(input$browserOutput_location) %||% "CYP2C19"
   ))
 
   bookmarks <- reactiveVal(data.frame(
     chrom = character(), start = numeric(), end = numeric(), name = character()
   ))
-  observeEvent(input$selectedFeature, {
-    f <- input$selectedFeature
+  observeEvent(input$browserOutput_selected_feature, {
+    f <- input$browserOutput_selected_feature
     bookmarks(rbind(bookmarks(), data.frame(
       chrom = f$refName, start = f$start, end = f$end, name = f$name %||% ""
     )))
@@ -86,7 +90,7 @@ server <- function(input, output, session) {
     row <- input$bookmarks_rows_selected
     if (length(row)) {
       b <- bookmarks()[row, ]
-      loc(paste0(b$chrom, ":", b$start, "..", b$end))
+      update_location("browserOutput", paste0(b$chrom, ":", b$start, "..", b$end))
     }
   })
   observeEvent(input$delete, {

@@ -111,8 +111,8 @@ server <- function(input, output, session) {
   })
 
   output$selected <- renderPrint({
-    req(input$selectedFeature)
-    f <- input$selectedFeature
+    req(input$browserOutput_selected_feature)
+    f <- input$browserOutput_selected_feature
     cat(sprintf(
       "%s\n%s:%s..%s (%s bp)",
       f$name, f$refName, f$start, f$end, f$end - f$start

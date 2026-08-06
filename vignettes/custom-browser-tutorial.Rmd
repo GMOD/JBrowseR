@@ -105,16 +105,27 @@ JBrowseR(
 
 ## Reacting to clicks in Shiny
 
-When rendered inside Shiny, clicking a feature sets `input$selectedFeature` to
-the feature's data, so you can build tables, plots, or links from the current
-selection.
+When rendered inside Shiny, clicking a feature sets
+`input$<outputId>_selected_feature` to the feature's data, so you can build
+tables, plots, or links from the current selection. The id is namespaced per
+output, so several browsers on one page do not overwrite each other's.
 
 ```{r}
 # server side
 output$browser <- renderJBrowseR(
   JBrowseR(assembly = hg19, tracks = my_tracks, location = "MYC")
 )
-observeEvent(input$selectedFeature, {
-  print(input$selectedFeature$name)
+observeEvent(input$browser_selected_feature, {
+  print(input$browser_selected_feature$name)
+})
+```
+
+To move the browser from R, send it a command rather than re-rendering it. A
+reactive `location` rebuilds the whole browser, which refetches its tracks and
+discards the user's zoom.
+
+```{r}
+observeEvent(input$goto_myc, {
+  update_location("browser", "MYC")
 })
 ```

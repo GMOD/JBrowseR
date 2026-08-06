@@ -111,9 +111,19 @@ JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
 #'
 #' It rides a coarse signal — which views exist, what each has open, and where
 #' each is looking — so it settles after a gesture instead of firing per frame.
-#' As with `_location`, reading it in the reactive that feeds
-#' `renderJBrowseRApp()` builds a loop: store it on an event, don't wire it
-#' straight through.
+#' Reading it in the reactive that feeds `renderJBrowseRApp()` builds a loop:
+#' store it on an event, don't wire it straight through.
+#'
+#' Two narrower read-backs sit beside it, under the same names
+#' [JBrowseROutput()] uses. `input[[paste0(outputId, "_selected_feature")]]` is
+#' the feature the user last clicked, in any view.
+#' `input[[paste0(outputId, "_location")]]` is where the app is looking — a
+#' *list*, one entry per open view, because this widget holds any number of
+#' them where [JBrowseR()] holds one and reports a single string. A comparative
+#' view contributes a character vector, one per panel, since a synteny view has
+#' no single visible region. The entries are in view order, which changes when
+#' the user adds or closes a view, so read `_session` instead when you need to
+#' know which view a region belongs to.
 #'
 #' @param outputId output variable to read from
 #' @param width Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
