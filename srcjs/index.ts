@@ -7,12 +7,7 @@ import {
   loadPlugins,
 } from '@jbrowse/react-linear-genome-view2'
 
-import { type Payload, type PluginSpec, defineWidget } from './widget'
-
-async function runtimePlugins(specs?: PluginSpec[]) {
-  const loaded = specs?.length ? await loadPlugins(specs) : []
-  return loaded.map(p => p.plugin)
-}
+import { type Payload, defineWidget } from './widget'
 
 // The clicked feature goes to `<outputId>_selected_feature` — el.id is the
 // output element's id, already namespaced by Shiny inside a module, so two
@@ -44,7 +39,10 @@ defineWidget<Payload<CreateLinearGenomeViewOptions>, LinearGenomeViewController>
   async (el, x) =>
     createLinearGenomeView(el, {
       ...x,
-      plugins: await runtimePlugins(x.plugins),
+      // the loadPlugins records go through whole rather than mapped to
+      // `.plugin`: the definition is what lets the RPC worker load the same
+      // plugin, so a stripped record leaves it missing there
+      plugins: await loadPlugins(x.plugins ?? []),
       onFeatureSelect: featureSelectHandler(el),
       onLocationChange: locationChangeHandler(el),
     }),
