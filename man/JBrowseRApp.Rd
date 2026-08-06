@@ -18,8 +18,10 @@ JBrowseRApp(
 )
 }
 \arguments{
-\item{assemblies}{A list of assembly configs — \code{list(name = , uri = )} each.
-A synteny/dotplot view needs two or more.}
+\item{assemblies}{A list of assemblies. Each entry is a config —
+\code{list(name = , uri = )} — or a shorthand string: a hub name (\code{"hg38"},
+\code{"GCF_..."}) or a sequence-file URL, the same shorthands \code{\link[=JBrowseR]{JBrowseR()}}
+accepts. A synteny/dotplot view needs two or more.}
 
 \item{tracks}{A list of full track config lists. A synteny track spans two
 assemblies, so it names both in \code{assemblyNames} and in its adapter.}
@@ -68,6 +70,7 @@ vector would serialize as a JSON scalar.
 }
 \examples{
 \dontrun{
+# assemblies also accept hub-name shorthands: assemblies = list("hg38", "mm39")
 JBrowseRApp(
   assemblies = list(
     list(name = "hg38", uri = hg38_fa),

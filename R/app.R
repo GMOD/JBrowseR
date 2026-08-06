@@ -16,8 +16,10 @@
 #' Note that fields JBrowse reads as arrays need `list()`, since a length-1
 #' vector would serialize as a JSON scalar.
 #'
-#' @param assemblies A list of assembly configs — `list(name = , uri = )` each.
-#'   A synteny/dotplot view needs two or more.
+#' @param assemblies A list of assemblies. Each entry is a config —
+#'   `list(name = , uri = )` — or a shorthand string: a hub name (`"hg38"`,
+#'   `"GCF_..."`) or a sequence-file URL, the same shorthands [JBrowseR()]
+#'   accepts. A synteny/dotplot view needs two or more.
 #' @param tracks A list of full track config lists. A synteny track spans two
 #'   assemblies, so it names both in `assemblyNames` and in its adapter.
 #' @param views A list of `list(type = , init = )` view specs.
@@ -43,6 +45,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # assemblies also accept hub-name shorthands: assemblies = list("hg38", "mm39")
 #' JBrowseRApp(
 #'   assemblies = list(
 #'     list(name = "hg38", uri = hg38_fa),
