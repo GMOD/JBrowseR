@@ -46,12 +46,11 @@ defineWidget<Payload<CreateLinearGenomeViewOptions>, LinearGenomeViewController>
       onFeatureSelect: featureSelectHandler(el),
       onLocationChange: locationChangeHandler(el),
     }),
-  // What `update_location()` reaches. Navigation only, deliberately: the
-  // controller also offers setTracks/setAssembly/setSession, and each of those
-  // has to answer what it does to a track the user opened by hand or a layout
-  // they rearranged. Rebuilding is a defensible answer to those and is what
-  // re-rendering the widget already does; moving the locus has one meaning and
-  // is the interaction that repeats, so it is the one worth doing live.
+  // What `update_location()` reaches, and the whole of it. What is left on the
+  // controller is addTrack/removeTrack/addLocalFiles; a Shiny app expresses
+  // those by re-rendering the widget, which is what renderJBrowseR already does
+  // with the track list. Moving the locus is the one interaction that repeats
+  // often enough for a rebuild to be visibly wrong.
   (controller, call) => {
     if (call.method === 'setLocation') {
       const location = call.args?.location

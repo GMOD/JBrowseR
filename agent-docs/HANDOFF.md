@@ -114,14 +114,14 @@ reactive into `renderJBrowseR()`, which destroys and rebuilds the browser —
 refetching its tracks and discarding zoom, track order and selection. Four of
 the bundled example apps did exactly that.
 
-The controller also offers `setTracks`, `setAssembly`, `setSession`,
-`addTrack`, `removeTrack` and `addLocalFiles`, and none of them are wired.
-That is the decision recorded in `IDEAS.md`, unchanged: each has to answer what
-it does to a track the user opened by hand or a layout they rearranged, and
-"rebuild" is a defensible answer to those — which is what re-rendering the
-widget already does. Navigation has one meaning and is the interaction that
-repeats. If you wire another, wire it in the anywidget first; that repo has no
-CRAN cycle and exercises the semantics against real notebook use.
+`setTracks`, `setAssembly` and `setSession` were removed from the controller
+upstream in the same pass (2026-08-06): the first two were `destroy and build
+again` spelled as methods, and the third reconciled a track list the user may
+have opened their own tracks into. So there is nothing left to wire here that
+re-rendering the widget does not already do. What remains on the controller is
+`addTrack`, `removeTrack` and `addLocalFiles`; if you ever wire one, wire it in
+the anywidget first, which has no CRAN cycle and exercises the semantics against
+real notebook use.
 
 **The seam is untyped, so it is pinned from both ends.**
 `tests/testthat/test-proxy.R` has what R sends; `tools/verify_proxy.mjs` drives

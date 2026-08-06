@@ -42,11 +42,10 @@ because the rebuild resets the view; reading it in an \code{observeEvent()} that
 calls \code{update_location()} is not.
 
 Navigation is the only command, and there is deliberately no R function per
-thing a browser can do. A browser's tracks, assembly and session can also be
-swapped live, but each has to answer what it does to a track the user opened
-by hand or a layout they rearranged — and "rebuild" is a defensible answer to
-those, which is what re-rendering the widget already does. Moving the locus
-has one meaning and is the interaction that repeats.
+thing a browser can do. A browser's genome, session and track list are what
+it is built from, so changing one of those is a new browser — which is
+exactly what re-rendering the widget gives you. Moving the locus is the one
+interaction that repeats often enough for that to be visibly wrong.
 
 \code{\link[=JBrowseRApp]{JBrowseRApp()}} cannot be moved this way: it holds any number of views, and
 which one a location is meant for is not part of its interface.
