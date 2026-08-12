@@ -76,6 +76,49 @@ JBrowseR(
 )
 ```
 
+## A file from this R session, with no server
+
+`track_data_frame()` above puts every feature in the page as JSON, which stops
+scaling somewhere past a few thousand of them. `local_files` is the other way to
+have no web server: write a real file and hand JBrowse its bytes. Each path
+registers under its basename, and that name is what a track's `uri` refers to —
+so the `.bed` extension still picks the adapter, exactly as a URL's would.
+
+```{r localfile}
+bed <- file.path(tempdir(), "peaks.bed")
+write.table(
+  peaks[c("chrom", "start", "end", "name")],
+  bed,
+  sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE
+)
+
+JBrowseR(
+  "hg38",
+  tracks = list(list(uri = "peaks.bed", name = "Peaks from a file")),
+  local_files = bed,
+  location = "17:43,000,000..43,125,000"
+)
+```
+
+Nothing is served here: the bytes travel inside this page and JBrowse reads them
+out of a `Blob`. That also means an **indexed** file stays indexed, which is the
+reason to reach for this rather than inline the features — a bgzipped+tabixed
+table, or a BAM with its `.bai`, is read by byte range, so only the region on
+screen is ever touched. Put the index next to the data file and it comes along
+under the name the adapter derives:
+
+```r
+JBrowseR(
+  "hg38",
+  tracks = list(list(uri = "peaks.bed.gz", name = "Peaks")),
+  local_files = "~/analysis/peaks.bed.gz" # picks up peaks.bed.gz.tbi beside it
+)
+```
+
+The bytes are base64-encoded into the document, so this is for a file on your own
+machine rather than for a reference genome; `local_files` warns past ~50 MB, and
+the [Hosting data](../creating-urls.html) vignette covers what to do above that.
+
 ## A statistical plot (GWAS Manhattan)
 
 A track isn't only features and coverage — a display can plot data. Point a

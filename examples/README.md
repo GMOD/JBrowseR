@@ -30,7 +30,14 @@ one thing. Run any of them with `shiny::runApp("example_apps/<name>")`.
 | `bookmarks_demo` | gene navigation, data-frame tracks, feature bookmarking |
 | `load_config_json` | a full JBrowse `config.json` |
 | `using_plugins` | a JBrowse 2 plugin loaded via a config |
+| `local_files` | a file from the user's own machine, with nothing hosting it |
 | `demos` | all of the above as tabs — what gets hosted |
+
+`local_files` is the one app not in `demos` and not deployed: it opens a file the
+visitor picks off their own disk, so hosted it is a blank page until someone
+uploads something. To watch that feature work without supplying a file, the
+website's [live articles](https://gmod.github.io/JBrowseR/articles/live-browser.html)
+write one from R and open it in the page.
 
 Hosting comes from `example_apps/deploy.R`, which the **shinyapps** workflow runs
 on demand (Actions → shinyapps → Run workflow) and on each published release.
