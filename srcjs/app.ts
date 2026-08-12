@@ -9,7 +9,7 @@ import {
   resolveAssemblies,
 } from '@jbrowse/react-app2'
 
-import { type Payload, defineWidget } from './widget'
+import { type Payload, decodeLocalFiles, defineWidget } from './widget'
 
 // What the R side actually sends for `assemblies`: the loose vocabulary, which
 // is wider than the resolved configs createApp takes. Same reason `Payload`
@@ -32,6 +32,7 @@ defineWidget<AppPayload, { destroy: () => void }>(
       // `.plugin`: the definition is what lets the RPC worker load the same
       // plugin, so a stripped record leaves it missing there
       plugins: await loadPlugins(x.plugins ?? []),
+      localFiles: decodeLocalFiles(x.localFiles),
       // The layout the user built by hand goes to `<outputId>_session`, as the
       // same plain JSON `session =` takes, so a Shiny app can offer "save this
       // layout" and hand it straight back later. createApp settles it on a

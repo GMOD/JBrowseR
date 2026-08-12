@@ -11,6 +11,7 @@ JBrowseR(
   session = NULL,
   text_search = NULL,
   theme = NULL,
+  local_files = NULL,
   plugins = NULL,
   config = NULL,
   width = NULL,
@@ -44,6 +45,14 @@ whole initial layout when given. Same argument name as \code{\link[=JBrowseRApp]
 \item{theme}{A theme config, the
 \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
 palette} JBrowse takes: \code{list(palette = list(primary = list(main = )))}.}
+
+\item{local_files}{Files on this machine to open without a web server: a path,
+a vector of paths, or a list mixing paths with \code{raw} vectors of bytes you
+already hold. Each registers under its basename (or its list name), and a
+track then refers to that name as if it were a URL — see the "Hosting data"
+vignette. A conventional sibling index (\code{.tbi}, \code{.csi}, \code{.bai}, \code{.crai},
+\code{.fai}, \code{.gzi}) next to a path is picked up too, so an indexed file stays
+indexed and JBrowse reads only the region on screen.}
 
 \item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
 

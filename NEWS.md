@@ -1,5 +1,26 @@
 # JBrowseR 0.12.0
 
+- New `local_files =` on `JBrowseR()` and `JBrowseRApp()`: open files from your
+  own machine with no web server at all. Each path registers under its basename,
+  and a track (or an assembly) refers to that name as if it were a URL; a
+  conventional sibling index next to it (`.tbi`, `.csi`, `.bai`, `.crai`,
+  `.fai`, `.gzi`) is picked up automatically, so an indexed file stays indexed
+  and JBrowse reads only the region on screen.
+
+  This is what `serve_data()` was for before 0.11.0 removed it, without the
+  hand-rolled HTTP server or the `httpuv` dependency that went with it: the
+  bytes travel inside the document and the range reads happen in the browser.
+  The advice that replaced it — run `npx http-server --cors` and point at
+  `http://localhost:...` — still works and is still right for large files, but
+  it cannot produce a knitted document anyone else can open, because a localhost
+  URL is dead the moment the HTML leaves your machine.
+
+  The cost is that the bytes ride base64-encoded inside the payload, so this is
+  for a file on an analyst's laptop rather than for a reference genome; it warns
+  past ~50 MB. (Shiny cannot serve the alternative today: neither
+  `addResourcePath()`'s handler nor httpuv's static path answers HTTP `Range`,
+  so a URL pointing at either would refetch the whole file per read.)
+
 - New `update_location(outputId, location)`: navigate a browser that is
   already on the page instead of re-rendering it. Feeding a reactive `location`
   into `renderJBrowseR()` rebuilds the whole browser, which refetches its tracks

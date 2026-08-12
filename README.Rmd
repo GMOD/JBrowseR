@@ -98,6 +98,20 @@ JBrowseR(
 
 <img src="man/figures/demo-dataframe.png" width="100%" />
 
+Files on your own machine need no host either — `local_files` reads them into
+the document, and a track refers to one by name as if it were a URL. The sibling
+index comes along, so an indexed file stays indexed and only the region on
+screen is ever read:
+
+```r
+JBrowseR(
+  "hg38",
+  tracks = list(list(uri = "peaks.bed.gz", name = "Peaks")),
+  local_files = "~/data/peaks.bed.gz",
+  location = "17:43,000,000..43,125,000"
+)
+```
+
 A track's *display* can plot its data — a `GWASTrack` with a
 `LinearManhattanDisplay` draws genome-wide summary statistics as a Manhattan plot
 in the linear view, no separate plotting widget needed:

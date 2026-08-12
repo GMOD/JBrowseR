@@ -37,6 +37,13 @@
 #' @param theme A theme config, the
 #'   \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
 #'   palette} JBrowse takes: `list(palette = list(primary = list(main = )))`.
+#' @param local_files Files on this machine to open without a web server: a path,
+#'   a vector of paths, or a list mixing paths with `raw` vectors of bytes you
+#'   already hold. Each registers under its basename (or its list name), and a
+#'   track then refers to that name as if it were a URL — see the "Hosting data"
+#'   vignette. A conventional sibling index (`.tbi`, `.csi`, `.bai`, `.crai`,
+#'   `.fai`, `.gzi`) next to a path is picked up too, so an indexed file stays
+#'   indexed and JBrowse reads only the region on screen.
 #' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
 #' @param config Escape hatch: a whole JBrowse config forming the payload base
 #'   that explicit arguments override — a list, or the path, URL, or JSON text of
@@ -53,8 +60,8 @@
 #' JBrowseR("hg38", location = "BRCA1")
 JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
                      session = NULL, text_search = NULL, theme = NULL,
-                     plugins = NULL, config = NULL, width = NULL, height = NULL,
-                     elementId = NULL) {
+                     local_files = NULL, plugins = NULL, config = NULL,
+                     width = NULL, height = NULL, elementId = NULL) {
   if (is.null(assembly) && is.null(config)) {
     stop("provide an `assembly` (or a whole `config`)", call. = FALSE)
   }
@@ -65,6 +72,7 @@ JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
     session = session,
     aggregateTextSearchAdapters = as_adapter_list(text_search),
     configuration = configuration_from_theme(theme),
+    localFiles = read_local_files(local_files),
     plugins = plugins
   ), width, height, elementId)
 }

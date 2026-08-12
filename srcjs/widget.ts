@@ -4,10 +4,46 @@ export interface PluginSpec {
 }
 
 // The widget payload htmlwidgets hands renderValue is the create* options
-// verbatim — the R helpers produce that camelCase shape — except plugins arrive
-// as [{name,url}] specs loaded at runtime (R can't ship constructors).
-export type Payload<Options> = Omit<Options, 'plugins'> & {
+// verbatim — the R helpers produce that camelCase shape — with two exceptions,
+// both of them things JSON cannot carry: plugins arrive as [{name,url}] specs
+// loaded at runtime (R can't ship constructors), and local files arrive as
+// base64 (htmlwidgets has no binary channel, unlike ipywidgets' buffers, so a
+// raw vector rides as the string jsonlite makes of it).
+export type Payload<Options> = Omit<Options, 'plugins' | 'localFiles'> & {
   plugins?: PluginSpec[]
+  localFiles?: Record<string, string>
+}
+
+// Base64 back to bytes. Written as a loop rather than
+// `Uint8Array.from(bin, c => c.charCodeAt(0))` because these are whole data
+// files — a per-character callback over tens of millions of them is worth
+// avoiding on the render path.
+function decodeBase64(base64: string) {
+  const bin = atob(base64)
+  const bytes = new Uint8Array(bin.length)
+  for (let i = 0; i < bin.length; i++) {
+    bytes[i] = bin.charCodeAt(i)
+  }
+  return bytes
+}
+
+/**
+ * Decode the payload's `localFiles` into the `name -> bytes` the view takes.
+ *
+ * The bytes are read by byte range once they are in the browser, so an indexed
+ * file stays indexed — but getting them there costs the base64 inflation and
+ * puts the whole file in the document. That ceiling is why this is for a file
+ * on the analyst's own machine rather than for hosted data.
+ */
+export function decodeLocalFiles(files: Record<string, string> | undefined) {
+  return files
+    ? Object.fromEntries(
+        Object.entries(files).map(([name, base64]) => [
+          name,
+          decodeBase64(base64),
+        ]),
+      )
+    : undefined
 }
 
 const ERROR_CLASS = 'jbrowser-error'

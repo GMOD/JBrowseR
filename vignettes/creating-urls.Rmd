@@ -70,19 +70,42 @@ there, so co-locating the data gives faster performance.
 
 ## Viewing local files
 
-To view files from your own machine, serve the directory with any static server
-that supports range requests and CORS, then point the assembly and track configs at
-the resulting `http://localhost:...` URLs. For example, with
-[http-server](https://www.npmjs.com/package/http-server):
-
-```sh
-npx http-server --cors -p 5000 ~/path/to/my-data
-```
+Files on your own machine need no host at all. `local_files` reads them into the
+document, and a track then refers to one by name exactly as it would a URL:
 
 ```{r}
 JBrowseR(
-  assembly = list(name = "mine", uri = "http://127.0.0.1:5000/genome.fa.gz"),
-  tracks = list(list(uri = "http://127.0.0.1:5000/genes.gff.gz", name = "Genes")),
+  "hg38",
+  tracks = list(list(uri = "peaks.bed.gz", name = "Peaks")),
+  local_files = "~/data/peaks.bed.gz",
   location = "chr1:1-10000"
+)
+```
+
+The name is the file's basename, so the `.bed.gz` extension still picks the
+adapter. A conventional sibling index next to the file — `.tbi`, `.csi`, `.bai`,
+`.crai`, `.fai`, `.gzi` — is registered alongside it under the name the adapter
+derives, so an indexed file stays indexed: the browser seeks into the bytes it
+holds and reads only the region on screen, the same as it would over HTTP.
+
+This is the one case where no server is involved, so the two requirements above
+do not apply — there is no origin to configure CORS for, and the range reads
+happen inside the browser. It is also what makes a knitted document
+self-contained: the bytes travel with the HTML, where a `http://localhost:...`
+URL would be dead for anyone you send it to.
+
+The cost is that the bytes ride inside the document, base64-encoded, rather than
+being fetched a slice at a time. That is fine for a file on an analyst's laptop
+and wrong for a reference genome — `local_files` warns past ~50 MB. Host
+anything larger and pass its URL.
+
+An assembly can come from a local file the same way, since `uri` is a name here
+like any other:
+
+```{r}
+JBrowseR(
+  assembly = list(name = "mine", uri = "genome.fa.gz"),
+  local_files = c("~/data/genome.fa.gz", "~/data/genes.gff.gz"),
+  tracks = list(list(uri = "genes.gff.gz", name = "Genes"))
 )
 ```

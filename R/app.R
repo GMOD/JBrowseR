@@ -29,6 +29,13 @@
 #'   what to open, this carries the state the user built: navigation, open
 #'   tracks, per-display settings, widgets. `views` still describes what
 #'   File → New session returns to.
+#' @param local_files Files on this machine to open without a web server: a path,
+#'   a vector of paths, or a list mixing paths with `raw` vectors of bytes you
+#'   already hold. Each registers under its basename (or its list name), and a
+#'   track then refers to that name as if it were a URL — see the "Hosting data"
+#'   vignette. A conventional sibling index (`.tbi`, `.csi`, `.bai`, `.crai`,
+#'   `.fai`, `.gzi`) next to a path is picked up too, so an indexed file stays
+#'   indexed and JBrowse reads only the region on screen.
 #' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
 #' @param theme A theme config, the
 #'   \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
@@ -73,9 +80,9 @@
 #' )
 #' }
 JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
-                        session = NULL, plugins = NULL, theme = NULL,
-                        config = NULL, width = NULL, height = NULL,
-                        elementId = NULL) {
+                        session = NULL, local_files = NULL, plugins = NULL,
+                        theme = NULL, config = NULL, width = NULL,
+                        height = NULL, elementId = NULL) {
   if (is.null(assemblies) && is.null(config)) {
     stop("provide `assemblies` (or a whole `config`)", call. = FALSE)
   }
@@ -84,6 +91,7 @@ JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
     tracks = tracks,
     views = views,
     session = session,
+    localFiles = read_local_files(local_files),
     plugins = plugins,
     configuration = configuration_from_theme(theme)
   ), width, height, elementId)
