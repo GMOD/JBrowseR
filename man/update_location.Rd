@@ -22,11 +22,9 @@ vocabulary \code{\link[=JBrowseR]{JBrowseR()}}'s \code{location} takes, and the 
 \code{outputId}, invisibly.
 }
 \description{
-Navigates a browser that is already on the page. This is how a Shiny app
-should move the view: the alternative is putting a reactive into
-\code{renderJBrowseR()}, which rebuilds the whole browser, refetching its tracks
-and discarding the user's zoom, track order, scroll position and feature
-selection.
+Navigates a browser that is already on the page, without a Shiny round-trip
+through \code{renderJBrowseR()} — and without the loop that reading
+\verb{input$<outputId>_location} in the reactive feeding it would build.
 }
 \details{
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{output$browser <- renderJBrowseR(JBrowseR("hg38", location = "BRCA1"))
@@ -36,16 +34,13 @@ observeEvent(input$gene, \{
 \})
 }\if{html}{\out{</div>}}
 
-It also settles the loop \verb{input$<outputId>_location} otherwise creates.
-Reading that input in a reactive that feeds \code{renderJBrowseR()} is circular,
-because the rebuild resets the view; reading it in an \code{observeEvent()} that
-calls \code{update_location()} is not.
-
 Navigation is the only command, and there is deliberately no R function per
-thing a browser can do. A browser's genome, session and track list are what
-it is built from, so changing one of those is a new browser — which is
-exactly what re-rendering the widget gives you. Moving the locus is the one
-interaction that repeats often enough for that to be visibly wrong.
+thing a browser can do. Re-rendering the widget already reconciles a changed
+\code{tracks}, \code{location} or \code{local_files} into the browser on the page rather
+than rebuilding it, so a \code{renderJBrowseR()} driven by a reactive keeps the
+user's zoom and track order too. What this adds is the direction: a server
+that navigates in an \code{observeEvent()} never re-runs the render expression, so
+reading \verb{input$<outputId>_location} there is not circular.
 
 \code{\link[=JBrowseRApp]{JBrowseRApp()}} cannot be moved this way: it holds any number of views, and
 which one a location is meant for is not part of its interface.

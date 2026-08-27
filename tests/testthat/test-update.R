@@ -23,7 +23,7 @@ test_that("update_location sends the location to the named output", {
   expect_length(sent, 1)
   expect_equal(sent[[1]]$type, "jbrowser-call")
   expect_equal(sent[[1]]$message$id, "browser")
-  expect_equal(sent[[1]]$message$method, "setLocation")
+  expect_equal(sent[[1]]$message$method, "update")
   expect_equal(sent[[1]]$message$args$location, "chr1:1-1000")
 })
 

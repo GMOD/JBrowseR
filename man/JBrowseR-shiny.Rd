@@ -55,7 +55,20 @@ with it — \code{as.numeric(gsub(",", "", x))}. It feeds straight back into
 \verb{location =} unchanged, though (JBrowse parses what it prints).
 
 Note that reading it in a reactive that also feeds \code{renderJBrowseR()} builds
-a loop: the widget rebuilds on every change, and a rebuild resets the view.
-Read it to drive \emph{other} outputs, and navigate with \code{\link[=update_location]{update_location()}},
-which moves the browser in place instead of rebuilding it.
+a loop, whatever the render costs. Read it to drive \emph{other} outputs, and
+navigate with \code{\link[=update_location]{update_location()}}.
+
+Whatever the user does to the layout — navigating, opening tracks,
+rearranging them — is reported as
+\code{input[[paste0(outputId, "_session")]]}, in the same shape \verb{session =}
+takes. So "save this view" is storing that value and reopening it is passing
+it back, under the same input name \code{\link[=JBrowseRApp]{JBrowseRApp()}} uses.
+
+Re-rendering does not throw the browser away. A render whose payload differs
+only in \code{tracks}, \code{location} or \code{local_files} is reconciled into the browser
+already on the page: the tracks it names are opened and the ones it drops
+are closed, and the user's zoom, track order, scroll position and selection
+survive. Everything else — a different \code{assembly}, \code{session}, \code{plugins},
+\code{theme} or \code{config} — is what the browser is built from, so stating a new
+one builds a new browser.
 }

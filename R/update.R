@@ -1,10 +1,8 @@
 #' Move a rendered browser without rebuilding it
 #'
-#' Navigates a browser that is already on the page. This is how a Shiny app
-#' should move the view: the alternative is putting a reactive into
-#' `renderJBrowseR()`, which rebuilds the whole browser, refetching its tracks
-#' and discarding the user's zoom, track order, scroll position and feature
-#' selection.
+#' Navigates a browser that is already on the page, without a Shiny round-trip
+#' through `renderJBrowseR()` — and without the loop that reading
+#' `input$<outputId>_location` in the reactive feeding it would build.
 #'
 #' ```r
 #' output$browser <- renderJBrowseR(JBrowseR("hg38", location = "BRCA1"))
@@ -14,16 +12,13 @@
 #' })
 #' ```
 #'
-#' It also settles the loop `input$<outputId>_location` otherwise creates.
-#' Reading that input in a reactive that feeds `renderJBrowseR()` is circular,
-#' because the rebuild resets the view; reading it in an `observeEvent()` that
-#' calls `update_location()` is not.
-#'
 #' Navigation is the only command, and there is deliberately no R function per
-#' thing a browser can do. A browser's genome, session and track list are what
-#' it is built from, so changing one of those is a new browser — which is
-#' exactly what re-rendering the widget gives you. Moving the locus is the one
-#' interaction that repeats often enough for that to be visibly wrong.
+#' thing a browser can do. Re-rendering the widget already reconciles a changed
+#' `tracks`, `location` or `local_files` into the browser on the page rather
+#' than rebuilding it, so a `renderJBrowseR()` driven by a reactive keeps the
+#' user's zoom and track order too. What this adds is the direction: a server
+#' that navigates in an `observeEvent()` never re-runs the render expression, so
+#' reading `input$<outputId>_location` there is not circular.
 #'
 #' [JBrowseRApp()] cannot be moved this way: it holds any number of views, and
 #' which one a location is meant for is not part of its interface.
@@ -50,7 +45,7 @@ update_location <- function(outputId, location, session = shiny_session()) {
   }
   session$sendCustomMessage("jbrowser-call", list(
     id = namespaced(outputId, session),
-    method = "setLocation",
+    method = "update",
     args = list(location = location)
   ))
   invisible(outputId)

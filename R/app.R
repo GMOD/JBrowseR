@@ -39,7 +39,12 @@
 #' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
 #' @param theme A theme config, the
 #'   \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
-#'   palette} JBrowse takes.
+#'   palette} JBrowse takes. Shorthand for `configuration`'s `theme` slot,
+#'   which wins over it.
+#' @param configuration JBrowse's root
+#'   \href{https://jbrowse.org/jb2/docs/config_guide/}{`configuration` block},
+#'   handed over as it stands — `theme`, `formatDetails`, `logoPath`,
+#'   `shareURL` and the rest, without an R argument each.
 #' @param config Escape hatch: a whole JBrowse config forming the payload base
 #'   that explicit arguments override — a list, or the path, URL, or JSON text of
 #'   a `config.json`.
@@ -81,8 +86,8 @@
 #' }
 JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
                         session = NULL, local_files = NULL, plugins = NULL,
-                        theme = NULL, config = NULL, width = NULL,
-                        height = NULL, elementId = NULL) {
+                        theme = NULL, configuration = NULL, config = NULL,
+                        width = NULL, height = NULL, elementId = NULL) {
   if (is.null(assemblies) && is.null(config)) {
     stop("provide `assemblies` (or a whole `config`)", call. = FALSE)
   }
@@ -93,7 +98,7 @@ JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
     session = session,
     localFiles = read_local_files(local_files),
     plugins = plugins,
-    configuration = configuration_from_theme(theme)
+    configuration = with_theme(configuration, theme)
   ), width, height, elementId)
 }
 

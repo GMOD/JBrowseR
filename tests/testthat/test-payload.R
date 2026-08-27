@@ -55,3 +55,25 @@ test_that("config reads a path, a URL, or inline JSON (all via jsonlite)", {
     "inline"
   )
 })
+
+test_that("configuration passes the root block through, with theme as one slot", {
+  x <- JBrowseR(
+    "hg38",
+    configuration = list(
+      logoPath = list(uri = "logo.svg"),
+      theme = list(palette = list(primary = list(main = "#000000")))
+    ),
+    theme = list(palette = list(primary = list(main = "#123456")))
+  )$x
+  # the block survives whole, and `theme` lands in it rather than replacing it
+  expect_equal(x$configuration$logoPath$uri, "logo.svg")
+  expect_equal(x$configuration$theme$palette$primary$main, "#123456")
+
+  # and it reaches the app widget under the same name
+  y <- JBrowseRApp(
+    assemblies = list("hg38"),
+    configuration = list(logoPath = list(uri = "logo.svg"))
+  )$x
+  expect_equal(y$configuration$logoPath$uri, "logo.svg")
+  expect_false("configuration" %in% names(JBrowseR("hg38")$x))
+})

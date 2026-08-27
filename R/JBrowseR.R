@@ -37,6 +37,11 @@
 #' @param theme A theme config, the
 #'   \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
 #'   palette} JBrowse takes: `list(palette = list(primary = list(main = )))`.
+#'   Shorthand for `configuration`'s `theme` slot, which wins over it.
+#' @param configuration JBrowse's root
+#'   \href{https://jbrowse.org/jb2/docs/config_guide/}{`configuration` block},
+#'   handed over as it stands — `theme`, `formatDetails`, `logoPath`,
+#'   `shareURL` and the rest, without an R argument each.
 #' @param local_files Files on this machine to open without a web server: a path,
 #'   a vector of paths, or a list mixing paths with `raw` vectors of bytes you
 #'   already hold. Each registers under its basename (or its list name), and a
@@ -60,8 +65,9 @@
 #' JBrowseR("hg38", location = "BRCA1")
 JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
                      session = NULL, text_search = NULL, theme = NULL,
-                     local_files = NULL, plugins = NULL, config = NULL,
-                     width = NULL, height = NULL, elementId = NULL) {
+                     configuration = NULL, local_files = NULL, plugins = NULL,
+                     config = NULL, width = NULL, height = NULL,
+                     elementId = NULL) {
   if (is.null(assembly) && is.null(config)) {
     stop("provide an `assembly` (or a whole `config`)", call. = FALSE)
   }
@@ -71,7 +77,7 @@ JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
     location = location,
     session = session,
     aggregateTextSearchAdapters = as_adapter_list(text_search),
-    configuration = configuration_from_theme(theme),
+    configuration = with_theme(configuration, theme),
     localFiles = read_local_files(local_files),
     plugins = plugins
   ), width, height, elementId)
@@ -104,9 +110,22 @@ JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
 #' `location =` unchanged, though (JBrowse parses what it prints).
 #'
 #' Note that reading it in a reactive that also feeds `renderJBrowseR()` builds
-#' a loop: the widget rebuilds on every change, and a rebuild resets the view.
-#' Read it to drive *other* outputs, and navigate with [update_location()],
-#' which moves the browser in place instead of rebuilding it.
+#' a loop, whatever the render costs. Read it to drive *other* outputs, and
+#' navigate with [update_location()].
+#'
+#' Whatever the user does to the layout — navigating, opening tracks,
+#' rearranging them — is reported as
+#' `input[[paste0(outputId, "_session")]]`, in the same shape `session =`
+#' takes. So "save this view" is storing that value and reopening it is passing
+#' it back, under the same input name [JBrowseRApp()] uses.
+#'
+#' Re-rendering does not throw the browser away. A render whose payload differs
+#' only in `tracks`, `location` or `local_files` is reconciled into the browser
+#' already on the page: the tracks it names are opened and the ones it drops
+#' are closed, and the user's zoom, track order, scroll position and selection
+#' survive. Everything else — a different `assembly`, `session`, `plugins`,
+#' `theme` or `config` — is what the browser is built from, so stating a new
+#' one builds a new browser.
 #'
 #' @param outputId output variable to read from
 #' @param width Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.

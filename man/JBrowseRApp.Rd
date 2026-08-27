@@ -12,6 +12,7 @@ JBrowseRApp(
   local_files = NULL,
   plugins = NULL,
   theme = NULL,
+  configuration = NULL,
   config = NULL,
   width = NULL,
   height = NULL,
@@ -48,7 +49,13 @@ indexed and JBrowse reads only the region on screen.}
 
 \item{theme}{A theme config, the
 \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
-palette} JBrowse takes.}
+palette} JBrowse takes. Shorthand for \code{configuration}'s \code{theme} slot,
+which wins over it.}
+
+\item{configuration}{JBrowse's root
+\href{https://jbrowse.org/jb2/docs/config_guide/}{\code{configuration} block},
+handed over as it stands — \code{theme}, \code{formatDetails}, \code{logoPath},
+\code{shareURL} and the rest, without an R argument each.}
 
 \item{config}{Escape hatch: a whole JBrowse config forming the payload base
 that explicit arguments override — a list, or the path, URL, or JSON text of

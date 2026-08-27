@@ -46,6 +46,20 @@ export function decodeLocalFiles(files: Record<string, string> | undefined) {
     : undefined
 }
 
+/**
+ * Whether two payload fields state the same thing.
+ *
+ * Key order counts, because the cheap comparison is the whole point and the
+ * payload is R's own JSON: two renders of one expression serialize their lists
+ * in the same order, so the only thing order-sensitivity costs is a rebuild
+ * where a reconcile would have done — which is what every render did before
+ * there was a reconcile. A false "unchanged" would leave a stale browser
+ * looking correct, so the bias goes this way deliberately.
+ */
+export function sameJson(a: unknown, b: unknown) {
+  return JSON.stringify(a ?? null) === JSON.stringify(b ?? null)
+}
+
 const ERROR_CLASS = 'jbrowser-error'
 
 // Live browsers by output element id, so a `jbrowse_proxy()` call from the R
@@ -80,8 +94,8 @@ function registerProxyHandler() {
   })
 }
 
-// A failed create* call otherwise leaves an empty div, so the R user sees a
-// blank browser with the reason only in the devtools console.
+// A failed build otherwise leaves an empty div, so the R user sees a blank
+// browser with the reason only in the devtools console.
 function showError(el: HTMLElement, e: unknown) {
   const box = document.createElement('pre')
   box.className = ERROR_CLASS
@@ -99,30 +113,65 @@ function clearError(el: HTMLElement) {
   })
 }
 
-// Both widgets are the same htmlwidgets shell around an async create* call:
-// destroy the previous browser, build the next one, and let the last payload win
-// (renderValue can fire repeatedly in Shiny).
+interface WidgetHooks<P, Controller> {
+  /**
+   * Bring the live browser to the next payload, answering whether it could.
+   * A `false` — or no hook at all — falls back to destroying it and building
+   * again, which is what every render used to do.
+   */
+  absorb?: (controller: Controller, previous: P, next: P) => boolean
+  /**
+   * How this widget answers a `jbrowse_proxy()` call. Omitted by a widget whose
+   * controller has nothing safe to drive live — an unknown method is the
+   * widget's own error to report, since only it knows what it offers.
+   */
+  dispatch?: (controller: Controller, call: ProxyCall) => void
+}
+
+// Both widgets are the same htmlwidgets shell around a create* call, with the
+// last payload winning (renderValue fires repeatedly in Shiny).
 export function defineWidget<P, Controller extends { destroy: () => void }>(
   name: string,
-  build: (el: HTMLElement, payload: P) => Promise<Controller>,
-  // How this widget answers a `jbrowse_proxy()` call. Omitted by a widget whose
-  // controller has nothing safe to drive live — an unknown method is the
-  // widget's own error to report, since only it knows what it offers.
-  dispatch?: (controller: Controller, call: ProxyCall) => void,
+  // `fail` is how a build reports a failure that its own promise cannot carry:
+  // createLinearGenomeView returns synchronously and resolves the assembly
+  // inside itself, so a genome that will not resolve never reaches this promise
+  // at all. Without it the widget is a blank box and the reason is console-only.
+  build: (
+    el: HTMLElement,
+    payload: P,
+    fail: (e: unknown) => void,
+  ) => Promise<Controller>,
+  { absorb, dispatch }: WidgetHooks<P, Controller> = {},
 ) {
   window.HTMLWidgets?.widget<P>({
     name,
     type: 'output',
     factory(el) {
       let controller: Controller | undefined
+      let rendered: P | undefined
       let seq = 0
       return {
         renderValue(x) {
+          // The live path: in Shiny every reactive read feeding the widget
+          // re-renders it, and rebuilding refetches every track and throws away
+          // the zoom, track order, scroll position and selection the user
+          // built. A controller that can reconcile the difference keeps them.
+          if (controller && rendered && absorb?.(controller, rendered, x)) {
+            rendered = x
+            return
+          }
           const token = ++seq
+          const fail = (e: unknown) => {
+            console.error(e)
+            if (token === seq) {
+              showError(el, e)
+            }
+          }
           controller?.destroy()
           controller = undefined
+          rendered = x
           clearError(el)
-          const building = build(el, x)
+          const building = build(el, x, fail)
           building
             .then(built => {
               if (token === seq) {
@@ -131,12 +180,7 @@ export function defineWidget<P, Controller extends { destroy: () => void }>(
                 built.destroy()
               }
             })
-            .catch((e: unknown) => {
-              console.error(e)
-              if (token === seq) {
-                showError(el, e)
-              }
-            })
+            .catch(fail)
           if (dispatch) {
             registerProxyHandler()
             // Re-registered per render so the entry closes over THIS build. A

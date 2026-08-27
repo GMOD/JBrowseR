@@ -11,6 +11,7 @@ JBrowseR(
   session = NULL,
   text_search = NULL,
   theme = NULL,
+  configuration = NULL,
   local_files = NULL,
   plugins = NULL,
   config = NULL,
@@ -44,7 +45,13 @@ whole initial layout when given. Same argument name as \code{\link[=JBrowseRApp]
 
 \item{theme}{A theme config, the
 \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
-palette} JBrowse takes: \code{list(palette = list(primary = list(main = )))}.}
+palette} JBrowse takes: \code{list(palette = list(primary = list(main = )))}.
+Shorthand for \code{configuration}'s \code{theme} slot, which wins over it.}
+
+\item{configuration}{JBrowse's root
+\href{https://jbrowse.org/jb2/docs/config_guide/}{\code{configuration} block},
+handed over as it stands — \code{theme}, \code{formatDetails}, \code{logoPath},
+\code{shareURL} and the rest, without an R argument each.}
 
 \item{local_files}{Files on this machine to open without a web server: a path,
 a vector of paths, or a list mixing paths with \code{raw} vectors of bytes you

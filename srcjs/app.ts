@@ -18,6 +18,11 @@ type AppPayload = Omit<Payload<CreateAppOptions>, 'assemblies'> & {
   assemblies?: AssemblyInput[]
 }
 
+// No `absorb`: createApp's controller has no reconcile door — `setSession`
+// replaces the whole tree, which discards the user's own layout rather than
+// keeping it — so every re-render is a rebuild here, as it was for both widgets
+// before. It needs no `fail` either: createApp is synchronous throughout, so a
+// build failure reaches the promise defineWidget already catches.
 defineWidget<AppPayload, { destroy: () => void }>(
   'JBrowseRApp',
   async (el, x) =>

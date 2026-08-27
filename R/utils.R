@@ -33,9 +33,15 @@ create_widget <- function(name, config, fields, width, height, elementId) {
   )
 }
 
-# a theme() config rides to the view as configuration = { theme }
-configuration_from_theme <- function(theme) {
-  if (is.null(theme)) NULL else list(theme = theme)
+# `theme` is the shorthand for one slot of the root configuration block, so it
+# lands in it rather than beside it: passing both means the block plus that
+# theme, not two blocks of which one wins.
+with_theme <- function(configuration, theme) {
+  if (is.null(theme)) {
+    configuration
+  } else {
+    utils::modifyList(configuration %||% list(), list(theme = theme))
+  }
 }
 
 # accept a single text_index() adapter or a list of them; the view always wants
