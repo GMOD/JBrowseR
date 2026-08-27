@@ -33,9 +33,9 @@ jobs:
         with:
           path: JBrowseR
       # the `link:` deps and puppeteer both resolve from this checkout; the
-      # harness also imports its readiness waits from the monorepo's
-      # browser-test-utils, so a capture uses the same signals as jbrowse-web's
-      # own browser tests rather than a bespoke sleep
+      # harness also imports its readiness waits and its chrome-picking from
+      # that checkout's @jbrowse/capture, so a capture uses the same signals as
+      # jbrowse-web's own browser tests rather than a bespoke sleep
       - uses: actions/checkout@v4
         with:
           repository: GMOD/jbrowse-components
@@ -44,7 +44,7 @@ jobs:
         with:
           version: 11
       # node 24 strips TypeScript natively, which the harness needs: it imports
-      # browser-test-utils' waits.ts directly, as source
+      # @jbrowse/capture's index.ts directly, as source
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -98,18 +98,18 @@ jobs:
           PUPPETEER_FROM: ${{ github.workspace }}/jbrowse-components/package.json
         run: node tools/screenshot_examples.mjs
 
-      # The proxy's two halves are pinned separately — testthat has what R sends,
-      # this has what the bundle does with it — and nothing types the seam
-      # between them, so a rename on either side only shows up here. Rides this
-      # job because it needs the same three things: a real browser, a built
-      # bundle, and network. `if: always()` so a figure that fails to draw does
-      # not also hide whether the wire still works.
-      - name: verify the proxy wire
+      # Three seams a build cannot see: the update_location() wire (testthat has
+      # what R sends, this has what the bundle does with it, and nothing types
+      # between them), the live reconcile on a re-render, and onError routing a
+      # failed build into the widget. Rides this job because it needs the same
+      # three things: a real browser, a built bundle, and network. `if:
+      # always()` so a figure that fails to draw does not also hide these.
+      - name: verify the widget seams
         if: always()
         working-directory: JBrowseR
         env:
           PUPPETEER_FROM: ${{ github.workspace }}/jbrowse-components/package.json
-        run: node tools/verify_proxy.mjs
+        run: node tools/verify_widget.mjs
 
       # The figures are the evidence, so they are worth keeping whichever way it
       # went — on success to eyeball, on failure to see how far it got. They are

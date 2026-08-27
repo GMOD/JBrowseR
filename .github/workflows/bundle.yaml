@@ -51,6 +51,22 @@ jobs:
       # needs substituting. Both halves are worth asserting — a dependency that
       # starts reaching for Buffer, or a vite config change that drops the
       # `define`, would otherwise surface only as a blank browser in a Shiny app.
+      # htmlwidgets delivers each bundle as one file and nothing else. Measured:
+      # the binding dependency carries `all_files: FALSE`, so a sibling chunk is
+      # never copied into a saved document, and `selfcontained = TRUE` inlines
+      # the bundle into an inline <script> where there are no siblings and no
+      # script URL to resolve one against. A vite change that emits a chunk —
+      # a `?worker`, a dynamic import escaping inlineDynamicImports — therefore
+      # builds green and 404s at runtime. This is what sees it.
+      - name: each bundle is one file, with nothing beside it
+        working-directory: JBrowseR/inst/htmlwidgets
+        run: |
+          unexpected=$(ls -A | grep -vxE 'JBrowseR\.js|JBrowseR\.css|JBrowseRApp\.js|JBrowseRApp\.css' || true)
+          if [ -n "$unexpected" ]; then
+            echo "::error::vite emitted files htmlwidgets will not deliver: $unexpected"
+            exit 1
+          fi
+
       - name: no unpolyfilled Node globals in the bundle
         working-directory: JBrowseR/inst/htmlwidgets
         run: |
