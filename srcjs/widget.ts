@@ -62,10 +62,10 @@ export function sameJson(a: unknown, b: unknown) {
 
 const ERROR_CLASS = 'jbrowser-error'
 
-// Live browsers by output element id, so a `jbrowse_proxy()` call from the R
-// server reaches the one it names. The value takes the call rather than being
-// the controller, because the controller may not exist yet: `build` is async, so
-// an `observe()` that fires at startup races the first render. Holding the
+// Live browsers by output element id, so an `update_location()` call from the
+// R server reaches the one it names. The value takes the call rather than the
+// controller, because the controller may not exist yet: `build` is async, so an
+// `observe()` that fires at startup races the first render. Holding the
 // promise instead of the resolved value makes that ordinary rather than a
 // dropped call.
 const callers = new Map<string, (call: ProxyCall) => void>()
@@ -121,8 +121,8 @@ interface WidgetHooks<P, Controller> {
    */
   absorb?: (controller: Controller, previous: P, next: P) => boolean
   /**
-   * How this widget answers a `jbrowse_proxy()` call. Omitted by a widget whose
-   * controller has nothing safe to drive live — an unknown method is the
+   * How this widget answers an `update_location()` call. Omitted by a widget
+   * whose controller has nothing safe to drive live — an unknown method is the
    * widget's own error to report, since only it knows what it offers.
    */
   dispatch?: (controller: Controller, call: ProxyCall) => void

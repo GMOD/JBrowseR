@@ -5,8 +5,9 @@
 # example configs headless, and fails if any of them never paints a canvas. It
 # is what catches a config change that is syntactically fine and semantically
 # wrong, and a monorepo change that breaks rendering without breaking the build.
-# It also drives the `jbrowse_proxy()` wire end to end, which needs the same
-# browser, bundle and network.
+# It also drives the `update_location()` wire, the live reconcile and the
+# build-failure path end to end, which need the same browser, bundle and
+# network.
 #
 # Nightly rather than on push/PR, deliberately: it needs real network to
 # jbrowse.org and UCSC, and it links against jbrowse-components `main`, so it

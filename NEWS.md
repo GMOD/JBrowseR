@@ -1,3 +1,29 @@
+# JBrowseR (development version)
+
+- Re-rendering a browser no longer throws it away. A render whose payload
+  differs only in `tracks`, `location` or `local_files` is reconciled into the
+  browser already on the page — the tracks it names open, the ones it drops
+  close — and the user's zoom, track order, scroll position and feature
+  selection survive. In Shiny that is every reactive read feeding
+  `renderJBrowseR()`, so a track checkbox opens a track in place instead of
+  refetching everything. Changing the `assembly`, `session`, `plugins` or
+  `configuration` still builds a new browser, because that is what a browser is
+  built from.
+
+- `JBrowseR()` reports `input[[paste0(outputId, "_session")]]` as the user
+  navigates and opens tracks, in the same shape `session =` takes and under the
+  same name `JBrowseRApp()` already used. "Save this view" is storing that
+  value; reopening it is passing it back.
+
+- New `configuration =` on both widgets: JBrowse's root
+  [configuration block](https://jbrowse.org/jb2/docs/config_guide/) handed
+  straight over, so `formatDetails`, `logoPath` and `shareURL` need no argument
+  each. `theme =` is now the shorthand for its `theme` slot.
+
+- A browser that fails to build — a genome name nothing answers for, a plugin
+  that will not fetch — says so in the widget. It used to leave an empty box
+  with the reason only in the browser console.
+
 # JBrowseR 0.12.0
 
 - New `local_files =` on `JBrowseR()` and `JBrowseRApp()`: open files from your

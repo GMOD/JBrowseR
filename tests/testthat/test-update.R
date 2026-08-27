@@ -1,7 +1,7 @@
 # update_location() is one custom message. These check what lands on the wire,
 # with a fake session standing in for Shiny's — the JS side reads
 # `id`/`method`/`args` and nothing else, and nothing type-checks that seam, so
-# tools/verify_proxy.mjs pins the other end of it against the built bundle.
+# tools/verify_widget.mjs pins the other end of it against the built bundle.
 
 fake_session <- function(ns = NULL) {
   sent <- list()

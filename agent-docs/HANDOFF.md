@@ -18,6 +18,12 @@ The package exports these names:
 | `track_data_frame` | a data frame is not JSON |
 | `update_location` | moving a rendered browser is not config |
 
+`configuration` is not a helper and does not count against that bar: it is
+JBrowse's root config block handed straight over, so `formatDetails`, `logoPath`
+and `shareURL` all arrived without an R argument each. `theme` survives as the
+shorthand for its one slot. Adding an argument that passes a config through is
+the shape to reach for; adding one that *shapes* config is not.
+
 `assembly`, `track`, `tracks`, `text_index`, `theme`, `view`, `linear_view`,
 `synteny_view`, `dotplot_view`, `synteny_track` and `json_config` were all
 deleted: each returned a list literal, and each had to grow whenever JBrowse
@@ -92,46 +98,87 @@ byte-different PNGs on re-render even with no code change. Don't commit
 regenerated figures in a change that isn't about them; `git checkout man/figures/`
 after a verification run.
 
-**Verify config changes by rendering, not by reading.** The 11 figures in
-`tools/screenshot_specs.json` exercise real configs end-to-end, which is what
-caught that the raw-list rewrites of the theme, synteny and dotplot specs were
-semantically right and not just syntactically. `Rscript tools/gen_screenshot_specs.R`
-then `node tools/screenshot_examples.mjs`. The `render` workflow does exactly
-this nightly, and by `workflow_dispatch` when you want it on demand — it is
-deliberately not on push/PR, because it needs real network and links against
-jbrowse-components `main`, so it fails for reasons unrelated to the commit that
-triggered it. It fails the run if any example never paints a canvas, and
-uploads the figures as an artifact either way.
+**Figures come from running the documents that show them.**
+`Rscript tools/gen_screenshot_specs.R` executes `vignettes/JBrowseR.Rmd` and
+`vignettes/comparative-synteny.Rmd` and keeps the widget each labelled chunk
+built; `node tools/screenshot_examples.mjs` renders those. **A chunk's label IS
+its figure's name**, so `![...](../man/figures/demo-genes.png)` under a
+```{r demo-genes} block is a picture of the code above it. The script used to
+restate each config alongside the vignette that showed it, and the two agreed
+only while someone kept them agreeing.
 
-## Why `update_location` is one function and not a proxy object
+Two things fail the run rather than shipping a stale figure: a figure the prose
+points at with no chunk to build it (the names are scanned out of `README.Rmd`
+and the vignettes, so it is a closed loop), and a labelled chunk whose last
+value is not a widget. Executing them is also the only check that the documented
+code *runs* — the vignettes set `eval = FALSE`, so knitting never evaluates a
+line of it.
 
-`update_location(outputId, loc)` moves a rendered browser without rebuilding
-it. It is one exported name and one custom message — deliberately not the
-leaflet-style `proxy <- jbrowse_proxy(id)` object, which exists there to
-accumulate many calls and flush them, and here would only be a second exported
-name and a class to document in front of a single command. Before it, a Shiny app navigated by putting a
-reactive into `renderJBrowseR()`, which destroys and rebuilds the browser —
-refetching its tracks and discarding zoom, track order and selection. Four of
-the bundled example apps did exactly that.
+The `render` workflow does all this nightly, and by `workflow_dispatch` on
+demand — deliberately not on push/PR, because it needs real network and links
+against jbrowse-components `main`, so it fails for reasons unrelated to the
+commit that triggered it. It fails the run if any example never paints a canvas,
+and uploads the figures as an artifact either way.
 
-`setTracks`, `setAssembly` and `setSession` were removed from the controller
-upstream in the same pass (2026-08-06): the first two were `destroy and build
-again` spelled as methods, and the third reconciled a track list the user may
-have opened their own tracks into. So there is nothing left to wire here that
-re-rendering the widget does not already do. What remains on the controller is
-`addTrack`, `removeTrack` and `addLocalFiles`; if you ever wire one, wire it in
-the anywidget first, which has no CRAN cycle and exercises the semantics against
-real notebook use.
+## The controller takes one declarative `update()`
+
+`LinearGenomeViewController` is `whenReady` / `update(state)` / `destroy`. The
+setters this package used to call are gone upstream — `setLocation` last, which
+left `tsc --noEmit` red. `update` takes `{ tracks?, location?, localFiles? }`:
+each field you state is the complete wanted value, a field you leave out is left
+alone, and the engine survives.
+
+**A re-render is no longer a rebuild.** `renderValue` compares the payload
+against the last one and, when they differ only in those three fields, states
+them instead of destroying the browser. In Shiny that is every reactive read
+feeding the widget, so a track checkbox opens a track in place rather than
+refetching the lot and resetting the user's zoom.
+
+Three things about how, each of which is a way to get it wrong:
+
+- **The comparison is on everything OUTSIDE the three live fields.** A payload
+  field JBrowse gains lands on the rebuild side without anyone updating a list.
+  That direction is deliberate: a wrong answer costs the rebuild this used to do
+  unconditionally, where a field wrongly called live would be silently dropped.
+- **The comparison is key-order sensitive** (`JSON.stringify`), because the
+  payload is R's own JSON and two renders of one expression order their lists
+  the same way. A false "changed" costs a rebuild; a false "unchanged" would
+  leave a stale browser looking correct.
+- **`localFiles` is live only while it grows.** Upstream keeps the blob a
+  registered name already minted, because live track configs point at it. So a
+  payload that changes or drops the bytes behind a name it already sent
+  rebuilds — otherwise editing a file on disk and re-rendering would silently
+  show the old bytes.
+
+`update_location()` is unchanged as an R function and still worth having: it is
+the direction that does not re-run the render expression, so reading
+`input$<id>_location` in an `observeEvent()` that calls it is not circular. Its
+wire method is now `update`, carrying the state; `setLocation` named a
+controller method that no longer exists.
+
+**A build failure needs `onError`.** `createLinearGenomeView` returns
+synchronously and resolves the assembly inside itself, so a genome that will not
+resolve never reaches the promise `defineWidget` awaits — `defineWidget` hands
+`build` a `fail` callback for exactly this. Without it the widget is a blank box
+and the reason is console-only. `createApp` is synchronous throughout and needs
+none, which is also why `JBrowseRApp()` has no live path: its controller's
+`setSession` replaces the whole tree rather than reconciling into it.
 
 **The seam is untyped, so it is pinned from both ends.**
-`tests/testthat/test-proxy.R` has what R sends; `tools/verify_proxy.mjs` drives
-the built bundle in a real browser and asserts what it does with it. Nothing
-type-checks `"jbrowser-call"` or the `{id, method, args}` shape across the two
-languages, so a rename on one side is otherwise silent. The verifier rides the
-nightly `render` workflow, which already has the browser, the built bundle and
-the network it needs.
+`tests/testthat/test-update.R` has what R sends; `tools/verify_widget.mjs`
+drives the built bundle in a real browser and asserts what it does with it.
+Nothing type-checks `"jbrowser-call"` or the `{id, method, args}` shape across
+the two languages, so a rename on one side is otherwise silent.
 
-One thing that verifier exists to hold: **a proxy call can arrive mid-build**.
+That verifier also pins the live reconcile, and pins it with **two** assertions
+because neither alone is enough: a rebuild opens the new track too, so "the
+track appeared" passes either way. What discriminates is that the container is
+never emptied (`root.unmount()` is a rebuild's own signature) and that the view
+stays where a prior `update_location()` put it. Note what it does NOT assert:
+DOM node identity. React legitimately replaces the header's nodes when the track
+list changes, so an identity check reads as a rebuild that never happened.
+
+One thing the verifier exists to hold: **a proxy call can arrive mid-build**.
 `build` is async, so an `observe()` firing at app startup races the first
 render. The registry in `widget.ts` therefore stores the build *promise*, not
 the resolved controller — keyed to the controller, that call would be dropped
@@ -144,9 +191,49 @@ an exported `update_location()` that silently does nothing for anyone who
 installs from GitHub. It is built against the *local* monorepo checkout, so
 rebuild it once the monorepo commits it needs are pushed.
 
+## The RPC runs on the main thread, and here it has to
+
+The sibling anywidget passes `makeWorkerInstance`, so BAM/CRAM parsing is off
+its UI thread. That does not port, and the reason is htmlwidgets' delivery
+rather than a preference. Measured, all of it, on 2026-08-27:
+
+- **htmlwidgets delivers one file and nothing beside it.** The binding
+  dependency comes back with `all_files: FALSE`
+  (`htmlwidgets:::widget_dependencies("JBrowseR", "JBrowseR")`), so a sibling
+  chunk is never copied. Dropped a `sibling-probe.js` next to `JBrowseR.js` and
+  saved a widget both ways: neither `_files` directory contains it.
+- **A self-contained document has no script URL at all.**
+  `saveWidget(selfcontained = TRUE)` inlines the whole 4.9MB bundle into an
+  *inline* `<script>` element — verified by finding the bundle's first bytes
+  inside the 4.8MB HTML, and there is no `<script src>` and no `data:` URI. So
+  `document.currentScript.src` is empty and nothing resolves against it.
+- **The portable spelling does not even build.**
+  `new Worker(new URL('.../rpcWorker', import.meta.url))` fails as
+  `[vite:worker-import-meta-url] Invalid value "iife" for option
+  "worker.format" - UMD and IIFE output formats are not supported for
+  code-splitting builds`. Adding `worker.rollupOptions.output.inlineDynamicImports`
+  makes it build, and it then emits
+  `new Worker(new URL("/assets/rpcWorker-<hash>.js", <currentScript.src or document.baseURI>))`
+  — **root-absolute**, so the base is discarded and it resolves to
+  `<origin>/assets/...` under all three delivery modes: Shiny, a loose
+  `saveWidget`, and a self-contained document. That is never where the file is,
+  and per the first bullet the file is never copied at all.
+- **So `?worker&inline` is the only road, and it costs the CRAN budget.**
+  Inlining it took `JBrowseR.js` from 4,909 kB to 9,805 kB (gzip 1,505 → 2,987
+  kB) — the worker's copy of the adapters is a second copy. The package tarball
+  is **6.19 MB today**, and inlining just the *linear-view* worker put it at
+  7.60 MB. Doing both bundles is another ~1.7 MB on top. CRAN's guidance is 5 MB.
+
+`bundle.yaml` asserts the consequence rather than the reasoning: each bundle is
+one file with nothing beside it, so a vite change that emits a chunk fails there
+instead of 404ing in someone's knitted report.
+
+If this is ever worth revisiting, the lever is a worker entry narrower than
+`corePlugins` — the same one the anywidget's handoff names.
+
 ## Known broken / unresolved
 
-`JBrowseRApp()` has no proxy. Its controller has no `setLocation` at all, and
+`JBrowseRApp()` has no proxy. Its controller has no location door at all, and
 the anywidget's `IDEAS.md` calls view identity the blocker — but that is now
 stale on both sides: `ManagedView` already carries an `id`, and `createApp`
 defaults one per view (`viewsToSession`), so `setViewLocation(id, loc)` is

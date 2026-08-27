@@ -5,57 +5,31 @@ with enough context to pick up cold.
 
 ## Reactivity: updating a browser without rebuilding it
 
-**Partly done.** `update_location()` shipped in 0.12.0 and
-navigation no longer rebuilds; see HANDOFF.md. What follows is the reasoning
-for the rest, which is unchanged and still deliberately not built.
+**Done**, and by the route the last note called "a much larger change": the
+components became declarative upstream rather than each embedding growing
+imperative handles. `LinearGenomeViewController` is `whenReady` / `update(state)`
+/ `destroy`, `update` takes the whole wanted state, and it reconciles — so R,
+Python and plain JS get the same answer. See HANDOFF.md for what that means
+here.
 
-Today every other change rebuilds. `renderValue` in `srcjs/widget.ts` destroys the
-previous controller and calls `create*` again, so in Shiny any reactive input
-feeding `renderJBrowseR()` throws away the user's zoom, track order, scroll
-position, and feature selection. The only signal out is `onFeatureSelect`.
+Kept because the reasoning was the blocker and is worth not re-deriving: the
+question that stopped this was "what should an update do to a track the user
+opened by hand, or a view layout they rearranged?", and `reconcileTracks` in
+`packages/product-core` answers it — the host's list is the complete wanted set
+of *its* tracks, opened if absent and closed if dropped, and the session's own
+`getTrackById` keeps a config the user already has from being shadowed. The
+echo problem the anywidget hit (`onLocationChange` writing back into the trait
+it mirrors) does not arise in htmlwidgets, because R holds no two-way binding:
+the payload flows one way and `input$<id>_location` is a read-back nothing feeds
+back automatically.
 
-The controller can do better. `createLinearGenomeView` returns `setAssembly`,
-`setTracks`, `setSession`, `setLocation`, and accepts `onLocationChange`. The
-sibling anywidget (`~/src/jbrowse-anywidget`, `src/index.ts`) drives all of them
-from traitlets, so the mechanism is proven — the question is what belongs in R.
-
-The R-side shape is `session$sendCustomMessage`, dispatched in `widget.ts` to
-the live controller — the mechanism leaflet's and plotly's proxies use
-underneath, without the proxy object, which buys nothing until there are enough
-commands to want to batch them.
-
-### Why we stopped at one bug fix
-
-The components aren't declarative. `init` is a `defaultValue`: it seeds a MobX
-session that the user then mutates by panning and dragging. Mirroring that into
-declarative R state means reconciliation, and the reconciliation is where the
-semantics get murky — what should `update_tracks()` do to a track the user
-opened by hand, or to a view layout they rearranged? "Rebuild" is a defensible
-answer to those, not merely a limitation.
-
-The cost is visible in the anywidget already: `onLocationChange` has to guard
-`if (model.get('location') !== locs)` before writing back, because a trait
-mirroring an uncontrolled view echoes. Each additional two-way trait buys another
-instance of that.
-
-### If we pick this up
-
-`update_location()` is the one that resolves cleanly — navigation is the repeated
-interaction, a full rebuild to move the locus is visibly wasteful, and location
-has one unambiguous meaning that `setLocation` already handles as a plain async
-call. Done: it is one custom message rather than an htmlwidgets proxy object per
-call, which is the same mechanism leaflet's proxies use underneath.
-
-`setTracks` / `setAssembly` / `setSession` should earn it in the anywidget first.
-That repo has no CRAN cycle and one maintainer, and it exercises them against
-real notebook use. If they hold up there — no echo weirdness, no surprising loss
-of view state — port them with the semantics already settled.
-
-An alternative worth weighing: make the components genuinely declarative
-upstream, in `@jbrowse/react-linear-genome-view2`, instead of growing imperative
-handles in each embedding. That is a much larger change and would want its own
-design, but it is the version where R, Python, and plain React all get the same
-answer.
+What is still not built is a *narrower* door than a re-render — an
+`update_tracks()` to sit beside `update_location()`. Nothing needs it yet:
+re-rendering already reconciles, and the one thing `update_location()` buys over
+it is not re-running the render expression, which matters for navigation because
+it repeats and would otherwise loop through `input$<id>_location`. A track list
+changes on a click, not on a drag. The wire already carries the whole state, so
+if it is ever wanted it is a line on each side.
 
 ## Feature selection from JBrowseRApp
 
