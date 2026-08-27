@@ -77,7 +77,7 @@ four rows have three gaps between adjacent pairs, and each gap draws the same
 all-vs-all track, so `tracks` is that trackId once per gap. `drawCurves = FALSE`
 draws straight ribbons; `minAlignmentLength` hides short, noisy blocks.
 
-```{r}
+```{r demo-synteny}
 app <- JBrowseRApp(
   assemblies = assemblies,
   tracks = list(ecoli_ava),
@@ -106,7 +106,7 @@ Shiny, pair `JBrowseROutput()` with `renderJBrowseR()`.
 Any one pair opens whole-genome as a dotplot — the long diagonal is the shared
 backbone, off-diagonal segments are rearrangements.
 
-```{r}
+```{r demo-dotplot}
 JBrowseRApp(
   assemblies = assemblies[1:2],
   tracks = list(ecoli_ava),

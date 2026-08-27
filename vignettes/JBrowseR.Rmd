@@ -16,9 +16,11 @@ an htmlwidget. JBrowse 2 is a fast, GPU-accelerated genome browser; JBrowseR
 lets you drive it entirely from R and embed it in R Markdown documents, Shiny
 apps, or the interactive console.
 
-The API is *declarative*. You describe the browser with plain values — a genome,
-a list of tracks, a location — and helper constructors assemble the config. You
-never build JSON by hand.
+The API is *declarative*, and what you describe it with is JBrowse's own config:
+assemblies, tracks and sessions are the same
+[JSON objects](https://jbrowse.org/jb2/docs/config_guide/) a `config.json`
+holds, written as R lists. There are no constructors to learn, so a track type
+or view type JBrowse gains needs nothing added to the package.
 
 ```{r setup}
 library(JBrowseR)
@@ -44,7 +46,7 @@ Add tracks by URL with `list(uri = )`. The track type and its index files
 (`.bai`/`.crai`/`.tbi`) are inferred from the file extension, so a data URL is
 usually all you need. `list()` gathers several together.
 
-```{r}
+```{r demo-alignments}
 JBrowseR(
   "hg38",
   tracks = list(
@@ -109,7 +111,7 @@ limits. Every one of them is also on the website as a
 
 **Genes.** A gene annotation track over the hub assembly, navigated by name.
 
-```{r}
+```{r demo-genes}
 JBrowseR(
   "hg38",
   tracks = list(list(
@@ -125,7 +127,7 @@ JBrowseR(
 
 **Variants.** A 1000 Genomes VCF.
 
-```{r}
+```{r demo-variants}
 JBrowseR(
   "hg38",
   tracks = list(list(
@@ -141,7 +143,7 @@ JBrowseR(
 
 **Quantitative.** A phyloP conservation bigWig.
 
-```{r}
+```{r demo-conservation}
 JBrowseR(
   "hg38",
   tracks = list(list(
@@ -161,7 +163,7 @@ Manhattan plot right in the linear view, so no separate plotting widget is
 needed. Write the track as a config list — the same JSON a JBrowse config file
 holds — and let the `uri` shorthand find the `.tbi` index.
 
-```{r}
+```{r demo-manhattan}
 JBrowseR(
   "hg19",
   tracks = list(list(
@@ -185,7 +187,8 @@ JBrowseR(
 `track_data_frame()` — no files and no web server. Any `score` column makes it a
 quantitative track.
 
-```{r}
+```{r demo-dataframe}
+set.seed(1)
 peaks <- data.frame(
   chrom = "17",
   start = seq(43000000, 43120000, by = 12000),
@@ -209,7 +212,7 @@ Sniffles calls the structural variants from them. This view lands on a
 translocation from chr17 to chr20 (`<TRA> 20:61,039,934`): the call sits in the
 Sniffles track and the long reads carry it below.
 
-```{r}
+```{r demo-skbr3}
 JBrowseR(
   "hg19",
   tracks = list(
@@ -234,7 +237,7 @@ JBrowseR(
 carry a ~1.8 kb somatic deletion in *CUZD1*, visible as a clean drop-out spanning
 many reads.
 
-```{r}
+```{r demo-cancer-deletion}
 JBrowseR(
   "hg38",
   tracks = list(list(
@@ -252,7 +255,7 @@ JBrowseR(
 [MUI palette](https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme)
 JBrowse takes.
 
-```{r}
+```{r demo-theme}
 JBrowseR(
   "hg38",
   tracks = list(list(
