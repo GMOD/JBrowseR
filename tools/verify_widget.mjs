@@ -11,6 +11,9 @@
 //   - `onError`. createLinearGenomeView resolves the assembly inside itself, so
 //     a genome that will not resolve never reaches the promise the widget
 //     awaits — the failure has to be routed out or the user gets a blank box.
+//   - the app widget's hub merge. JBrowseRApp spreads resolveAssemblies' result
+//     over what R sent, and a hub brings a track catalog of its own, so a
+//     result that did not carry R's tracks replaced them with the hub's.
 //
 // Needs network — it loads the hosted hg38 hub, same as the figures do.
 //
@@ -87,7 +90,7 @@ function check(ok, what) {
   }
 }
 
-async function open(x) {
+async function open(x, bundle = 'JBrowseR.js') {
   const page = await browser.newPage()
   const errors = []
   page.on('pageerror', e => {
@@ -97,7 +100,7 @@ async function open(x) {
   await page.evaluateOnNewDocument(payload => {
     window.__x = payload
   }, x)
-  await page.goto(`http://localhost:${port}/harness.html?bundle=JBrowseR.js`, {
+  await page.goto(`http://localhost:${port}/harness.html?bundle=${bundle}`, {
     waitUntil: 'load',
     timeout: 60000,
   })
@@ -244,6 +247,39 @@ const errors = []
       .then(() => true)
       .catch(() => false)
     check(shown, 'a genome that will not resolve reports into the widget')
+  } finally {
+    await page.close()
+  }
+}
+
+// ---- the app widget opens the tracks R sent beside a hub's catalog
+{
+  const { page, errors: pageErrors } = await open(
+    {
+      assemblies: ['hg38'],
+      tracks: [{ ...LATE_TRACK, assemblyNames: ['hg38'] }],
+      views: [
+        {
+          type: 'LinearGenomeView',
+          assembly: 'hg38',
+          loc: TARGET,
+          tracks: [LATE_TRACK.trackId],
+        },
+      ],
+    },
+    'JBrowseRApp.js',
+  )
+  errors.push(...pageErrors)
+  try {
+    const shown = await page
+      .waitForFunction(
+        name => document.body.innerText.includes(name),
+        { timeout: 90000 },
+        LATE_TRACK.name,
+      )
+      .then(() => true)
+      .catch(() => false)
+    check(shown, "the app widget opens R's own track beside the hub's catalog")
   } finally {
     await page.close()
   }

@@ -31,8 +31,10 @@ defineWidget<AppPayload, { destroy: () => void }>(
       // an `assemblies` entry may be a hub name ("hg38"), a sequence-file URL,
       // a hub config, or a full assembly config -- the same vocabulary
       // JBrowseR()'s `assembly` takes, resolved by the product rather than by
-      // each host
-      ...(await resolveAssemblies(x.assemblies ?? [])),
+      // each host. The R side's own tracks and search adapters go in too: a
+      // hub brings a catalog and an index of its own, and this returns both
+      // merged, so the spread keeps what R sent
+      ...(await resolveAssemblies(x.assemblies ?? [], x)),
       // the loadPlugins records go through whole rather than mapped to
       // `.plugin`: the definition is what lets the RPC worker load the same
       // plugin, so a stripped record leaves it missing there
