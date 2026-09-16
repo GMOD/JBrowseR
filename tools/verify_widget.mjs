@@ -12,6 +12,9 @@
 //     a genome that will not resolve never reaches the promise the widget
 //     awaits — the failure has to be routed out or the user gets a blank box.
 //   - the app widget restores a changed `session` in place.
+//   - both widgets run their RPC in a worker. No worker at all is silent: drop
+//     makeWorkerInstance and every figure still draws, just on the page's own
+//     thread, which a deep BAM region then blocks for the whole parse.
 //   - the app widget's hub merge. JBrowseRApp spreads resolveAssemblies' result
 //     over what R sent, and a hub brings a track catalog of its own, so a
 //     result that did not carry R's tracks replaced them with the hub's.
@@ -89,6 +92,25 @@ function check(ok, what) {
   if (!ok) {
     failures.push(what)
   }
+}
+
+// positive, on the worker's own rpcServer: a worker count would also see the
+// parsers' own workers, which the main thread spawns when the RPC runs there
+async function checkRpcWorker(page, widget) {
+  const registered = await Promise.all(
+    page
+      .workers()
+      .map(w =>
+        w
+          .evaluate(() => Object.keys(self.rpcServer?.methods ?? {}))
+          .catch(() => []),
+      ),
+  )
+  const rpc = registered.find(methods => methods.includes('CoreGetFeatures'))
+  check(
+    rpc !== undefined,
+    `${widget} runs its RPC in a worker (${rpc ? `${rpc.length} methods` : `${registered.length} workers, none serving RPC`})`,
+  )
 }
 
 async function open(x, bundle = 'JBrowseR.js') {
@@ -183,6 +205,7 @@ const errors = []
     check(opened, 'a re-render that adds a track opens it')
 
     await waitForReady(page)
+    await checkRpcWorker(page, 'JBrowseR')
     const after = await page.evaluate(
       id => ({
         unmounts: window.__unmounts,
@@ -276,6 +299,7 @@ const errors = []
       .then(() => true)
       .catch(() => false)
     check(shown, "the app widget opens R's own track beside the hub's catalog")
+    await checkRpcWorker(page, 'JBrowseRApp')
 
     // A re-render that changes only `session` goes through setSession: the
     // container stays, and the emptied session reports no views

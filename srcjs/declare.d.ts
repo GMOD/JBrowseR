@@ -2,6 +2,11 @@
 declare module '@fontsource/roboto'
 declare module '@jbrowse/react-app2/styles.css'
 
+declare module '*?worker&inline' {
+  const WorkerFactory: new () => Worker
+  export default WorkerFactory
+}
+
 interface Window {
   HTMLWidgets?: {
     widget<T = unknown>(definition: {

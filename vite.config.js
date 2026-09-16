@@ -7,8 +7,7 @@ import { defineConfig } from 'vite'
 // Each registers its binding via window.HTMLWidgets.widget(...) on load. They are
 // built by separate `vite build` invocations (see the R build note) because
 // inlineDynamicImports — which keeps each to one file, so there are no sibling
-// chunks — forbids multiple entries in one build. RPC runs on the main thread
-// (no makeWorkerInstance) in both.
+// chunks — forbids multiple entries in one build.
 const isApp = process.env.JB_TARGET === 'app'
 const widgetName = isApp ? 'JBrowseRApp' : 'JBrowseR'
 
@@ -22,6 +21,13 @@ export default defineConfig({
   // `stream` alias broke, and cost ~1.3MB of shims for one identifier. CI
   // asserts the bundle stays free of unpolyfilled globals.
   define: { 'process.env.NODE_ENV': '"production"' },
+  // The RPC worker is inlined and started from a blob URL, so a self-contained
+  // saveWidget() page needs no second file. Without inlineDynamicImports the
+  // worker would import('./chunk') against that blob and 404 at the first read.
+  worker: {
+    format: 'iife',
+    rollupOptions: { output: { inlineDynamicImports: true } },
+  },
   resolve: {
     // The linked @jbrowse packages resolve react/mobx from the monorepo's
     // node_modules — a second copy. Dedupe the packages present in both trees

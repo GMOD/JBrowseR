@@ -197,38 +197,32 @@ an exported `update_jbrowse()` that silently does nothing for anyone who
 installs from GitHub. It is built against the *local* monorepo checkout, so
 rebuild it once the monorepo commits it needs are pushed.
 
-## The RPC runs on the main thread, and here it has to
+## The RPC runs in an inlined worker, and that doubles the bundle
 
-The sibling anywidget passes `makeWorkerInstance`, so BAM/CRAM parsing is off
-its UI thread. That does not port, and the reason is htmlwidgets' delivery
-rather than a preference. Measured, all of it, on 2026-08-27:
+Both widgets pass `makeWorkerInstance` with the product's
+`esm/rpcWorker?worker&inline`, as the anywidget does, so a deep BAM region no
+longer blocks a Shiny page for the whole parse. `tools/verify_widget.mjs` checks
+it positively, on the worker's own `self.rpcServer`. Inlining is the only road,
+for reasons measured on 2026-08-27:
 
 - **htmlwidgets delivers one file and nothing beside it.** The binding
-  dependency comes back with `all_files: FALSE`
-  (`htmlwidgets:::widget_dependencies("JBrowseR", "JBrowseR")`), so a sibling
-  chunk is never copied. Dropped a `sibling-probe.js` next to `JBrowseR.js` and
-  saved a widget both ways: neither `_files` directory contains it.
-- **A self-contained document has no script URL at all.**
-  `saveWidget(selfcontained = TRUE)` inlines the whole 4.9MB bundle into an
-  *inline* `<script>` element — verified by finding the bundle's first bytes
-  inside the 4.8MB HTML, and there is no `<script src>` and no `data:` URI. So
-  `document.currentScript.src` is empty and nothing resolves against it.
-- **The portable spelling does not even build.**
-  `new Worker(new URL('.../rpcWorker', import.meta.url))` fails as
-  `[vite:worker-import-meta-url] Invalid value "iife" for option
-  "worker.format" - UMD and IIFE output formats are not supported for
-  code-splitting builds`. Adding `worker.rollupOptions.output.inlineDynamicImports`
-  makes it build, and it then emits
-  `new Worker(new URL("/assets/rpcWorker-<hash>.js", <currentScript.src or document.baseURI>))`
-  — **root-absolute**, so the base is discarded and it resolves to
-  `<origin>/assets/...` under all three delivery modes: Shiny, a loose
-  `saveWidget`, and a self-contained document. That is never where the file is,
-  and per the first bullet the file is never copied at all.
-- **So `?worker&inline` is the only road, and it costs the CRAN budget.**
-  Inlining it took `JBrowseR.js` from 4,909 kB to 9,805 kB (gzip 1,505 → 2,987
-  kB) — the worker's copy of the adapters is a second copy. The package tarball
-  is **6.19 MB today**, and inlining just the *linear-view* worker put it at
-  7.60 MB. Doing both bundles is another ~1.7 MB on top. CRAN's guidance is 5 MB.
+  dependency comes back with `all_files: FALSE`, so a sibling worker chunk is
+  never copied, and `saveWidget(selfcontained = TRUE)` inlines the bundle into
+  an inline `<script>` with no script URL to resolve one against.
+- **The portable spelling emits a root-absolute path.**
+  `new Worker(new URL('.../rpcWorker', import.meta.url))` builds (with
+  `worker.rollupOptions.output.inlineDynamicImports`) as
+  `new Worker(new URL("/assets/rpcWorker-<hash>.js", ...))`, which resolves to
+  `<origin>/assets/...` under Shiny, a loose `saveWidget` and a self-contained
+  document alike.
+
+The worker is built as `iife`: an `es` worker skips minification in lib mode
+and inlines as unminified source, 12.7 MB against 10.0 MB for `JBrowseR.js`.
+Measured on 2026-09-16, `JBrowseR.js` went from 5,007 kB to 9,997 kB (gzip
+1,544 → 3,063 kB), `JBrowseRApp.js` from 5,884 kB to 11,674 kB (gzip 1,817 →
+3,587 kB), and the package tarball from 5.16 MB to 8.44 MB against CRAN's 5 MB
+guidance. The worker's copy of the adapters is a second copy; the lever is a
+worker entry narrower than `corePlugins`.
 
 `bundle.yaml` asserts the consequence rather than the reasoning: each bundle is
 one file with nothing beside it, so a vite change that emits a chunk fails there

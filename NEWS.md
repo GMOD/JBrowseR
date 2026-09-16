@@ -82,6 +82,10 @@ Install with `devtools::install_github("GMOD/JBrowseR")`.
   that will not fetch — says so in the widget. It used to leave an empty box
   with the reason only in the browser console.
 
+- Both widgets parse data in a web worker, so a deep BAM or CRAM region no
+  longer freezes a Shiny page while it loads. The worker is inlined, which
+  doubles each bundle (`JBrowseR.js` 5.0 → 10.0 MB).
+
 # JBrowseR 0.12.0
 
 - New `local_files =` on `JBrowseR()` and `JBrowseRApp()`: open files from your

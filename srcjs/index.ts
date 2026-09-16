@@ -8,6 +8,8 @@ import {
   loadPlugins,
 } from '@jbrowse/react-linear-genome-view2'
 
+import RpcWorker from '@jbrowse/react-linear-genome-view2/esm/rpcWorker?worker&inline'
+
 import { type Payload, decodeLocalFiles, defineWidget } from './widget'
 
 type Options = Payload<CreateLinearGenomeViewOptions>
@@ -40,6 +42,7 @@ defineWidget<Options, LinearGenomeViewController>('JBrowseR', {
       onFeatureSelect: report(el, 'selected_feature'),
       onLocationChange: report(el, 'location'),
       onSessionChange: report(el, 'session'),
+      makeWorkerInstance: () => new RpcWorker(),
       onError: fail,
     }),
   live: (controller, changes, previous) => {

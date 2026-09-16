@@ -10,6 +10,8 @@ import {
   resolveAssemblies,
 } from '@jbrowse/react-app2'
 
+import RpcWorker from '@jbrowse/react-app2/esm/rpcWorker?worker&inline'
+
 import { type Payload, decodeLocalFiles, defineWidget } from './widget'
 
 type AppPayload = Omit<Payload<CreateAppOptions>, 'assemblies'> & {
@@ -25,6 +27,7 @@ defineWidget<AppPayload, JBrowseAppController>('JBrowseRApp', {
       ...(await resolveAssemblies(x.assemblies ?? [], x)),
       plugins: await loadPlugins(x.plugins ?? []),
       localFiles: decodeLocalFiles(x.localFiles),
+      makeWorkerInstance: () => new RpcWorker(),
       onSessionChange: session => {
         window.Shiny?.setInputValue(`${el.id}_session`, session)
       },

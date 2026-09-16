@@ -3,7 +3,7 @@
 # Generate self-contained HTML pages with a *live, fully interactive* embedded
 # JBrowse — the widget's whole JS bundle is inlined, so each page works offline
 # (it still fetches track data from the URLs at view time). These are NOT shipped
-# as package vignettes: the bundle is ~5 MB, well over CRAN's vignette budget, so
+# as package vignettes: the bundle is ~10 MB, well over CRAN's vignette budget, so
 # the `JBrowseR.Rmd` vignette uses static screenshots instead. Run this to
 # produce browsable demos for the website or a release.
 #
