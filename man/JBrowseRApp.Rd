@@ -80,8 +80,6 @@ written directly beside \code{type} — the same object a \code{config.json}'s
 \href{https://jbrowse.org/jb2/docs/models/}{state-model options}. There is no
 R constructor for it, so every view type JBrowse has — including one a
 runtime \code{plugins} entry registers — opens with nothing added to this package.
-Settings nested under \code{init}, the spelling before JBrowse 5, still open but
-draw a warning.
 
 A comparative view's panels are \code{list(assembly = , loc = )}, one per side.
 Note that fields JBrowse reads as arrays need \code{list()}, since a length-1
