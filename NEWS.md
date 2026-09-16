@@ -1,5 +1,10 @@
 # JBrowseR (development version)
 
+- A `JBrowseRApp()` view is `list(type = , ...)` with its settings beside
+  `type`, the same object a `config.json`'s `defaultSession.views` holds. The
+  nested `list(type = , init = list(...))` still opens but is deprecated, and
+  now draws an R warning showing the flat spelling.
+
 - Re-rendering a browser no longer throws it away. A render whose payload
   differs only in `tracks`, `location` or `local_files` is reconciled into the
   browser already on the page — the tracks it names open, the ones it drops
