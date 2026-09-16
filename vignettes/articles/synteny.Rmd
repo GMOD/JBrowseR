@@ -12,11 +12,10 @@ library(JBrowseR)
 
 `JBrowseR()` shows a single linear view. For anything comparative — synteny,
 dotplots, breakpoint-split — `JBrowseRApp()` drives the full JBrowse 2 app, and a
-`views` list describes what to open. Each entry is a `list(type, init)` spec, the
-same vocabulary JBrowse Web serializes into its
-[`?session=spec-…` URLs](https://jbrowse.org/jb2/docs/urlparams/) — a plain
-list, with no R builder in the way. The fields each `init` accepts come from the
-view's
+`views` list describes what to open. Each entry is `list(type = , ...)` with the
+view's settings beside `type`, the same object a `config.json`'s
+`defaultSession.views` holds — a plain list, with no R builder in the way. The
+settings each view accepts come from its
 [state-model docs](https://jbrowse.org/jb2/docs/models/) — see
 [LinearSyntenyView](https://jbrowse.org/jb2/docs/models/linearsyntenyview/) — and
 the PAF track is a
@@ -55,10 +54,8 @@ JBrowseRApp(
   ),
   views = list(list(
     type = "LinearSyntenyView",
-    init = list(
-      views = list(list(assembly = "volvox"), list(assembly = "volvox_del")),
-      tracks = list("volvox_del_paf")
-    )
+    views = list(list(assembly = "volvox"), list(assembly = "volvox_del")),
+    tracks = list("volvox_del_paf")
   ))
 )
 ```
@@ -90,10 +87,8 @@ JBrowseRApp(
   ),
   views = list(list(
     type = "DotplotView",
-    init = list(
-      views = list(list(assembly = "volvox"), list(assembly = "volvox_del")),
-      tracks = list("volvox_del_paf")
-    )
+    views = list(list(assembly = "volvox"), list(assembly = "volvox_del")),
+    tracks = list("volvox_del_paf")
   ))
 )
 ```

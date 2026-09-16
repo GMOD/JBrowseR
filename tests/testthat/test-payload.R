@@ -34,7 +34,7 @@ test_that("explicit args override a config base", {
 test_that("JBrowseRApp sends assemblies/tracks/views for createApp", {
   x <- JBrowseRApp(
     assemblies = list(list(name = "g", uri = "g.fa")),
-    views = list(list(type = "LinearGenomeView", init = list(assembly = "g")))
+    views = list(list(type = "LinearGenomeView", assembly = "g"))
   )$x
   expect_length(x$assemblies, 1)
   expect_equal(x$views[[1]]$type, "LinearGenomeView")

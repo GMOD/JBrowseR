@@ -1,16 +1,11 @@
-# JBrowseRApp opens views declared as plain JBrowse JSON. A view spec is only
-# ever list(type = , init = ) — the same vocabulary JBrowse Web serializes into
-# its ?session=spec-... URLs — so there are no R builders for it, and a view
-# type JBrowse gains (or one a runtime plugin registers) needs nothing added
-# here.
+# A view is list(type = , ...) with its settings beside `type`, the same object
+# a config.json's defaultSession.views holds, so a view type JBrowse gains needs
+# nothing added here.
 
 synteny_view_spec <- list(
   type = "LinearSyntenyView",
-  init = list(
-    # a comparative view's panels are list(assembly=, loc=) per side
-    views = list(list(assembly = "hg38"), list(assembly = "mm39")),
-    tracks = list("hg38_mm39")
-  )
+  views = list(list(assembly = "hg38"), list(assembly = "mm39")),
+  tracks = list("hg38_mm39")
 )
 
 paf_track <- list(
@@ -35,13 +30,14 @@ test_that("JBrowseRApp passes assemblies, tracks and views through verbatim", {
   expect_equal(w$x$assemblies[[2]]$name, "mm39")
   expect_equal(w$x$tracks[[1]]$adapter$type, "PAFAdapter")
   expect_equal(w$x$views[[1]]$type, "LinearSyntenyView")
-  expect_equal(w$x$views[[1]]$init$views[[1]]$assembly, "hg38")
+  expect_equal(w$x$views[[1]]$views[[1]]$assembly, "hg38")
+  expect_equal(w$x$views[[1]]$tracks, list("hg38_mm39"))
 })
 
 test_that("any view type opens with no change to this package", {
   w <- JBrowseRApp(
     assemblies = list(list(name = "hg38")),
-    views = list(list(type = "CircularView", init = list(assembly = "hg38")))
+    views = list(list(type = "CircularView", assembly = "hg38"))
   )
   expect_equal(w$x$views[[1]]$type, "CircularView")
 })
@@ -59,7 +55,7 @@ test_that("a saved session rides along to be restored instead of views", {
   )
   w <- JBrowseRApp(
     assemblies = list(list(name = "hg38")),
-    views = list(list(type = "LinearGenomeView", init = list(assembly = "hg38"))),
+    views = list(list(type = "LinearGenomeView", assembly = "hg38")),
     session = saved
   )
   expect_equal(w$x$session$views[[1]]$offsetPx, 587433)

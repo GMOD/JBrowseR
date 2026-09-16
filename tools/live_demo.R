@@ -78,10 +78,8 @@ local({
       views = list(
         list(
           type = "LinearSyntenyView",
-          init = list(
-            views = list(list(assembly = "volvox"), list(assembly = "volvox_del")),
-            tracks = list("volvox_del_paf")
-          )
+          views = list(list(assembly = "volvox"), list(assembly = "volvox_del")),
+          tracks = list("volvox_del_paf")
         )
       )
     ),

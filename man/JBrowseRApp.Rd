@@ -28,7 +28,7 @@ accepts. A synteny/dotplot view needs two or more.}
 \item{tracks}{A list of full track config lists. A synteny track spans two
 assemblies, so it names both in \code{assemblyNames} and in its adapter.}
 
-\item{views}{A list of \code{list(type = , init = )} view specs.}
+\item{views}{A list of view objects, \code{list(type = , ...)}.}
 
 \item{session}{A previously saved session to restore instead of \code{views} —
 the value a running app reported as
@@ -72,10 +72,9 @@ the whole app engine, so \code{views} can mix a linear view, a synteny view, a
 dotplot, and more.
 }
 \details{
-Each \code{views} entry is a \code{list(type = ..., init = ...)} spec — the same
-vocabulary JBrowse Web serializes into its
-\href{https://jbrowse.org/jb2/docs/urlparams/}{\verb{?session=spec-…} URLs}, and
-the \code{init} fields are that view's own
+Each \code{views} entry is a view object, \code{list(type = , ...)}, with every setting
+written directly beside \code{type} — the same object a \code{config.json}'s
+\code{defaultSession.views} holds, and the fields are that view's own
 \href{https://jbrowse.org/jb2/docs/models/}{state-model options}. There is no
 R constructor for it, so every view type JBrowse has — including one a
 runtime \code{plugins} entry registers — opens with nothing added to this package.
@@ -106,10 +105,8 @@ JBrowseRApp(
   )),
   views = list(list(
     type = "LinearSyntenyView",
-    init = list(
-      views = list(list(assembly = "hg38"), list(assembly = "mm39")),
-      tracks = list("hg38_mm39")
-    )
+    views = list(list(assembly = "hg38"), list(assembly = "mm39")),
+    tracks = list("hg38_mm39")
   ))
 )
 }

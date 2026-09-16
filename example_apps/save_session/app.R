@@ -33,7 +33,8 @@ genes <- list(
 
 opening_view <- list(
   type = "LinearGenomeView",
-  init = list(assembly = "hg19", loc = "17:41,196,312..41,277,500")
+  assembly = "hg19",
+  loc = "17:41,196,312..41,277,500"
 )
 
 ui <- page_sidebar(

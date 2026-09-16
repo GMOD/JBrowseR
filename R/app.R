@@ -4,10 +4,9 @@
 #' the whole app engine, so `views` can mix a linear view, a synteny view, a
 #' dotplot, and more.
 #'
-#' Each `views` entry is a `list(type = ..., init = ...)` spec — the same
-#' vocabulary JBrowse Web serializes into its
-#' \href{https://jbrowse.org/jb2/docs/urlparams/}{`?session=spec-…` URLs}, and
-#' the `init` fields are that view's own
+#' Each `views` entry is a view object, `list(type = , ...)`, with every setting
+#' written directly beside `type` — the same object a `config.json`'s
+#' `defaultSession.views` holds, and the fields are that view's own
 #' \href{https://jbrowse.org/jb2/docs/models/}{state-model options}. There is no
 #' R constructor for it, so every view type JBrowse has — including one a
 #' runtime `plugins` entry registers — opens with nothing added to this package.
@@ -22,7 +21,7 @@
 #'   accepts. A synteny/dotplot view needs two or more.
 #' @param tracks A list of full track config lists. A synteny track spans two
 #'   assemblies, so it names both in `assemblyNames` and in its adapter.
-#' @param views A list of `list(type = , init = )` view specs.
+#' @param views A list of view objects, `list(type = , ...)`.
 #' @param session A previously saved session to restore instead of `views` —
 #'   the value a running app reported as
 #'   `input[[paste0(outputId, "_session")]]`. Unlike `views`, which describes
@@ -77,10 +76,8 @@
 #'   )),
 #'   views = list(list(
 #'     type = "LinearSyntenyView",
-#'     init = list(
-#'       views = list(list(assembly = "hg38"), list(assembly = "mm39")),
-#'       tracks = list("hg38_mm39")
-#'     )
+#'     views = list(list(assembly = "hg38"), list(assembly = "mm39")),
+#'     tracks = list("hg38_mm39")
 #'   ))
 #' )
 #' }
