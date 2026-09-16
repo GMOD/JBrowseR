@@ -112,7 +112,9 @@ points at with no chunk to build it (the names are scanned out of `README.Rmd`
 and the vignettes, so it is a closed loop), and a labelled chunk whose last
 value is not a widget. Executing them is also the only check that the documented
 code *runs* — the vignettes set `eval = FALSE`, so knitting never evaluates a
-line of it.
+line of it. `tests/testthat/test-docs.R` is the offline half: it parses every
+R chunk and notebook code cell and fails on a function nothing exports, an
+argument a JBrowseR function lacks, or a view nesting `init`.
 
 The `render` workflow does all this nightly, and by `workflow_dispatch` on
 demand — deliberately not on push/PR, because it needs real network and links
