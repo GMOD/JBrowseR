@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
       </span>
     </div>
 
@@ -115,9 +115,13 @@ linear genome view as an htmlwidget. JBrowse 2 is a fast,
 GPU-accelerated genome browser; JBrowseR lets you drive it entirely from
 R and embed it in R Markdown documents, Shiny apps, or the interactive
 console.</p>
-<p>The API is <em>declarative</em>. You describe the browser with plain
-values — a genome, a list of tracks, a location — and helper
-constructors assemble the config. You never build JSON by hand.</p>
+<p>The API is <em>declarative</em>, and what you describe it with is
+JBrowse’s own options: <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> takes
+<code>createLinearGenomeView</code>’s options as named arguments, and
+assemblies, tracks and sessions are the same <a href="https://jbrowse.org/jb2/docs/config_guide/" class="external-link">JSON objects</a> a
+<code>config.json</code> holds, written as R lists. The package names
+none of them, so an option, track type or view type JBrowse gains needs
+nothing added here.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
@@ -127,7 +131,7 @@ constructors assemble the config. You never build JSON by hand.</p>
 This gives you the assembly, reference-name aliases, cytobands, and
 gene-name search with no further setup:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span></code></pre></div>
 <p><code>location</code> accepts a region string like
 <code>"chr1:1-10000"</code> or, because the hub ships a search index, a
 gene name like <code>"BRCA1"</code>. Other hubs work the same way —
@@ -143,7 +147,7 @@ are inferred from the file extension, so a data URL is usually all you
 need. <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> gathers several together.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
@@ -224,11 +228,11 @@ arguments to <code>list(uri = )</code> (e.g.
 the inferred defaults.</p>
 <p>When you only need the defaults, a bare URL string is a track —
 <code>list(uri = )</code> is just the same thing with room for
-<code>name=</code> and extra config. So a whole browser can skip the
-constructor entirely:</p>
+<code>name=</code> and extra config. So a whole browser can be a list of
+URLs:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="st">"https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw"</span>,</span>
 <span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span></span>
@@ -238,22 +242,21 @@ constructor entirely:</p>
 <p>Index files (<code>.bai</code>/<code>.crai</code>/<code>.tbi</code>)
 default to the conventional sibling of the data URL. When yours lives
 elsewhere — or is a <code>.csi</code> index — name it with
-<code>index=</code>, or as the second element of a
-<code>c(url, index)</code> pair in <code>tracks</code>:</p>
+<code>index=</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"https://example.com/reads.bam"</span>, index <span class="op">=</span> <span class="st">"https://example.com/reads.bai"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="a-gallery">A gallery<a class="anchor" aria-label="anchor" href="#a-gallery"></a>
 </h2>
-<p>The figures below are screenshots, so this vignette stays within
-CRAN’s size limits. Every one of them is also on the website as a <a href="https://gmod.github.io/JBrowseR/articles/live-browser.html">live,
+<p>The figures below are screenshots, so this vignette stays small.
+Every one of them is also on the website as a <a href="https://gmod.github.io/JBrowseR/articles/live-browser.html">live,
 interactive browser</a>.</p>
 <p><strong>Genes.</strong> A gene annotation track over the hub
 assembly, navigated by name.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span>,</span>
@@ -267,7 +270,7 @@ assembly, navigated by name.</p>
 <p><strong>Variants.</strong> A 1000 Genomes VCF.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/variants/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz"</span>,</span>
@@ -281,7 +284,7 @@ assembly, navigated by name.</p>
 <p><strong>Quantitative.</strong> A phyloP conservation bigWig.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw"</span>,</span>
@@ -301,7 +304,7 @@ JBrowse config file holds — and let the <code>uri</code> shorthand find
 the <code>.tbi</code> index.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg19"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg19"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    type <span class="op">=</span> <span class="st">"GWASTrack"</span>,</span>
 <span>    trackId <span class="op">=</span> <span class="st">"gwas_track"</span>,</span>
@@ -323,7 +326,8 @@ across chromosome 2</div>
 track with <code><a href="../reference/track_data_frame.html">track_data_frame()</a></code> — no files and no web server.
 Any <code>score</code> column makes it a quantitative track.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  chrom <span class="op">=</span> <span class="st">"17"</span>,</span>
 <span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">43000000</span>, <span class="fl">43120000</span>, by <span class="op">=</span> <span class="fl">12000</span><span class="op">)</span>,</span>
 <span>  end   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">43000000</span>, <span class="fl">43120000</span>, by <span class="op">=</span> <span class="fl">12000</span><span class="op">)</span> <span class="op">+</span> <span class="fl">4000</span>,</span>
@@ -332,7 +336,7 @@ Any <code>score</code> column makes it a quantitative track.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/track_data_frame.html">track_data_frame</a></span><span class="op">(</span><span class="va">peaks</span>, <span class="st">"R_peaks"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"17:43,000,000..43,125,000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -347,7 +351,7 @@ chr20 (<code>&lt;TRA&gt; 20:61,039,934</code>): the call sits in the
 Sniffles track and the long reads carry it below.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg19"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg19"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
@@ -370,7 +374,7 @@ sample; its PacBio HiFi reads carry a ~1.8 kb somatic deletion in
 <em>CUZD1</em>, visible as a clean drop-out spanning many reads.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/demos/cgiab/HG008-T_chr10_CUZD1_deletion.bam"</span>,</span>
@@ -381,23 +385,24 @@ sample; its PacBio HiFi reads carry a ~1.8 kb somatic deletion in
 <div class="float">
 <img src="../reference/figures/demo-cancer-deletion.png" alt="HG008 tumor somatic deletion at CUZD1"><div class="figcaption">HG008 tumor somatic deletion at CUZD1</div>
 </div>
-<p><strong>A custom theme.</strong> The <code>theme</code> config
-recolors the browser; it is the <a href="https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme" class="external-link">MUI
+<p><strong>A custom theme.</strong> The <code>theme</code> slot of
+JBrowse’s root <code>configuration</code> recolors the browser; it is
+the <a href="https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme" class="external-link">MUI
 palette</a> JBrowse takes.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
 <span>    <span class="st">"https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
-<span>  theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  configuration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      primary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"#311b92"</span><span class="op">)</span>,</span>
 <span>      secondary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"#0097a7"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
+<span>  <span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"BRCA1"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="float">
@@ -411,10 +416,11 @@ palette</a> JBrowse takes.</p>
 <li>A genome that isn’t on a hub? See the <a href="custom-browser-tutorial.html">custom browser tutorial</a>.</li>
 <li>Files on your own machine? See <a href="creating-urls.html">serving
 local data</a>.</li>
-<li>Need full control? Pass a whole JBrowse config with the <a href="json-tutorial.html"><code>config</code> escape hatch</a>.</li>
+<li>Keeping a browser in a JSON file? See the <a href="json-tutorial.html">JSON tutorial</a>.</li>
 <li>Embedding in Shiny? Use <code><a href="../reference/JBrowseR-shiny.html">JBrowseROutput()</a></code> and
-<code><a href="../reference/JBrowseR-shiny.html">renderJBrowseR()</a></code>, and read the selected feature back with
-<code>input$selectedFeature</code>.</li>
+<code><a href="../reference/JBrowseR-shiny.html">renderJBrowseR()</a></code>, read the selected feature back with
+<code>input$&lt;outputId&gt;_selected_feature</code>, and navigate with
+<code>update_jbrowse("&lt;outputId&gt;", location = loc)</code>.</li>
 </ul>
 </div>
   </div>

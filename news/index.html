@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
       </span>
     </div>
 
@@ -75,6 +75,68 @@
       <small>Source: <a href="https://github.com/GMOD/JBrowseR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.13.0" id="jbrowser-0130">JBrowseR 0.13.0<a class="anchor" aria-label="anchor" href="#jbrowser-0130"></a></h2>
+<p>Install with <code>devtools::install_github("GMOD/JBrowseR")</code>.</p>
+<ul><li>
+<p><strong>Breaking:</strong> <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> and <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> take JBrowse’s own options as named arguments and pass them through unread: <code>createLinearGenomeView</code>’s for <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> (<code>assembly</code>, <code>tracks</code>, <code>location</code>, <code>session</code>, <code>aggregateTextSearchAdapters</code>, <code>internetAccounts</code>, <code>plugins</code>, <code>configuration</code>) and <code>createApp</code>’s for <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> (<code>assemblies</code>, <code>tracks</code>, <code>views</code>, <code>session</code>, <code>connections</code>, …). The signatures are <code>JBrowseR(..., local_files = NULL, width = NULL, height = NULL, elementId = NULL)</code> and the same for <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code>, so an option JBrowse adds works with no package update. Every option is named; the genome is no longer positional.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># before</span></span>
+<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span>
+<span><span class="co"># after</span></span>
+<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li>
+<p><strong>Breaking:</strong> <code>theme =</code> and <code>text_search =</code> are gone. Both were renamings of a JBrowse option.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># before</span></span>
+<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="va">hg19</span>, text_search <span class="op">=</span> <span class="va">search</span>, theme <span class="op">=</span> <span class="va">palette</span><span class="op">)</span></span>
+<span><span class="co"># after</span></span>
+<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  assembly <span class="op">=</span> <span class="va">hg19</span>,</span>
+<span>  aggregateTextSearchAdapters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">search</span><span class="op">)</span>,</span>
+<span>  configuration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>theme <span class="op">=</span> <span class="va">palette</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</li>
+<li>
+<p><strong>Breaking:</strong> <code>config =</code> is gone. A JSON file of options is a <code><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call()</a></code>:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># before</span></span>
+<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"config.json"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span>
+<span><span class="co"># after</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">JBrowseR</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"config.json"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">JBrowseR</span>, <span class="fu"><a href="https://rdrr.io/r/utils/modifyList.html" class="external-link">modifyList</a></span><span class="op">(</span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"config.json"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li>
+<p><strong>Breaking:</strong> <code>update_location()</code> is now <code><a href="../reference/update_jbrowse.html">update_jbrowse()</a></code>, which sends any subset of the options to a rendered browser and works on <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> too. <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> applies <code>tracks</code> and <code>location</code> in place and <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> applies <code>session</code> in place; any other option rebuilds from the rendered options plus the change.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># before</span></span>
+<span><span class="fu">update_location</span><span class="op">(</span><span class="st">"browser"</span>, <span class="st">"BRCA1"</span><span class="op">)</span></span>
+<span><span class="co"># after</span></span>
+<span><span class="fu"><a href="../reference/update_jbrowse.html">update_jbrowse</a></span><span class="op">(</span><span class="st">"browser"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/update_jbrowse.html">update_jbrowse</a></span><span class="op">(</span><span class="st">"app"</span>, session <span class="op">=</span> <span class="va">saved</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li><p><code>jsonlite</code> moves from Imports to Suggests: the package no longer reads JSON itself.</p></li>
+<li><p>A <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> view is <code>list(type = , ...)</code> with its settings beside <code>type</code>, the same object a <code>config.json</code>’s <code>defaultSession.views</code> holds.</p></li>
+<li><p>Re-rendering a browser no longer throws it away. A render whose payload differs only in <code>tracks</code>, <code>location</code> or <code>local_files</code> is reconciled into the browser already on the page — the tracks it names open, the ones it drops close — and the user’s zoom, track order, scroll position and feature selection survive. In Shiny that is every reactive read feeding <code><a href="../reference/JBrowseR-shiny.html">renderJBrowseR()</a></code>, so a track checkbox opens a track in place instead of refetching everything. A <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> re-render that changes only <code>session</code> restores it in place. Any other changed option builds a new browser.</p></li>
+<li><p><code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> reports <code>input[[paste0(outputId, "_session")]]</code> as the user navigates and opens tracks, in the same shape <code>session =</code> takes and under the same name <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> already used. “Save this view” is storing that value; reopening it is passing it back.</p></li>
+<li><p>A browser that fails to build — a genome name nothing answers for, a plugin that will not fetch — says so in the widget. It used to leave an empty box with the reason only in the browser console.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.12.0" id="jbrowser-0120">JBrowseR 0.12.0<a class="anchor" aria-label="anchor" href="#jbrowser-0120"></a></h2>
+<ul><li>
+<p>New <code>local_files =</code> on <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> and <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code>: open files from your own machine with no web server at all. Each path registers under its basename, and a track (or an assembly) refers to that name as if it were a URL; a conventional sibling index next to it (<code>.tbi</code>, <code>.csi</code>, <code>.bai</code>, <code>.crai</code>, <code>.fai</code>, <code>.gzi</code>) is picked up automatically, so an indexed file stays indexed and JBrowse reads only the region on screen.</p>
+<p>This is what <code>serve_data()</code> was for before 0.11.0 removed it, without the hand-rolled HTTP server or the <code>httpuv</code> dependency that went with it: the bytes travel inside the document and the range reads happen in the browser. The advice that replaced it — run <code>npx http-server --cors</code> and point at <code>http://localhost:...</code> — still works and is still right for large files, but it cannot produce a knitted document anyone else can open, because a localhost URL is dead the moment the HTML leaves your machine.</p>
+<p>The cost is that the bytes ride base64-encoded inside the payload, so this is for a file on an analyst’s laptop rather than for a reference genome; it warns past ~50 MB. (Shiny cannot serve the alternative today: neither <code>addResourcePath()</code>’s handler nor httpuv’s static path answers HTTP <code>Range</code>, so a URL pointing at either would refetch the whole file per read.)</p>
+</li>
+<li>
+<p>New <code>update_location(outputId, location)</code>: navigate a browser that is already on the page instead of re-rendering it. Feeding a reactive <code>location</code> into <code><a href="../reference/JBrowseR-shiny.html">renderJBrowseR()</a></code> rebuilds the whole browser, which refetches its tracks and discards the user’s zoom, track order, scroll position and feature selection — so a Shiny app that moved the view was destroying state to do it. This also settles the loop <code>input$&lt;outputId&gt;_location</code> used to create: reading it in an <code>observeEvent()</code> that calls <code>update_location()</code> is not circular the way reading it in the reactive that feeds the widget is.</p>
+<p>Navigation is the only command, deliberately. A browser’s tracks, assembly and session can also be swapped live, but each of those has to answer what it does to a track the user opened by hand or a layout they rearranged; rebuilding is a defensible answer to those and is what re-rendering already does.</p>
+</li>
+<li><p><code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> now reports <code>input$&lt;outputId&gt;_selected_feature</code> and <code>input$&lt;outputId&gt;_location</code>, the two read-backs <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> already had, so an app that grows from one view to several does not have to rewrite its server. <code>_location</code> is a <em>list</em> there, one entry per open view, because the app holds any number of them.</p></li>
+<li><p><strong>Breaking:</strong> <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code>’s <code>default_session</code> is now <code>session</code>, matching [JBrowseRApp()] and the JS products. It was never a <em>default</em> the user’s own state layered on top of — it is the saved layout to open instead of <code>tracks</code> and <code>location</code>, which is what the app’s argument of that name already meant.</p></li>
+<li><p><strong>Breaking:</strong> the global <code>input$selectedFeature</code> is gone. Use the namespaced <code>input$&lt;outputId&gt;_selected_feature</code>, which has been set alongside it since 0.11.0. The global could not be made correct: two browsers on a page overwrite each other’s, and inside a Shiny module nothing can read it. The bundled example apps show the change; <code>demos/</code> was the case in point, where two tabs reading the global saw each other’s clicks.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.11.0" id="jbrowser-0110">JBrowseR 0.11.0<a class="anchor" aria-label="anchor" href="#jbrowser-0110"></a></h2>
 <ul><li>Upgraded to the GPU-accelerated JBrowse 2 v5 linear genome view (<code>@jbrowse/react-linear-genome-view2</code>), driven through the shared framework-agnostic <code>@jbrowse/embedded-linear-genome-view</code> controller.</li>

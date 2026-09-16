@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
       </span>
     </div>
 
@@ -115,9 +115,11 @@ dotplots</h1>
 comparative genomics — several genomes stacked, the blocks each pair
 shares drawn between the rows — <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> drives the
 full app from a declarative <code>views</code> list. Each entry is
-<code>list(type = , init = )</code> — the same vocabulary JBrowse Web
-serializes into its <a href="https://jbrowse.org/jb2/docs/urlparams/" class="external-link"><code>?session=spec-…</code>
-URLs</a>, and the <code>init</code> fields are the view’s own <a href="https://jbrowse.org/jb2/docs/models/linearsyntenyview/" class="external-link">state-model
+<code>list(type = , ...)</code> with the view’s settings written beside
+<code>type</code> — the same object a <code>config.json</code>’s
+<code>defaultSession.views</code> holds, and the same one JBrowse Web
+reads from its <a href="https://jbrowse.org/jb2/docs/urlparams/" class="external-link"><code>?session=spec-…</code>
+URLs</a>. The settings are the view’s own <a href="https://jbrowse.org/jb2/docs/models/linearsyntenyview/" class="external-link">state-model
 options</a>. There are no R builders for it, so any view type JBrowse
 has — including one a runtime plugin registers — opens with nothing
 added to the package.</p>
@@ -168,7 +170,7 @@ list, the same JSON a JBrowse config file would hold.</p>
 <div class="section level2">
 <h2 id="stack-them-in-a-synteny-view">Stack them in a synteny view<a class="anchor" aria-label="anchor" href="#stack-them-in-a-synteny-view"></a>
 </h2>
-<p><code>init$views</code> lists the panels top-to-bottom, one
+<p>The view’s own <code>views</code> lists the panels top-to-bottom, one
 <code>list(assembly = )</code> each. The four rows have three gaps
 between adjacent pairs, and each gap draws the same all-vs-all track, so
 <code>tracks</code> is that trackId once per gap.
@@ -181,12 +183,10 @@ between adjacent pairs, and each gap draws the same all-vs-all track, so
 <span>  views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      type <span class="op">=</span> <span class="st">"LinearSyntenyView"</span>,</span>
-<span>      init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">strains</span>, \<span class="op">(</span><span class="va">s</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="va">s</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        drawCurves <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>        minAlignmentLength <span class="op">=</span> <span class="fl">10000</span></span>
-<span>      <span class="op">)</span></span>
+<span>      views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">strains</span>, \<span class="op">(</span><span class="va">s</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="va">s</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      drawCurves <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>      minAlignmentLength <span class="op">=</span> <span class="fl">10000</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -196,8 +196,8 @@ between adjacent pairs, and each gap draws the same all-vs-all track, so
 each adjacent pair shares drawn between the rows</div>
 </div>
 <p>In the console this opens a browser tab; in R Markdown it renders
-inline; in Shiny, pair <code><a href="../reference/JBrowseR-shiny.html">JBrowseROutput()</a></code> with
-<code><a href="../reference/JBrowseR-shiny.html">renderJBrowseR()</a></code>.</p>
+inline; in Shiny, pair <code><a href="../reference/JBrowseRApp-shiny.html">JBrowseRAppOutput()</a></code> with
+<code><a href="../reference/JBrowseRApp-shiny.html">renderJBrowseRApp()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="the-same-paf-as-a-dotplot">The same PAF as a dotplot<a class="anchor" aria-label="anchor" href="#the-same-paf-as-a-dotplot"></a>
@@ -210,10 +210,8 @@ the shared backbone, off-diagonal segments are rearrangements.</p>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">ecoli_ava</span><span class="op">)</span>,</span>
 <span>  views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    type <span class="op">=</span> <span class="st">"DotplotView"</span>,</span>
-<span>    init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"K12"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"Sakai"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>      tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
+<span>    views <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"K12"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"Sakai"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"ecoli_ava"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="float">

@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
       </span>
     </div>
 
@@ -119,7 +119,7 @@ a hub name straight to <code><a href="../reference/JBrowseR.html">JBrowseR()</a>
 reference-name aliases, cytobands, and gene-name search all load from
 the CORS-enabled hub at <a href="https://jbrowse.org" class="external-link">jbrowse.org</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span></code></pre></div>
 <p>For your own data you host the files yourself. On the JBrowse 2 team
 we use <a href="https://aws.amazon.com/s3/" class="external-link">Amazon S3</a> — each object
 has its own URL — but any web server works, e.g. <a href="https://httpd.apache.org/" class="external-link">Apache</a> or a cloud bucket.</p>
@@ -165,16 +165,41 @@ co-locating the data gives faster performance.</p>
 <div class="section level2">
 <h2 id="viewing-local-files">Viewing local files<a class="anchor" aria-label="anchor" href="#viewing-local-files"></a>
 </h2>
-<p>To view files from your own machine, serve the directory with any
-static server that supports range requests and CORS, then point the
-assembly and track configs at the resulting
-<code>http://localhost:...</code> URLs. For example, with <a href="https://www.npmjs.com/package/http-server" class="external-link">http-server</a>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">npx</span> http-server <span class="at">--cors</span> <span class="at">-p</span> 5000 ~/path/to/my-data</span></code></pre></div>
+<p>Files on your own machine need no host at all.
+<code>local_files</code> reads them into the document, and a track then
+refers to one by name exactly as it would a URL:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"peaks.bed.gz"</span>, name <span class="op">=</span> <span class="st">"Peaks"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  local_files <span class="op">=</span> <span class="st">"~/data/peaks.bed.gz"</span>,</span>
+<span>  location <span class="op">=</span> <span class="st">"chr1:1-10000"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The name is the file’s basename, so the <code>.bed.gz</code>
+extension still picks the adapter. A conventional sibling index next to
+the file — <code>.tbi</code>, <code>.csi</code>, <code>.bai</code>,
+<code>.crai</code>, <code>.fai</code>, <code>.gzi</code> — is registered
+alongside it under the name the adapter derives, so an indexed file
+stays indexed: the browser seeks into the bytes it holds and reads only
+the region on screen, the same as it would over HTTP.</p>
+<p>This is the one case where no server is involved, so the two
+requirements above do not apply — there is no origin to configure CORS
+for, and the range reads happen inside the browser. It is also what
+makes a knitted document self-contained: the bytes travel with the HTML,
+where a <code>http://localhost:...</code> URL would be dead for anyone
+you send it to.</p>
+<p>The cost is that the bytes ride inside the document, base64-encoded,
+rather than being fetched a slice at a time. That is fine for a file on
+an analyst’s laptop and wrong for a reference genome —
+<code>local_files</code> warns past ~50 MB. Host anything larger and
+pass its URL.</p>
+<p>An assembly can come from a local file the same way, since
+<code>uri</code> is a name here like any other:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  assembly <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"mine"</span>, uri <span class="op">=</span> <span class="st">"http://127.0.0.1:5000/genome.fa.gz"</span><span class="op">)</span>,</span>
-<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"http://127.0.0.1:5000/genes.gff.gz"</span>, name <span class="op">=</span> <span class="st">"Genes"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  location <span class="op">=</span> <span class="st">"chr1:1-10000"</span></span>
+<span>  assembly <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"mine"</span>, uri <span class="op">=</span> <span class="st">"genome.fa.gz"</span><span class="op">)</span>,</span>
+<span>  local_files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"~/data/genome.fa.gz"</span>, <span class="st">"~/data/genes.gff.gz"</span><span class="op">)</span>,</span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"genes.gff.gz"</span>, name <span class="op">=</span> <span class="st">"Genes"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>

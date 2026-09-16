@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
       </span>
     </div>
 
@@ -111,9 +111,9 @@
     
     
 <p>When your genome is one of the hosted hubs,
-<code>JBrowseR("hg38")</code> is all you need. This tutorial covers the
-other case: building a browser for a genome you host yourself, with your
-own tracks, gene-name search, and theme.</p>
+<code>JBrowseR(assembly = "hg38")</code> is all you need. This tutorial
+covers the other case: building a browser for a genome you host
+yourself, with your own tracks, gene-name search, and theme.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
@@ -152,9 +152,9 @@ each track; the view fills it in from the assembly you load.</p>
 <h2 id="enable-gene-name-search">Enable gene-name search<a class="anchor" aria-label="anchor" href="#enable-gene-name-search"></a>
 </h2>
 <p>Hub assemblies include search; for a custom assembly, point at your
-own Trix index files with a Trix adapter and pass it as
-<code>text_search</code>. Now <code>location</code> can be a gene
-name.</p>
+own Trix index files with a Trix adapter and pass it in
+<code>aggregateTextSearchAdapters</code>. Now <code>location</code> can
+be a gene name.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hg19_search</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  type <span class="op">=</span> <span class="st">"TrixTextSearchAdapter"</span>,</span>
@@ -172,8 +172,8 @@ name.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  assembly <span class="op">=</span> <span class="va">hg19</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="va">my_tracks</span>,</span>
-<span>  text_search <span class="op">=</span> <span class="va">hg19_search</span>,</span>
-<span>  theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>primary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"#311b92"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  aggregateTextSearchAdapters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">hg19_search</span><span class="op">)</span>,</span>
+<span>  configuration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>theme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>primary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"#311b92"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"MYC"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -204,15 +204,26 @@ optional <code>score</code> column makes it a quantitative track.</p>
 <h2 id="reacting-to-clicks-in-shiny">Reacting to clicks in Shiny<a class="anchor" aria-label="anchor" href="#reacting-to-clicks-in-shiny"></a>
 </h2>
 <p>When rendered inside Shiny, clicking a feature sets
-<code>input$selectedFeature</code> to the feature’s data, so you can
-build tables, plots, or links from the current selection.</p>
+<code>input$&lt;outputId&gt;_selected_feature</code> to the feature’s
+data, so you can build tables, plots, or links from the current
+selection. The id is namespaced per output, so several browsers on one
+page do not overwrite each other’s.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># server side</span></span>
 <span><span class="va">output</span><span class="op">$</span><span class="va">browser</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/JBrowseR-shiny.html">renderJBrowseR</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="va">hg19</span>, tracks <span class="op">=</span> <span class="va">my_tracks</span>, location <span class="op">=</span> <span class="st">"MYC"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu">observeEvent</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">selectedFeature</span>, <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">selectedFeature</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span>
+<span><span class="fu">observeEvent</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">browser_selected_feature</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">browser_selected_feature</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p>To move the browser from R without re-running the render expression,
+send it the changed options with <code><a href="../reference/update_jbrowse.html">update_jbrowse()</a></code>. A
+reactive <code>location</code> fed from
+<code>input$browser_location</code> would loop; an observer does
+not.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">observeEvent</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">goto_myc</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="../reference/update_jbrowse.html">update_jbrowse</a></span><span class="op">(</span><span class="st">"browser"</span>, location <span class="op">=</span> <span class="st">"MYC"</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>

@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
       </span>
     </div>
 
@@ -107,31 +107,31 @@
 <!-- badges: start -->
 
 <p>JBrowseR provides an R interface to the <a href="https://jbrowse.org/jb2/" class="external-link">JBrowse 2</a> genome browser. It renders the interactive, GPU-accelerated JBrowse 2 linear genome view as an <a href="https://www.htmlwidgets.org/" class="external-link">htmlwidget</a>, so you can embed a full genome browser in an <strong>R Markdown</strong> document, a <strong>Shiny</strong> app, or straight from the <strong>R console</strong>.</p>
-<p>The API is declarative, and what you describe it with is JBrowse’s own config: assemblies, tracks and sessions are the same <a href="https://jbrowse.org/jb2/docs/config_guide/" class="external-link">JSON objects</a> a <code>config.json</code> holds, written as R lists. There are no constructors to learn and nothing imperative to wire up — so what you write here is what the config file holds, and a track type or view type JBrowse gains needs nothing added to the package.</p>
+<p>The API is JBrowse’s own: <code><a href="reference/JBrowseR.html">JBrowseR()</a></code> takes the options of JBrowse’s <code>createLinearGenomeView</code>, and <code><a href="reference/JBrowseRApp.html">JBrowseRApp()</a></code> those of <code>createApp</code>, as named arguments under JBrowse’s names. Assemblies, tracks and sessions are the same <a href="https://jbrowse.org/jb2/docs/config_guide/" class="external-link">JSON objects</a> a <code>config.json</code> holds, written as R lists, so an option, track type or view type JBrowse gains needs nothing added to the package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># an entire human genome browser in one line — assembly, reference name</span></span>
 <span><span class="co"># aliases, cytobands, and gene-name search all included</span></span>
-<span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span><span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="st">"hg38"</span>, location <span class="op">=</span> <span class="st">"BRCA1"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># a whole options object kept in JSON</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">JBrowseR</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"options.json"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Released version from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a>:</p>
+<p>Install from <a href="https://github.com/GMOD/JBrowseR" class="external-link">GitHub</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"JBrowseR"</span><span class="op">)</span></span></code></pre></div>
-<p>Development version from <a href="https://github.com/GMOD/JBrowseR" class="external-link">GitHub</a>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"GMOD/JBrowseR"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"GMOD/JBrowseR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-tour">Quick tour<a class="anchor" aria-label="anchor" href="#quick-tour"></a>
 </h2>
 <p>Point at a hub genome by name and add tracks by URL — the track type and its index files are inferred automatically.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
@@ -143,7 +143,7 @@
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/demo-alignments.png" width="100%"></p>
 <p>View results you computed in R directly on the genome — no files, no web server:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  chrom <span class="op">=</span> <span class="st">"17"</span>,</span>
 <span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">43000000</span>, <span class="fl">43120000</span>, by <span class="op">=</span> <span class="fl">12000</span><span class="op">)</span>,</span>
@@ -153,11 +153,19 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="reference/track_data_frame.html">track_data_frame</a></span><span class="op">(</span><span class="va">peaks</span>, <span class="st">"R_peaks"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"17:43,000,000..43,125,000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/demo-dataframe.png" width="100%"></p>
+<p>Files on your own machine need no host either — <code>local_files</code> reads them into the document, and a track refers to one by name as if it were a URL. The sibling index comes along, so an indexed file stays indexed and only the region on screen is ever read:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"peaks.bed.gz"</span>, name <span class="op">=</span> <span class="st">"Peaks"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  local_files <span class="op">=</span> <span class="st">"~/data/peaks.bed.gz"</span>,</span>
+<span>  location <span class="op">=</span> <span class="st">"17:43,000,000..43,125,000"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>A track’s <em>display</em> can plot its data — a <code>GWASTrack</code> with a <code>LinearManhattanDisplay</code> draws genome-wide summary statistics as a Manhattan plot in the linear view, no separate plotting widget needed:</p>
 <p><img src="reference/figures/demo-manhattan.png" width="100%"></p>
 <p>Compare whole genomes with <code><a href="reference/JBrowseRApp.html">JBrowseRApp()</a></code> — several assemblies stacked, the blocks each pair shares drawn between the rows (here four <em>E. coli</em> strains tied by one all-vs-all alignment), or the same alignment as a whole-genome dotplot. See the <a href="https://gmod.github.io/JBrowseR/articles/comparative-synteny.html">comparative synteny</a> vignette, or run it on Colab: <a href="https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_comparative_colab.ipynb" class="external-link"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a></p>
@@ -167,14 +175,14 @@
 <div class="section level2">
 <h2 id="try-it-live">Try it live<a class="anchor" aria-label="anchor" href="#try-it-live"></a>
 </h2>
-<p>The figures above are screenshots so the package stays inside CRAN’s size budget, but the website hosts the same browsers as <strong>real, interactive widgets</strong> — pan, zoom, and click features in the page:</p>
+<p>The figures above are screenshots so the package stays small, but the website hosts the same browsers as <strong>real, interactive widgets</strong> — pan, zoom, and click features in the page:</p>
 <ul>
 <li>
 <a href="https://gmod.github.io/JBrowseR/articles/live-browser.html">Live embedded browsers</a> — a hub genome, a custom FASTA, an R data frame as a track, and a GWAS Manhattan plot</li>
 <li>
 <a href="https://gmod.github.io/JBrowseR/articles/synteny.html">Comparing genomes, live</a> — a linear synteny view and a dotplot</li>
 </ul>
-<p>For the Shiny side, <a href="https://jbrowse.shinyapps.io/demos/" class="external-link"><strong>JBrowseR demos</strong></a> is every <a href="examples/README.html#shiny-apps">example app</a> in one place — gene search, a data frame as a track, a slider that re-runs the analysis, SKBR3 structural variants, a whole <code>config.json</code>, and a plugin.</p>
+<p>For the Shiny side, <a href="https://jbrowse.shinyapps.io/demos/" class="external-link"><strong>JBrowseR demos</strong></a> is every <a href="examples/README.html#shiny-apps">example app</a> in one place — gene search, a data frame as a track, a slider that re-runs the analysis, SKBR3 structural variants, a browser kept in a JSON file, and a plugin.</p>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
@@ -188,7 +196,7 @@
 <li>
 <a href="https://gmod.github.io/JBrowseR/articles/creating-urls.html">Hosting data</a> — CORS + range-request requirements, and viewing local files</li>
 <li>
-<a href="https://gmod.github.io/JBrowseR/articles/json-tutorial.html">Full JSON config</a> — the escape hatch for complete control</li>
+<a href="https://gmod.github.io/JBrowseR/articles/json-tutorial.html">A browser in a JSON file</a> — options kept in JSON</li>
 </ul>
 </div>
 <div class="section level2">
@@ -196,21 +204,21 @@
 </h2>
 <p>If you use JBrowseR in your research, please cite:</p>
 <p><a href="https://doi.org/10.1093/bioinformatics/btab459" class="external-link">Hershberg et al., 2021. JBrowseR: An R Interface to the JBrowse 2 Genome Browser</a></p>
-<pre><code>@article{hershberg2021jbrowser,
-  title={JBrowseR: An R Interface to the JBrowse 2 Genome Browser},
-  author={Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},
-  journal={Bioinformatics}
-}</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="sc">@</span>article{hershberg2021jbrowser,</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  title<span class="ot">=</span>{JBrowseR<span class="sc">:</span> An R Interface to the JBrowse <span class="dv">2</span> Genome Browser},</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  author<span class="ot">=</span>{Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  journal<span class="ot">=</span>{Bioinformatics}</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="for-developers">For developers<a class="anchor" aria-label="anchor" href="#for-developers"></a>
 </h2>
 <p>The R package ships a prebuilt JavaScript bundle in <code>inst/htmlwidgets/</code>. To rebuild it against a local checkout of <a href="https://github.com/GMOD/jbrowse-components" class="external-link">jbrowse-components</a> (expected as a sibling directory), install <a href="https://pnpm.io" class="external-link">pnpm</a> and run:</p>
-<pre><code>git clone https://github.com/GMOD/JBrowseR
-cd JBrowseR
-pnpm install
-pnpm build       # writes inst/htmlwidgets/JBrowseR.js and .css
-R -e 'devtools::install()'</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>git clone https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>GMOD<span class="sc">/</span>JBrowseR</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>cd JBrowseR</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>pnpm install</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>pnpm build       <span class="co"># writes inst/htmlwidgets/JBrowseR.js and .css</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>R <span class="sc">-</span>e <span class="st">'devtools::install()'</span></span></code></pre></div>
 </div>
 </div>
   </div>
@@ -259,7 +267,6 @@ R -e 'devtools::install()'</code></pre>
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/gmod/JBrowseR/actions" class="external-link"><img src="https://github.com/GMOD/JBrowseR/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://CRAN.R-project.org/package=JBrowseR" class="external-link"><img src="https://www.r-pkg.org/badges/version/JBrowseR" alt="CRAN status"></a></li>
 <li><a href="https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_colab.ipynb" class="external-link"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a></li>
 </ul>
 </div>

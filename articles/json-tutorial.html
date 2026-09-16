@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
       </span>
     </div>
 
@@ -110,42 +110,55 @@
 
     
     
-<p>The <a href="JBrowseR.html">introduction</a> and <a href="custom-browser-tutorial.html">custom browser tutorial</a> cover
-the declarative API, which is enough for most browsers. This tutorial
-covers the escape hatch: handing <code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> a whole JBrowse
-2 configuration through the <code>config</code> argument, for full
-control over every option.</p>
+<p><code><a href="../reference/JBrowseR.html">JBrowseR()</a></code> takes JBrowse’s
+<code>createLinearGenomeView</code> options as named arguments, and
+<code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> takes <code>createApp</code>’s, both under
+the camelCase names JBrowse gives them. A browser can therefore live in
+a JSON file that R, Python and JavaScript all read.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="when-to-use-it">When to use it<a class="anchor" aria-label="anchor" href="#when-to-use-it"></a>
+<h2 id="what-the-options-hold">What the options hold<a class="anchor" aria-label="anchor" href="#what-the-options-hold"></a>
 </h2>
-<p>Reach for <code>config</code> when you need something the helpers
-don’t expose — a saved <code>defaultSession</code>, per-track display
-options, internet accounts for authenticated data, or runtime plugins. A
-JBrowse <code>config</code> mirrors the format documented in the <a href="https://jbrowse.org/jb2/docs/config_guide" class="external-link">JBrowse config
-guide</a> and may contain <code>assembly</code>, <code>tracks</code>,
-<code>defaultSession</code>, <code>aggregateTextSearchAdapters</code>,
-<code>theme</code>, and <code>plugins</code>.</p>
+<p><code><a href="../reference/JBrowseR.html">JBrowseR()</a></code>’s options are <code>assembly</code>,
+<code>tracks</code>, <code>location</code>, <code>session</code>,
+<code>aggregateTextSearchAdapters</code>, <code>internetAccounts</code>,
+<code>plugins</code> and <code>configuration</code>. The package passes
+them through unread, so an option JBrowse adds works here without a
+package update.</p>
+<p>A JBrowse Web <code>config.json</code> is not that shape: it lists
+<code>assemblies</code> in the plural and opens a
+<code>defaultSession</code>. Its <code>assemblies</code>,
+<code>tracks</code> and <code>plugins</code> are
+<code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code> options, though, and its
+<code>defaultSession.views</code> is <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code>’s
+<code>views</code>. To open a genome JBrowse hosts, name its hub instead
+— <code>JBrowseR(assembly = "hg19")</code> fetches
+<code>https://jbrowse.org/ucsc/hg19/config.json</code> and resolves its
+paths.</p>
 </div>
 <div class="section level2">
-<h2 id="from-a-config-file">From a config file<a class="anchor" aria-label="anchor" href="#from-a-config-file"></a>
+<h2 id="from-a-json-file">From a JSON file<a class="anchor" aria-label="anchor" href="#from-a-json-file"></a>
 </h2>
-<p><code>config</code> takes the path or URL of a
-<code>config.json</code> and reads it for you (JSON text works too). A
-config file is portable — the same file works in the JBrowse web app and
-desktop.</p>
+<p><code><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call()</a></code> hands a list’s entries to a function as named
+arguments, so a file read with <code><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">jsonlite::read_json()</a></code> is a
+whole browser. The <a href="https://github.com/GMOD/JBrowseR/tree/main/example_apps/load_config_json" class="external-link"><code>load_config_json</code></a>
+example app keeps its assembly in one:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/config.json"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">JBrowseR</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"config.json"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="https://rdrr.io/r/utils/modifyList.html" class="external-link">modifyList()</a></code> overrides a field the file holds:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">opts</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"config.json"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">JBrowseR</span>, <span class="fu"><a href="https://rdrr.io/r/utils/modifyList.html" class="external-link">modifyList</a></span><span class="op">(</span><span class="va">opts</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>location <span class="op">=</span> <span class="st">"10:29,838,737..29,838,819"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><code>read_json()</code> keeps JSON arrays as lists, so a one-element
+<code>assemblyNames</code> stays an array on the way back out.</p>
 </div>
 <div class="section level2">
 <h2 id="from-an-r-list">From an R list<a class="anchor" aria-label="anchor" href="#from-an-r-list"></a>
 </h2>
-<p>Because htmlwidgets serializes R lists to JSON, you can also assemble
-the config inline. Mix in the declarative helpers wherever they are
-convenient — they return plain lists.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<p>The same object written inline:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">opts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  assembly <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"hg19"</span>,</span>
 <span>    uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz"</span>,</span>
@@ -153,27 +166,14 @@ convenient — they return plain lists.</p>
 <span>  <span class="op">)</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    uri <span class="op">=</span></span>
-<span>      <span class="st">"https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz"</span>,</span>
+<span>      uri <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz"</span>,</span>
 <span>      name <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  defaultSession <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    name <span class="op">=</span> <span class="st">"My session"</span>,</span>
-<span>    view <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      type <span class="op">=</span> <span class="st">"LinearGenomeView"</span>,</span>
-<span>      tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        type <span class="op">=</span> <span class="st">"FeatureTrack"</span>,</span>
-<span>        configuration <span class="op">=</span> <span class="st">"NCBI RefSeq Genes"</span></span>
-<span>      <span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
+<span>  location <span class="op">=</span> <span class="st">"10:29,838,737..29,838,819"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span>config <span class="op">=</span> <span class="va">cfg</span>, location <span class="op">=</span> <span class="st">"10:29,838,737..29,838,819"</span><span class="op">)</span></span></code></pre></div>
-<p><code>location</code> still applies alongside a <code>config</code>,
-unless the config’s <code>defaultSession</code> already positions the
-view.</p>
+<span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">JBrowseR</span>, <span class="va">opts</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>
 

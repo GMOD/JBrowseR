@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
 
 
       </header><link href="live-browser_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
-<script src="live-browser_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="live-browser_files/JBrowseR-binding-0.11.0/JBrowseR.js"></script><div class="row">
+<script src="live-browser_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="live-browser_files/JBrowseR-binding-0.13.0/JBrowseR.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Live embedded browsers</h1>
@@ -114,8 +114,8 @@
 <p>Every browser on this page is a <strong>live, interactive JBrowse
 2</strong> — pan, zoom, and click features directly in the page. This
 article is part of the website only (it is not a package vignette), so
-it can embed the full widget; the <a href="../JBrowseR.html">Introduction</a> uses screenshots to stay within
-CRAN’s size limits.</p>
+it can embed the full widget; the <a href="../JBrowseR.html">Introduction</a> uses screenshots to keep the
+package small.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gmod.github.io/JBrowseR/">JBrowseR</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
@@ -127,7 +127,7 @@ cytobands, and gene-name search for free. Here
 index.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    uri <span class="op">=</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
@@ -150,7 +150,7 @@ it after the file), and a bare data-file URL in <code>tracks</code> is
 inferred into a track — here an alignments track from a BAM.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"https://jbrowse.org/genomes/volvox/volvox.fa"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"https://jbrowse.org/genomes/volvox/volvox.fa"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"https://jbrowse.org/genomes/volvox/volvox.bam"</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"ctgA:1..5,000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -173,12 +173,55 @@ inferred into a track — here an alignments track from a BAM.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg38"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/track_data_frame.html">track_data_frame</a></span><span class="op">(</span><span class="va">peaks</span>, <span class="st">"R_peaks"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"17:43,000,000..43,125,000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="JBrowseR html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:700px;height:432.632880098888px;"></div>
 <script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"assembly":"hg38","tracks":[{"type":"QuantitativeTrack","trackId":"R_peaks","name":"R_peaks","adapter":{"type":"FromConfigAdapter","features":[{"refName":"17","start":43000000,"end":43004000,"name":"peak1","score":13,"uniqueId":"R_peaks-1","type":""},{"refName":"17","start":43012000,"end":43016000,"name":"peak2","score":84,"uniqueId":"R_peaks-2","type":""},{"refName":"17","start":43024000,"end":43028000,"name":"peak3","score":62,"uniqueId":"R_peaks-3","type":""},{"refName":"17","start":43036000,"end":43040000,"name":"peak4","score":20,"uniqueId":"R_peaks-4","type":""},{"refName":"17","start":43048000,"end":43052000,"name":"peak5","score":6,"uniqueId":"R_peaks-5","type":""},{"refName":"17","start":43060000,"end":43064000,"name":"peak6","score":49,"uniqueId":"R_peaks-6","type":""},{"refName":"17","start":43072000,"end":43076000,"name":"peak7","score":52,"uniqueId":"R_peaks-7","type":""},{"refName":"17","start":43084000,"end":43088000,"name":"peak8","score":33,"uniqueId":"R_peaks-8","type":""},{"refName":"17","start":43096000,"end":43100000,"name":"peak9","score":75,"uniqueId":"R_peaks-9","type":""},{"refName":"17","start":43108000,"end":43112000,"name":"peak10","score":78,"uniqueId":"R_peaks-10","type":""},{"refName":"17","start":43120000,"end":43124000,"name":"peak11","score":88,"uniqueId":"R_peaks-11","type":""}]}}],"location":"17:43,000,000..43,125,000"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="section level2">
+<h2 id="a-file-from-this-r-session-with-no-server">A file from this R session, with no server<a class="anchor" aria-label="anchor" href="#a-file-from-this-r-session-with-no-server"></a>
+</h2>
+<p><code><a href="../reference/track_data_frame.html">track_data_frame()</a></code> above puts every feature in the page
+as JSON, which stops scaling somewhere past a few thousand of them.
+<code>local_files</code> is the other way to have no web server: write a
+real file and hand JBrowse its bytes. Each path registers under its
+basename, and that name is what a track’s <code>uri</code> refers to —
+so the <code>.bed</code> extension still picks the adapter, exactly as a
+URL’s would.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"peaks.bed"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span></span>
+<span>  <span class="va">peaks</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrom"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>, <span class="st">"name"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  <span class="va">bed</span>,</span>
+<span>  sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>, col.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"peaks.bed"</span>, name <span class="op">=</span> <span class="st">"Peaks from a file"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  local_files <span class="op">=</span> <span class="va">bed</span>,</span>
+<span>  location <span class="op">=</span> <span class="st">"17:43,000,000..43,125,000"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="JBrowseR html-widget html-fill-item" id="htmlwidget-febe03efa1a2d8d52a86" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"assembly":"hg38","tracks":[{"uri":"peaks.bed","name":"Peaks from a file"}],"location":"17:43,000,000..43,125,000","localFiles":{"peaks.bed":"MTcJNC4zZSswNwk0MzAwNDAwMAlwZWFrMQoxNwk0MzAxMjAwMAk0MzAxNjAwMAlwZWFrMgox\nNwk0MzAyNDAwMAk0MzAyODAwMAlwZWFrMwoxNwk0MzAzNjAwMAk0MzA0MDAwMAlwZWFrNAox\nNwk0MzA0ODAwMAk0MzA1MjAwMAlwZWFrNQoxNwk0MzA2MDAwMAk0MzA2NDAwMAlwZWFrNgox\nNwk0MzA3MjAwMAk0MzA3NjAwMAlwZWFrNwoxNwk0MzA4NDAwMAk0MzA4ODAwMAlwZWFrOAox\nNwk0MzA5NjAwMAk0MzEwMDAwMAlwZWFrOQoxNwk0MzEwODAwMAk0MzExMjAwMAlwZWFrMTAK\nMTcJNDMxMjAwMDAJNDMxMjQwMDAJcGVhazExCg=="}},"evals":[],"jsHooks":[]}</script><p>Nothing is served here: the bytes travel inside this page and JBrowse
+reads them out of a <code>Blob</code>. That also means an
+<strong>indexed</strong> file stays indexed, which is the reason to
+reach for this rather than inline the features — a bgzipped+tabixed
+table, or a BAM with its <code>.bai</code>, is read by byte range, so
+only the region on screen is ever touched. Put the index next to the
+data file and it comes along under the name the adapter derives:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"peaks.bed.gz"</span>, name <span class="op">=</span> <span class="st">"Peaks"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  local_files <span class="op">=</span> <span class="st">"~/analysis/peaks.bed.gz"</span> <span class="co"># picks up peaks.bed.gz.tbi beside it</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The bytes are base64-encoded into the document, so this is for a file
+on your own machine rather than for a reference genome;
+<code>local_files</code> warns past ~50 MB, and the <a href="../creating-urls.html">Hosting data</a> vignette covers what to do
+above that.</p>
 </div>
 <div class="section level2">
 <h2 id="a-statistical-plot-gwas-manhattan">A statistical plot (GWAS Manhattan)<a class="anchor" aria-label="anchor" href="#a-statistical-plot-gwas-manhattan"></a>
@@ -191,9 +234,9 @@ and the same linear view becomes a Manhattan plot: the
 The adapter’s <code>uri</code> shorthand finds the <code>.tbi</code>
 index next to the data, and JBrowse fills in <code>displayId</code>, so
 the config stays short.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
-<span>  <span class="st">"hg19"</span>,</span>
+<span>  assembly <span class="op">=</span> <span class="st">"hg19"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    type <span class="op">=</span> <span class="st">"GWASTrack"</span>,</span>
 <span>    trackId <span class="op">=</span> <span class="st">"gwas_track"</span>,</span>
@@ -207,8 +250,8 @@ the config stays short.</p>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
 <span>  location <span class="op">=</span> <span class="st">"2"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="JBrowseR html-widget html-fill-item" id="htmlwidget-febe03efa1a2d8d52a86" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"assembly":"hg19","tracks":[{"type":"GWASTrack","trackId":"gwas_track","name":"GWAS","adapter":{"type":"GWASAdapter","scoreColumn":"neg_log_pvalue","uri":"https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"},"displays":[{"type":"LinearManhattanDisplay","height":250}]}],"location":"2"},"evals":[],"jsHooks":[]}</script><p>For comparative genomics — synteny and dotplots across two assemblies
+<div class="JBrowseR html-widget html-fill-item" id="htmlwidget-1fb4450895fe099f74a1" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-1fb4450895fe099f74a1">{"x":{"assembly":"hg19","tracks":[{"type":"GWASTrack","trackId":"gwas_track","name":"GWAS","adapter":{"type":"GWASAdapter","scoreColumn":"neg_log_pvalue","uri":"https://jbrowse.org/genomes/hg19/gwas/summary_stats.txt.gz"},"displays":[{"type":"LinearManhattanDisplay","height":250}]}],"location":"2"},"evals":[],"jsHooks":[]}</script><p>For comparative genomics — synteny and dotplots across two assemblies
 — see the <a href="synteny.html">comparing genomes</a> article, which
 uses <code><a href="../reference/JBrowseRApp.html">JBrowseRApp()</a></code>.</p>
 </div>
