@@ -23,14 +23,6 @@ it mirrors) does not arise in htmlwidgets, because R holds no two-way binding:
 the payload flows one way and `input$<id>_location` is a read-back nothing feeds
 back automatically.
 
-What is still not built is a *narrower* door than a re-render — an
-`update_tracks()` to sit beside `update_location()`. Nothing needs it yet:
-re-rendering already reconciles, and the one thing `update_location()` buys over
-it is not re-running the render expression, which matters for navigation because
-it repeats and would otherwise loop through `input$<id>_location`. A track list
-changes on a click, not on a drag. The wire already carries the whole state, so
-if it is ever wanted it is a line on each side.
-
 ## Feature selection from JBrowseRApp
 
 **Done in 0.12.0.** `createApp` grew `SessionObservers` (`onFeatureSelect`,

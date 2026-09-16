@@ -5,7 +5,7 @@
 # example configs headless, and fails if any of them never paints a canvas. It
 # is what catches a config change that is syntactically fine and semantically
 # wrong, and a monorepo change that breaks rendering without breaking the build.
-# It also drives the `update_location()` wire, the live reconcile and the
+# It also drives the `update_jbrowse()` wire, the live reconcile and the
 # build-failure path end to end, which need the same browser, bundle and
 # network.
 #
@@ -99,7 +99,7 @@ jobs:
           PUPPETEER_FROM: ${{ github.workspace }}/jbrowse-components/package.json
         run: node tools/screenshot_examples.mjs
 
-      # Three seams a build cannot see: the update_location() wire (testthat has
+      # Seams a build cannot see: the update_jbrowse() wire (testthat has
       # what R sends, this has what the bundle does with it, and nothing types
       # between them), the live reconcile on a re-render, and onError routing a
       # failed build into the widget. Rides this job because it needs the same

@@ -5,8 +5,13 @@ is the "what just changed, what will bite you" file.
 
 ## The design rule now in force
 
-**R adds only what JSON cannot express itself.** Everything else is a plain list
-handed to JBrowse.
+**A widget's JS options are its API.** `JBrowseR(...)` sends
+`createLinearGenomeView`'s options verbatim and `JBrowseRApp(...)` sends
+`createApp`'s, under JBrowse's camelCase names. R names none of them: no
+per-key formals, no reshaping, so an option JBrowse adds needs nothing here. The
+formals after `...` are only what JSON cannot carry or htmlwidgets needs:
+`local_files` (R reads the bytes), `width`, `height`, `elementId`. Every option
+is named; an unnamed one errors.
 
 The package exports these names:
 
@@ -16,23 +21,20 @@ The package exports these names:
 | `JBrowseROutput`, `renderJBrowseR` | the Shiny bindings |
 | `JBrowseRAppOutput`, `renderJBrowseRApp` | the app's, which cannot be shared (htmlwidgets dispatches on the element's class) |
 | `track_data_frame` | a data frame is not JSON |
-| `update_location` | moving a rendered browser is not config |
+| `update_jbrowse` | changing a rendered browser without re-running its render |
 
-`configuration` is not a helper and does not count against that bar: it is
-JBrowse's root config block handed straight over, so `formatDetails`, `logoPath`
-and `shareURL` all arrived without an R argument each. `theme` survives as the
-shorthand for its one slot. Adding an argument that passes a config through is
-the shape to reach for; adding one that *shapes* config is not.
+0.13.0 cut `theme=`, `text_search=` and `config=`: each renamed or reshaped a
+JBrowse option (`configuration.theme`, `aggregateTextSearchAdapters`, a
+`do.call`). Before that, 0.11.0 cut the config builders (`assembly`, `track`,
+`theme`, `view`, ...). If you are about to add an argument or helper that shapes
+an option, put the list in the docs instead.
 
-`assembly`, `track`, `tracks`, `text_index`, `theme`, `view`, `linear_view`,
-`synteny_view`, `dotplot_view`, `synteny_track` and `json_config` were all
-deleted: each returned a list literal, and each had to grow whenever JBrowse
-gained a type. If you are about to add a helper that shapes config, don't — put
-the list in the docs instead. A view type, adapter or display JBrowse adds now
-needs **nothing** here.
+`update_jbrowse(outputId, ..., domain)` names its Shiny session `domain`
+because `session` is a JBrowseRApp option.
 
-Deleting `theme()` also stopped the package masking `ggplot2::theme`, which any
-Shiny app that plots was hitting.
+`tests/testthat/test-docs.R` checks every documented call's argument names
+against the upstream option interfaces, parsed out of the sibling
+jbrowse-components checkout, and skips that half when the checkout is absent.
 
 ## Traps
 
@@ -130,9 +132,14 @@ left `tsc --noEmit` red. `update` takes `{ tracks?, location?, localFiles? }`:
 each field you state is the complete wanted value, a field you leave out is left
 alone, and the engine survives.
 
-**A re-render is no longer a rebuild.** `renderValue` compares the payload
-against the last one and, when they differ only in those three fields, states
-them instead of destroying the browser. In Shiny that is every reactive read
+**A re-render is no longer a rebuild.** Each widget defines one `live()` in
+`srcjs/`, handed the changed option keys: JBrowseR states them through
+`update` when every key is `tracks`, `location` or `localFiles`; JBrowseRApp
+calls `setSession` when the only key is `session`; anything else answers false
+and the widget rebuilds. A `jbrowser-update` message from `update_jbrowse()`
+goes through the same `live()`, and on false rebuilds from the rendered options
+plus the changes. A live-applied message leaves the rendered options alone, so
+a later re-render that does not restate that key keeps what the message set. In Shiny that is every reactive read
 feeding the widget, so a track checkbox opens a track in place rather than
 refetching the lot and resetting the user's zoom.
 
@@ -152,31 +159,28 @@ Three things about how, each of which is a way to get it wrong:
   rebuilds — otherwise editing a file on disk and re-rendering would silently
   show the old bytes.
 
-`update_location()` is unchanged as an R function and still worth having: it is
-the direction that does not re-run the render expression, so reading
-`input$<id>_location` in an `observeEvent()` that calls it is not circular. Its
-wire method is now `update`, carrying the state; `setLocation` named a
-controller method that no longer exists.
+`update_jbrowse()` is worth having beside re-rendering because it does not
+re-run the render expression, so reading `input$<id>_location` in an
+`observeEvent()` that calls it is not circular.
 
 **A build failure needs `onError`.** `createLinearGenomeView` returns
 synchronously and resolves the assembly inside itself, so a genome that will not
 resolve never reaches the promise `defineWidget` awaits — `defineWidget` hands
 `build` a `fail` callback for exactly this. Without it the widget is a blank box
-and the reason is console-only. `createApp` is synchronous throughout and needs
-none, which is also why `JBrowseRApp()` has no live path: its controller's
-`setSession` replaces the whole tree rather than reconciling into it.
+and the reason is console-only. `createApp` is async and rejects its own promise,
+so it needs none.
 
 **The seam is untyped, so it is pinned from both ends.**
 `tests/testthat/test-update.R` has what R sends; `tools/verify_widget.mjs`
 drives the built bundle in a real browser and asserts what it does with it.
-Nothing type-checks `"jbrowser-call"` or the `{id, method, args}` shape across
+Nothing type-checks `"jbrowser-update"` or the `{id, options}` shape across
 the two languages, so a rename on one side is otherwise silent.
 
 That verifier also pins the live reconcile, and pins it with **two** assertions
 because neither alone is enough: a rebuild opens the new track too, so "the
 track appeared" passes either way. What discriminates is that the container is
 never emptied (`root.unmount()` is a rebuild's own signature) and that the view
-stays where a prior `update_location()` put it. Note what it does NOT assert:
+stays where a prior `update_jbrowse()` put it. Note what it does NOT assert:
 DOM node identity. React legitimately replaces the header's nodes when the track
 list changes, so an identity check reads as a rebuild that never happened.
 
@@ -189,7 +193,7 @@ with the browser looking perfectly fine.
 **The bundle in `inst/htmlwidgets/` is committed with this**, because nothing
 else ever rebuilds it (`bundle.yaml`'s header says why: CRAN and
 `remotes::install_github` have no JS toolchain). Committing R alone would ship
-an exported `update_location()` that silently does nothing for anyone who
+an exported `update_jbrowse()` that silently does nothing for anyone who
 installs from GitHub. It is built against the *local* monorepo checkout, so
 rebuild it once the monorepo commits it needs are pushed.
 
@@ -235,9 +239,7 @@ If this is ever worth revisiting, the lever is a worker entry narrower than
 
 ## Known broken / unresolved
 
-`JBrowseRApp()` has no proxy. Its controller has no location door at all, and
-the anywidget's `IDEAS.md` calls view identity the blocker — but that is now
-stale on both sides: `ManagedView` already carries an `id`, and `createApp`
+`JBrowseRApp()` has no per-view location door: `update_jbrowse()` reaches it only
+through `session`, or a rebuild. `ManagedView` carries an `id` and `createApp`
 defaults one per view (`viewsToSession`), so `setViewLocation(id, loc)` is
 well-defined whenever someone wants to add it upstream.
-
