@@ -57,9 +57,11 @@ which wins over it.}
 handed over as it stands — \code{theme}, \code{formatDetails}, \code{logoPath},
 \code{shareURL} and the rest, without an R argument each.}
 
-\item{config}{Escape hatch: a whole JBrowse config forming the payload base
-that explicit arguments override — a list, or the path, URL, or JSON text of
-a \code{config.json}.}
+\item{config}{These same options as one object, in JBrowse's camelCase
+(\code{assemblies}, \code{tracks}, \code{views}, \code{internetAccounts}, ...): a list, or the
+path, URL, or JSON text of a file holding them. Arguments override its
+fields. A JBrowse Web \code{config.json} supplies its assemblies, tracks and
+plugins this way, but not its \code{defaultSession}: pass \code{views}.}
 
 \item{width, height, elementId}{Standard htmlwidget sizing arguments.}
 }

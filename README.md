@@ -142,7 +142,7 @@ For the Shiny side, [**JBrowseR
 demos**](https://jbrowse.shinyapps.io/demos/) is every [example
 app](examples/README.md#shiny-apps) in one place — gene search, a data
 frame as a track, a slider that re-runs the analysis, SKBR3 structural
-variants, a whole `config.json`, and a plugin.
+variants, a browser kept in a JSON file, and a plugin.
 
 ## Getting started
 
@@ -156,9 +156,9 @@ See the vignettes:
 - [Hosting
   data](https://gmod.github.io/JBrowseR/articles/creating-urls.html) —
   CORS + range-request requirements, and viewing local files
-- [Full JSON
-  config](https://gmod.github.io/JBrowseR/articles/json-tutorial.html) —
-  the escape hatch for complete control
+- [A browser in a JSON
+  file](https://gmod.github.io/JBrowseR/articles/json-tutorial.html) —
+  the `config` argument
 
 ## Citation
 

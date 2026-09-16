@@ -28,8 +28,8 @@ one thing. Run any of them with `shiny::runApp("example_apps/<name>")`.
 | `interactive_peak_calling` | a slider that re-runs the analysis and repaints |
 | `skbr3_gene_fusions` | SKBR3 long-read structural variants |
 | `bookmarks_demo` | gene navigation, data-frame tracks, feature bookmarking |
-| `load_config_json` | a full JBrowse `config.json` |
-| `using_plugins` | a JBrowse 2 plugin loaded via a config |
+| `load_config_json` | `JBrowseR()`'s options kept in a JSON file |
+| `using_plugins` | a JBrowse 2 plugin and its `internetAccounts`, from a config |
 | `local_files` | a file from the user's own machine, with nothing hosting it |
 | `demos` | all of the above as tabs — what gets hosted |
 

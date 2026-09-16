@@ -46,9 +46,11 @@
 #'   \href{https://jbrowse.org/jb2/docs/config_guide/}{`configuration` block},
 #'   handed over as it stands — `theme`, `formatDetails`, `logoPath`,
 #'   `shareURL` and the rest, without an R argument each.
-#' @param config Escape hatch: a whole JBrowse config forming the payload base
-#'   that explicit arguments override — a list, or the path, URL, or JSON text of
-#'   a `config.json`.
+#' @param config These same options as one object, in JBrowse's camelCase
+#'   (`assemblies`, `tracks`, `views`, `internetAccounts`, ...): a list, or the
+#'   path, URL, or JSON text of a file holding them. Arguments override its
+#'   fields. A JBrowse Web `config.json` supplies its assemblies, tracks and
+#'   plugins this way, but not its `defaultSession`: pass `views`.
 #' @param width,height,elementId Standard htmlwidget sizing arguments.
 #'
 #' @return an htmlwidget of the JBrowse 2 app

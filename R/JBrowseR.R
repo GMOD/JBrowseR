@@ -50,9 +50,11 @@
 #'   `.fai`, `.gzi`) next to a path is picked up too, so an indexed file stays
 #'   indexed and JBrowse reads only the region on screen.
 #' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
-#' @param config Escape hatch: a whole JBrowse config forming the payload base
-#'   that explicit arguments override — a list, or the path, URL, or JSON text of
-#'   a `config.json`.
+#' @param config These same options as one object, in JBrowse's camelCase
+#'   (`assembly`, `tracks`, `aggregateTextSearchAdapters`, `internetAccounts`,
+#'   ...): a list, or the path, URL, or JSON text of a file holding them.
+#'   Arguments override its fields. A JBrowse Web `config.json` is not this
+#'   shape: this view reads neither its `assemblies` nor its `defaultSession`.
 #' @param width,height,elementId Standard htmlwidget sizing arguments.
 #'
 #' @return an htmlwidget of the JBrowse 2 linear genome view

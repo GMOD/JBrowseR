@@ -2,8 +2,9 @@ library(shiny)
 library(JBrowseR)
 library(bslib)
 
-# The escape hatch: hand JBrowseR a whole JBrowse 2 config.json for full control.
-# The same file works in the JBrowse web app and desktop.
+# config.json holds JBrowseR()'s own options as JSON (`assembly`, `tracks`, ...),
+# so the browser lives in a file rather than in R. It is not a JBrowse Web
+# config.json, which lists `assemblies` and opens a `defaultSession`.
 
 ui <- fluidPage(
   theme = bs_theme(version = 5),

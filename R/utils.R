@@ -44,15 +44,12 @@ with_theme <- function(configuration, theme) {
   }
 }
 
-# accept a single text_index() adapter or a list of them; the view always wants
-# the array (a single named adapter has $type, a list of adapters does not)
+# a single adapter has $type, a list of them does not
 as_adapter_list <- function(x) {
   if (is.null(x) || is.null(x$type)) x else list(x)
 }
 
-# config escape hatch, forming the payload base explicit arguments override: a
-# list passes through; a string is a path, a URL, or the JSON itself — no
-# sniffing here, fromJSON already distinguishes all three.
+# a string is a path, a URL, or the JSON itself; fromJSON tells them apart
 as_config <- function(config) {
   if (is.null(config)) {
     list()

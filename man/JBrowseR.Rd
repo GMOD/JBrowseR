@@ -63,9 +63,11 @@ indexed and JBrowse reads only the region on screen.}
 
 \item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
 
-\item{config}{Escape hatch: a whole JBrowse config forming the payload base
-that explicit arguments override — a list, or the path, URL, or JSON text of
-a \code{config.json}.}
+\item{config}{These same options as one object, in JBrowse's camelCase
+(\code{assembly}, \code{tracks}, \code{aggregateTextSearchAdapters}, \code{internetAccounts},
+...): a list, or the path, URL, or JSON text of a file holding them.
+Arguments override its fields. A JBrowse Web \code{config.json} is not this
+shape: this view reads neither its \code{assemblies} nor its \code{defaultSession}.}
 
 \item{width, height, elementId}{Standard htmlwidget sizing arguments.}
 }

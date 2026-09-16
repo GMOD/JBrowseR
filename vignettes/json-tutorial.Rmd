@@ -12,39 +12,44 @@ knitr::opts_chunk$set(eval = FALSE)
 ```
 
 The [introduction](JBrowseR.html) and
-[custom browser tutorial](custom-browser-tutorial.html) cover the declarative
-API, which is enough for most browsers. This tutorial covers the escape hatch:
-handing `JBrowseR()` a whole JBrowse 2 configuration through the `config`
-argument, for full control over every option.
+[custom browser tutorial](custom-browser-tutorial.html) pass JBrowse config to
+`JBrowseR()` one argument at a time. The `config` argument takes the same
+options as one JSON object instead, so a browser can live in a file that R,
+Python and JavaScript all read.
 
 ```{r setup}
 library(JBrowseR)
 ```
 
-## When to use it
+## What a config holds
 
-Reach for `config` when you need something the helpers don't expose — a saved
-`defaultSession`, per-track display options, internet accounts for authenticated
-data, or runtime plugins. A JBrowse `config` mirrors the format documented in
-the [JBrowse config guide](https://jbrowse.org/jb2/docs/config_guide) and may
-contain `assembly`, `tracks`, `defaultSession`, `aggregateTextSearchAdapters`,
-`theme`, and `plugins`.
+`config` is `JBrowseR()`'s options in the camelCase JBrowse spells them:
+`assembly`, `tracks`, `location`, `session`, `aggregateTextSearchAdapters`,
+`configuration`, `plugins`, and `internetAccounts`, the one with no R argument
+of its own, for authenticated data. Arguments passed beside `config` override
+the fields it holds.
+
+It is not a JBrowse Web `config.json`. That file lists `assemblies` in the
+plural, opens a `defaultSession`, and names data relative to its own URL, and
+`JBrowseR()` reads none of the three. To open a genome JBrowse hosts, name its
+hub instead — `JBrowseR("hg19")` fetches `https://jbrowse.org/ucsc/hg19/config.json`
+and resolves its paths.
 
 ## From a config file
 
-`config` takes the path or URL of a `config.json` and reads it for you (JSON
-text works too). A config file is portable — the same file works in the JBrowse
-web app and desktop.
+`config` takes the path or URL of a JSON file and reads it for you (JSON text
+works too). The
+[`load_config_json`](https://github.com/GMOD/JBrowseR/tree/main/example_apps/load_config_json)
+example app keeps its assembly in one:
 
 ```{r}
-JBrowseR(config = "https://jbrowse.org/genomes/hg19/config.json")
+JBrowseR(config = "config.json", location = "10:29,838,737..29,838,819")
 ```
 
 ## From an R list
 
-Because htmlwidgets serializes R lists to JSON, you can also assemble the config
-inline. Mix in the declarative helpers wherever they are convenient — they
-return plain lists.
+Because htmlwidgets serializes R lists to JSON, the same object can be written
+inline:
 
 ```{r}
 cfg <- list(
@@ -55,25 +60,12 @@ cfg <- list(
   ),
   tracks = list(
     list(
-    uri =
-      "https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
+      uri = "https://jbrowse.org/genomes/hg19/GRCh37_latest_genomic.sort.gff.gz",
       name = "NCBI RefSeq Genes"
     )
   ),
-  defaultSession = list(
-    name = "My session",
-    view = list(
-      type = "LinearGenomeView",
-      tracks = list(list(
-        type = "FeatureTrack",
-        configuration = "NCBI RefSeq Genes"
-      ))
-    )
-  )
+  location = "10:29,838,737..29,838,819"
 )
 
-JBrowseR(config = cfg, location = "10:29,838,737..29,838,819")
+JBrowseR(config = cfg)
 ```
-
-`location` still applies alongside a `config`, unless the config's
-`defaultSession` already positions the view.

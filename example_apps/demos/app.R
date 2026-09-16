@@ -98,16 +98,16 @@ ui <- page_navbar(
   nav_panel(
     "config.json",
     p(
-      "The escape hatch: a whole JBrowse 2 config, the same file the web app",
-      " and desktop read."
+      "JBrowseR()'s options kept in a JSON file rather than in R: ",
+      code("config = \"config.json\"")
     ),
     JBrowseROutput("config")
   ),
   nav_panel(
     "Plugins",
     p(
-      "Plugins are declared in a config, so ", code("config ="),
-      " is how a JBrowse 2 plugin gets loaded — here ModifyHTTPHeaders."
+      "A config that loads the ModifyHTTPHeaders plugin and sets the ",
+      code("internetAccounts"), " it reads, which have no R argument."
     ),
     JBrowseROutput("plugins")
   )
