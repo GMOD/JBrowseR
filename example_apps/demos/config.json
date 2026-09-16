@@ -1,4 +1,5 @@
 {
+  "location": "10:29,838,737..29,838,819",
   "assembly": {
     "name": "hg19",
     "aliases": ["GRCh37"],

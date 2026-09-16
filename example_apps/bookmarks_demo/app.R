@@ -36,9 +36,9 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  observeEvent(input$cyp, update_location("browserOutput", "CYP2C19"))
-  observeEvent(input$tp53, update_location("browserOutput", "TP53"))
-  observeEvent(input$brca2, update_location("browserOutput", "BRCA2"))
+  observeEvent(input$cyp, update_jbrowse("browserOutput", location = "CYP2C19"))
+  observeEvent(input$tp53, update_jbrowse("browserOutput", location = "TP53"))
+  observeEvent(input$brca2, update_jbrowse("browserOutput", location = "BRCA2"))
 
   genes <- list(
     uri =
@@ -70,7 +70,7 @@ server <- function(input, output, session) {
   # where the user was rather than back at the start, and isolating it keeps
   # this from re-running every time they pan.
   output$browserOutput <- renderJBrowseR(JBrowseR(
-    "hg38",
+    assembly = "hg38",
     tracks = c(list(genes, variants), extra()),
     location = isolate(input$browserOutput_location) %||% "CYP2C19"
   ))
@@ -90,7 +90,7 @@ server <- function(input, output, session) {
     row <- input$bookmarks_rows_selected
     if (length(row)) {
       b <- bookmarks()[row, ]
-      update_location("browserOutput", paste0(b$chrom, ":", b$start, "..", b$end))
+      update_jbrowse("browserOutput", location = paste0(b$chrom, ":", b$start, "..", b$end))
     }
   })
   observeEvent(input$delete, {

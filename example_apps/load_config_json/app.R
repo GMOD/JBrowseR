@@ -2,7 +2,7 @@ library(shiny)
 library(JBrowseR)
 library(bslib)
 
-# config.json holds JBrowseR()'s own options as JSON (`assembly`, `tracks`, ...),
+# config.json holds JBrowseR()'s options (`assembly`, `tracks`, `location`, ...),
 # so the browser lives in a file rather than in R. It is not a JBrowse Web
 # config.json, which lists `assemblies` and opens a `defaultSession`.
 
@@ -13,10 +13,9 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  output$widgetOutput <- renderJBrowseR(JBrowseR(
-    config = "./config.json",
-    location = "10:29,838,737..29,838,819"
-  ))
+  output$widgetOutput <- renderJBrowseR(
+    do.call(JBrowseR, jsonlite::read_json("config.json"))
+  )
 }
 
 shinyApp(ui, server)

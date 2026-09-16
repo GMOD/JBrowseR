@@ -13,7 +13,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   output$widgetOutput <- renderJBrowseR(JBrowseR(
-    "hg38",
+    assembly = "hg38",
     tracks = list(list(
     uri =
       "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",

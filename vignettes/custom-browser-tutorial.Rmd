@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-When your genome is one of the hosted hubs, `JBrowseR("hg38")` is all you need.
+When your genome is one of the hosted hubs, `JBrowseR(assembly = "hg38")` is all you need.
 This tutorial covers the other case: building a browser for a genome you host
 yourself, with your own tracks, gene-name search, and theme.
 
@@ -54,8 +54,8 @@ my_tracks <- list(
 ## Enable gene-name search
 
 Hub assemblies include search; for a custom assembly, point at your own Trix
-index files with a Trix adapter and pass it as `text_search`. Now `location` can
-be a gene name.
+index files with a Trix adapter and pass it in `aggregateTextSearchAdapters`.
+Now `location` can be a gene name.
 
 ```{r}
 hg19_search <- list(
@@ -74,8 +74,8 @@ hg19_search <- list(
 JBrowseR(
   assembly = hg19,
   tracks = my_tracks,
-  text_search = hg19_search,
-  theme = list(palette = list(primary = list(main = "#311b92"))),
+  aggregateTextSearchAdapters = list(hg19_search),
+  configuration = list(theme = list(palette = list(primary = list(main = "#311b92")))),
   location = "MYC"
 )
 ```
@@ -120,13 +120,12 @@ observeEvent(input$browser_selected_feature, {
 })
 ```
 
-To move the browser from R, send it a command rather than re-rendering it. A
-reactive `location` does navigate the browser in place, but it re-runs the
-render expression, and one fed from `input$browser_location` loops.
-`update_location()` moves the browser without re-rendering it.
+To move the browser from R without re-running the render expression, send it
+the changed options with `update_jbrowse()`. A reactive `location` fed from
+`input$browser_location` would loop; an observer does not.
 
 ```{r}
 observeEvent(input$goto_myc, {
-  update_location("browser", "MYC")
+  update_jbrowse("browser", location = "MYC")
 })
 ```

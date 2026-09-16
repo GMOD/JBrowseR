@@ -1,6 +1,6 @@
 Package: JBrowseR
 Title: An R Interface to the JBrowse 2 Genome Browser
-Version: 0.12.0
+Version: 0.13.0
 Authors@R: 
     c(person(given = "Elliot",
              family = "Hershberg",
@@ -27,9 +27,9 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.1.0)
 Imports:
-    htmlwidgets,
-    jsonlite
+    htmlwidgets
 Suggests:
+    jsonlite,
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,

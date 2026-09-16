@@ -11,48 +11,56 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-The [introduction](JBrowseR.html) and
-[custom browser tutorial](custom-browser-tutorial.html) pass JBrowse config to
-`JBrowseR()` one argument at a time. The `config` argument takes the same
-options as one JSON object instead, so a browser can live in a file that R,
+`JBrowseR()` takes JBrowse's `createLinearGenomeView` options as named
+arguments, and `JBrowseRApp()` takes `createApp`'s, both under the camelCase
+names JBrowse gives them. A browser can therefore live in a JSON file that R,
 Python and JavaScript all read.
 
 ```{r setup}
 library(JBrowseR)
 ```
 
-## What a config holds
+## What the options hold
 
-`config` is `JBrowseR()`'s options in the camelCase JBrowse spells them:
-`assembly`, `tracks`, `location`, `session`, `aggregateTextSearchAdapters`,
-`configuration`, `plugins`, and `internetAccounts`, the one with no R argument
-of its own, for authenticated data. Arguments passed beside `config` override
-the fields it holds.
+`JBrowseR()`'s options are `assembly`, `tracks`, `location`, `session`,
+`aggregateTextSearchAdapters`, `internetAccounts`, `plugins` and
+`configuration`. The package passes them through unread, so an option JBrowse
+adds works here without a package update.
 
-It is not a JBrowse Web `config.json`. That file lists `assemblies` in the
-plural, opens a `defaultSession`, and names data relative to its own URL, and
-`JBrowseR()` reads none of the three. To open a genome JBrowse hosts, name its
-hub instead — `JBrowseR("hg19")` fetches `https://jbrowse.org/ucsc/hg19/config.json`
+A JBrowse Web `config.json` is not that shape: it lists `assemblies` in the
+plural and opens a `defaultSession`. Its `assemblies`, `tracks` and `plugins`
+are `JBrowseRApp()` options, though, and its `defaultSession.views` is
+`JBrowseRApp()`'s `views`. To open a genome JBrowse hosts, name its hub instead —
+`JBrowseR(assembly = "hg19")` fetches `https://jbrowse.org/ucsc/hg19/config.json`
 and resolves its paths.
 
-## From a config file
+## From a JSON file
 
-`config` takes the path or URL of a JSON file and reads it for you (JSON text
-works too). The
+`do.call()` hands a list's entries to a function as named arguments, so a file
+read with `jsonlite::read_json()` is a whole browser. The
 [`load_config_json`](https://github.com/GMOD/JBrowseR/tree/main/example_apps/load_config_json)
 example app keeps its assembly in one:
 
 ```{r}
-JBrowseR(config = "config.json", location = "10:29,838,737..29,838,819")
+do.call(JBrowseR, jsonlite::read_json("config.json"))
 ```
+
+`modifyList()` overrides a field the file holds:
+
+```{r}
+opts <- jsonlite::read_json("config.json")
+do.call(JBrowseR, modifyList(opts, list(location = "10:29,838,737..29,838,819")))
+```
+
+`read_json()` keeps JSON arrays as lists, so a one-element `assemblyNames`
+stays an array on the way back out.
 
 ## From an R list
 
-Because htmlwidgets serializes R lists to JSON, the same object can be written
-inline:
+The same object written inline:
 
 ```{r}
-cfg <- list(
+opts <- list(
   assembly = list(
     name = "hg19",
     uri = "https://jbrowse.org/genomes/hg19/fasta/hg19.fa.gz",
@@ -67,5 +75,5 @@ cfg <- list(
   location = "10:29,838,737..29,838,819"
 )
 
-JBrowseR(config = cfg)
+do.call(JBrowseR, opts)
 ```

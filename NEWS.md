@@ -1,4 +1,64 @@
-# JBrowseR (development version)
+# JBrowseR 0.13.0
+
+Install with `devtools::install_github("GMOD/JBrowseR")`.
+
+- **Breaking:** `JBrowseR()` and `JBrowseRApp()` take JBrowse's own options as
+  named arguments and pass them through unread: `createLinearGenomeView`'s for
+  `JBrowseR()` (`assembly`, `tracks`, `location`, `session`,
+  `aggregateTextSearchAdapters`, `internetAccounts`, `plugins`,
+  `configuration`) and `createApp`'s for `JBrowseRApp()` (`assemblies`,
+  `tracks`, `views`, `session`, `connections`, ...). The signatures are
+  `JBrowseR(..., local_files = NULL, width = NULL, height = NULL, elementId = NULL)`
+  and the same for `JBrowseRApp()`, so an option JBrowse adds works with no
+  package update. Every option is named; the genome is no longer positional.
+
+  ```r
+  # before
+  JBrowseR("hg38", location = "BRCA1")
+  # after
+  JBrowseR(assembly = "hg38", location = "BRCA1")
+  ```
+
+- **Breaking:** `theme =` and `text_search =` are gone. Both were renamings of
+  a JBrowse option.
+
+  ```r
+  # before
+  JBrowseR(assembly = hg19, text_search = search, theme = palette)
+  # after
+  JBrowseR(
+    assembly = hg19,
+    aggregateTextSearchAdapters = list(search),
+    configuration = list(theme = palette)
+  )
+  ```
+
+- **Breaking:** `config =` is gone. A JSON file of options is a `do.call()`:
+
+  ```r
+  # before
+  JBrowseR(config = "config.json", location = "BRCA1")
+  # after
+  do.call(JBrowseR, jsonlite::read_json("config.json"))
+  do.call(JBrowseR, modifyList(jsonlite::read_json("config.json"), list(location = "BRCA1")))
+  ```
+
+- **Breaking:** `update_location()` is now `update_jbrowse()`, which sends any
+  subset of the options to a rendered browser and works on `JBrowseRApp()` too.
+  `JBrowseR()` applies `tracks` and `location` in place and `JBrowseRApp()`
+  applies `session` in place; any other option rebuilds from the rendered
+  options plus the change.
+
+  ```r
+  # before
+  update_location("browser", "BRCA1")
+  # after
+  update_jbrowse("browser", location = "BRCA1")
+  update_jbrowse("app", session = saved)
+  ```
+
+- `jsonlite` moves from Imports to Suggests: the package no longer reads JSON
+  itself.
 
 - A `JBrowseRApp()` view is `list(type = , ...)` with its settings beside
   `type`, the same object a `config.json`'s `defaultSession.views` holds.
@@ -9,19 +69,14 @@
   close — and the user's zoom, track order, scroll position and feature
   selection survive. In Shiny that is every reactive read feeding
   `renderJBrowseR()`, so a track checkbox opens a track in place instead of
-  refetching everything. Changing the `assembly`, `session`, `plugins` or
-  `configuration` still builds a new browser, because that is what a browser is
-  built from.
+  refetching everything. A `JBrowseRApp()` re-render that changes only
+  `session` restores it in place. Any other changed option builds a new
+  browser.
 
 - `JBrowseR()` reports `input[[paste0(outputId, "_session")]]` as the user
   navigates and opens tracks, in the same shape `session =` takes and under the
   same name `JBrowseRApp()` already used. "Save this view" is storing that
   value; reopening it is passing it back.
-
-- New `configuration =` on both widgets: JBrowse's root
-  [configuration block](https://jbrowse.org/jb2/docs/config_guide/) handed
-  straight over, so `formatDetails`, `logoPath` and `shareURL` need no argument
-  each. `theme =` is now the shorthand for its `theme` slot.
 
 - A browser that fails to build — a genome name nothing answers for, a plugin
   that will not fetch — says so in the widget. It used to leave an empty box

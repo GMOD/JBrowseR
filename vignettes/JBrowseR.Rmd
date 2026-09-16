@@ -16,11 +16,12 @@ an htmlwidget. JBrowse 2 is a fast, GPU-accelerated genome browser; JBrowseR
 lets you drive it entirely from R and embed it in R Markdown documents, Shiny
 apps, or the interactive console.
 
-The API is *declarative*, and what you describe it with is JBrowse's own config:
-assemblies, tracks and sessions are the same
+The API is *declarative*, and what you describe it with is JBrowse's own
+options: `JBrowseR()` takes `createLinearGenomeView`'s options as named
+arguments, and assemblies, tracks and sessions are the same
 [JSON objects](https://jbrowse.org/jb2/docs/config_guide/) a `config.json`
-holds, written as R lists. There are no constructors to learn, so a track type
-or view type JBrowse gains needs nothing added to the package.
+holds, written as R lists. The package names none of them, so an option, track
+type or view type JBrowse gains needs nothing added here.
 
 ```{r setup}
 library(JBrowseR)
@@ -33,7 +34,7 @@ the assembly, reference-name aliases, cytobands, and gene-name search with no
 further setup:
 
 ```{r}
-JBrowseR("hg38", location = "BRCA1")
+JBrowseR(assembly = "hg38", location = "BRCA1")
 ```
 
 `location` accepts a region string like `"chr1:1-10000"` or, because the hub
@@ -48,7 +49,7 @@ usually all you need. `list()` gathers several together.
 
 ```{r demo-alignments}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(
     list(
     uri =
@@ -86,7 +87,7 @@ can be a list of URLs:
 
 ```{r}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(
     "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
     "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz"
@@ -105,15 +106,14 @@ list(uri = "https://example.com/reads.bam", index = "https://example.com/reads.b
 
 ## A gallery
 
-The figures below are screenshots, so this vignette stays within CRAN's size
-limits. Every one of them is also on the website as a
-[live, interactive browser](https://gmod.github.io/JBrowseR/articles/live-browser.html).
+The figures below are screenshots, so this vignette stays small. Every one of
+them is also on the website as a [live, interactive browser](https://gmod.github.io/JBrowseR/articles/live-browser.html).
 
 **Genes.** A gene annotation track over the hub assembly, navigated by name.
 
 ```{r demo-genes}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(
     uri =
     "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
@@ -129,7 +129,7 @@ JBrowseR(
 
 ```{r demo-variants}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(
     uri =
     "https://jbrowse.org/genomes/GRCh38/variants/ALL.wgs.shapeit2_integrated_snvindels_v2a.GRCh38.27022019.sites.vcf.gz",
@@ -145,7 +145,7 @@ JBrowseR(
 
 ```{r demo-conservation}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(
     uri =
     "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/phyloP100way/hg38.phyloP100way.bw",
@@ -165,7 +165,7 @@ holds — and let the `uri` shorthand find the `.tbi` index.
 
 ```{r demo-manhattan}
 JBrowseR(
-  "hg19",
+  assembly = "hg19",
   tracks = list(list(
     type = "GWASTrack",
     trackId = "gwas_track",
@@ -198,7 +198,7 @@ peaks <- data.frame(
 )
 
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(track_data_frame(peaks, "R_peaks")),
   location = "17:43,000,000..43,125,000"
 )
@@ -214,7 +214,7 @@ Sniffles track and the long reads carry it below.
 
 ```{r demo-skbr3}
 JBrowseR(
-  "hg19",
+  assembly = "hg19",
   tracks = list(
     list(
     uri =
@@ -239,7 +239,7 @@ many reads.
 
 ```{r demo-cancer-deletion}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(
     uri =
     "https://jbrowse.org/demos/cgiab/HG008-T_chr10_CUZD1_deletion.bam",
@@ -251,24 +251,25 @@ JBrowseR(
 
 ![HG008 tumor somatic deletion at CUZD1](../man/figures/demo-cancer-deletion.png)
 
-**A custom theme.** The `theme` config recolors the browser; it is the
+**A custom theme.** The `theme` slot of JBrowse's root `configuration` recolors
+the browser; it is the
 [MUI palette](https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme)
 JBrowse takes.
 
 ```{r demo-theme}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(
     uri =
     "https://jbrowse.org/genomes/GRCh38/ncbi_refseq/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.sorted.gff.gz",
     name = "NCBI RefSeq Genes"
   )),
-  theme = list(
+  configuration = list(theme = list(
     palette = list(
       primary = list(main = "#311b92"),
       secondary = list(main = "#0097a7")
     )
-  ),
+  )),
   location = "BRCA1"
 )
 ```
@@ -280,8 +281,7 @@ JBrowseR(
 - A genome that isn't on a hub? See the
   [custom browser tutorial](custom-browser-tutorial.html).
 - Files on your own machine? See [serving local data](creating-urls.html).
-- Keeping a browser in a JSON file? Pass it as
-  [`config`](json-tutorial.html).
+- Keeping a browser in a JSON file? See the [JSON tutorial](json-tutorial.html).
 - Embedding in Shiny? Use `JBrowseROutput()` and `renderJBrowseR()`, read the
   selected feature back with `input$<outputId>_selected_feature`, and navigate
-  with `update_location("<outputId>", loc)`.
+  with `update_jbrowse("<outputId>", location = loc)`.

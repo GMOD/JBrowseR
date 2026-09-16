@@ -22,7 +22,7 @@ gene-name search all load from the CORS-enabled hub at
 [jbrowse.org](https://jbrowse.org).
 
 ```{r}
-JBrowseR("hg38", location = "BRCA1")
+JBrowseR(assembly = "hg38", location = "BRCA1")
 ```
 
 For your own data you host the files yourself. On the JBrowse 2 team we use
@@ -75,7 +75,7 @@ document, and a track then refers to one by name exactly as it would a URL:
 
 ```{r}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(uri = "peaks.bed.gz", name = "Peaks")),
   local_files = "~/data/peaks.bed.gz",
   location = "chr1:1-10000"

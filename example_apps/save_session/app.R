@@ -4,13 +4,10 @@ library(bslib)
 
 # Save and reopen a layout. The app reports whatever the user built --
 # navigation, open tracks, added or rearranged views -- as
-# `input$<outputId>_session`, in the same shape `session =` takes. So "save"
-# is storing that value and "restore" is handing it back.
-#
-# Note the two are deliberately not the same reactive. `current` only ever
-# tracks the browser; `restored` only ever feeds it. Wiring the read-back
-# straight into renderJBrowseRApp() would rebuild the app every time the user
-# panned, throwing away the state it was meant to preserve.
+# `input$<outputId>_session`, in the shape the `session` option takes. Saving
+# stores that value; restoring sends it back with update_jbrowse(), which
+# restores it in the app on the page. Feeding the read-back into
+# renderJBrowseRApp() instead would restore on every pan.
 
 hg19 <- list(
   name = "hg19",
@@ -57,17 +54,11 @@ ui <- page_sidebar(
 
 server <- function(input, output, session) {
   saved <- reactiveVal(NULL)
-  # What renderJBrowseRApp reads: NULL opens `views`, a snapshot restores it.
-  # Carries a nonce because reactiveVal compares with identical() and will not
-  # invalidate on an unchanged value — without it, panning away and hitting
-  # Restore a second time would silently do nothing.
-  restored <- reactiveVal(NULL)
 
   output$browser <- renderJBrowseRApp(JBrowseRApp(
     assemblies = list(hg19),
     tracks = list(genes),
-    views = list(opening_view),
-    session = restored()$snapshot
+    views = list(opening_view)
   ))
 
   observeEvent(input$save, {
@@ -76,11 +67,12 @@ server <- function(input, output, session) {
 
   observeEvent(input$restore, {
     req(saved())
-    restored(list(snapshot = saved(), nonce = input$restore))
+    update_jbrowse("browser", session = saved())
   })
 
+  # `views` is not applied in place, so this rebuilds the app from its options
   observeEvent(input$reset, {
-    restored(NULL)
+    update_jbrowse("browser", views = list(opening_view))
   })
 
   output$saved_summary <- renderPrint({

@@ -41,7 +41,7 @@ server <- function(input, output, session) {
   output$browser <- renderJBrowseR({
     req(data_file())
     JBrowseR(
-      "hg38",
+      assembly = "hg38",
       tracks = list(list(uri = data_file(), name = data_file())),
       # `name` is what the track refers to; `datapath` is where Shiny staged it
       local_files = stats::setNames(input$files$datapath, input$files$name)

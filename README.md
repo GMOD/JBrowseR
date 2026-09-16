@@ -6,8 +6,6 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/GMOD/JBrowseR/workflows/R-CMD-check/badge.svg)](https://github.com/gmod/JBrowseR/actions)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/JBrowseR)](https://CRAN.R-project.org/package=JBrowseR)
 [![Open In
 Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GMOD/JBrowseR/blob/main/examples/JBrowseR_colab.ipynb)
 <!-- badges: end -->
@@ -19,35 +17,31 @@ GPU-accelerated JBrowse 2 linear genome view as an
 genome browser in an **R Markdown** document, a **Shiny** app, or
 straight from the **R console**.
 
-The API is declarative, and what you describe it with is JBrowse’s own
-config: assemblies, tracks and sessions are the same [JSON
-objects](https://jbrowse.org/jb2/docs/config_guide/) a `config.json`
-holds, written as R lists. There are no constructors to learn and
-nothing imperative to wire up — so what you write here is what the
-config file holds, and a track type or view type JBrowse gains needs
-nothing added to the package.
+The API is JBrowse’s own: `JBrowseR()` takes the options of JBrowse’s
+`createLinearGenomeView`, and `JBrowseRApp()` those of `createApp`, as
+named arguments under JBrowse’s names. Assemblies, tracks and sessions
+are the same [JSON objects](https://jbrowse.org/jb2/docs/config_guide/)
+a `config.json` holds, written as R lists, so an option, track type or
+view type JBrowse gains needs nothing added to the package.
 
 ``` r
 library(JBrowseR)
 
 # an entire human genome browser in one line — assembly, reference name
 # aliases, cytobands, and gene-name search all included
-JBrowseR("hg38", location = "BRCA1")
+JBrowseR(assembly = "hg38", location = "BRCA1")
+
+# a whole options object kept in JSON
+do.call(JBrowseR, jsonlite::read_json("options.json"))
 ```
 
 ## Installation
 
-Released version from [CRAN](https://CRAN.R-project.org):
+Install from [GitHub](https://github.com/GMOD/JBrowseR):
 
 ``` r
-install.packages("JBrowseR")
-```
-
-Development version from [GitHub](https://github.com/GMOD/JBrowseR):
-
-``` r
-# install.packages("remotes")
-remotes::install_github("GMOD/JBrowseR")
+# install.packages("devtools")
+devtools::install_github("GMOD/JBrowseR")
 ```
 
 ## Quick tour
@@ -57,7 +51,7 @@ its index files are inferred automatically.
 
 ``` r
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(
     list(
     uri =
@@ -84,7 +78,7 @@ peaks <- data.frame(
 )
 
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(track_data_frame(peaks, "R_peaks")),
   location = "17:43,000,000..43,125,000"
 )
@@ -99,7 +93,7 @@ only the region on screen is ever read:
 
 ``` r
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(uri = "peaks.bed.gz", name = "Peaks")),
   local_files = "~/data/peaks.bed.gz",
   location = "17:43,000,000..43,125,000"
@@ -126,9 +120,9 @@ Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.
 
 ## Try it live
 
-The figures above are screenshots so the package stays inside CRAN’s
-size budget, but the website hosts the same browsers as **real,
-interactive widgets** — pan, zoom, and click features in the page:
+The figures above are screenshots so the package stays small, but the
+website hosts the same browsers as **real, interactive widgets** — pan,
+zoom, and click features in the page:
 
 - [Live embedded
   browsers](https://gmod.github.io/JBrowseR/articles/live-browser.html)
@@ -158,7 +152,7 @@ See the vignettes:
   CORS + range-request requirements, and viewing local files
 - [A browser in a JSON
   file](https://gmod.github.io/JBrowseR/articles/json-tutorial.html) —
-  the `config` argument
+  options kept in JSON
 
 ## Citation
 

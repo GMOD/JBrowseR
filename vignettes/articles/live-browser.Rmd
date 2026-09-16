@@ -12,8 +12,7 @@ knitr::opts_chunk$set(
 Every browser on this page is a **live, interactive JBrowse 2** — pan, zoom, and
 click features directly in the page. This article is part of the website only
 (it is not a package vignette), so it can embed the full widget; the
-[Introduction](../JBrowseR.html) uses screenshots to stay within CRAN's size
-limits.
+[Introduction](../JBrowseR.html) uses screenshots to keep the package small.
 
 ```{r setup}
 library(JBrowseR)
@@ -27,7 +26,7 @@ hub's search index.
 
 ```{r hub}
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(
     uri =
     paste0(
@@ -49,7 +48,7 @@ track from a BAM.
 
 ```{r custom}
 JBrowseR(
-  "https://jbrowse.org/genomes/volvox/volvox.fa",
+  assembly = "https://jbrowse.org/genomes/volvox/volvox.fa",
   tracks = list("https://jbrowse.org/genomes/volvox/volvox.bam"),
   location = "ctgA:1..5,000"
 )
@@ -70,7 +69,7 @@ peaks <- data.frame(
 )
 
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(track_data_frame(peaks, "R_peaks")),
   location = "17:43,000,000..43,125,000"
 )
@@ -93,7 +92,7 @@ write.table(
 )
 
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(uri = "peaks.bed", name = "Peaks from a file")),
   local_files = bed,
   location = "17:43,000,000..43,125,000"
@@ -109,7 +108,7 @@ under the name the adapter derives:
 
 ```r
 JBrowseR(
-  "hg38",
+  assembly = "hg38",
   tracks = list(list(uri = "peaks.bed.gz", name = "Peaks")),
   local_files = "~/analysis/peaks.bed.gz" # picks up peaks.bed.gz.tbi beside it
 )
@@ -132,7 +131,7 @@ short.
 
 ```{r manhattan}
 JBrowseR(
-  "hg19",
+  assembly = "hg19",
   tracks = list(list(
     type = "GWASTrack",
     trackId = "gwas_track",

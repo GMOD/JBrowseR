@@ -99,7 +99,7 @@ ui <- page_navbar(
     "config.json",
     p(
       "JBrowseR()'s options kept in a JSON file rather than in R: ",
-      code("config = \"config.json\"")
+      code("do.call(JBrowseR, jsonlite::read_json(\"config.json\"))")
     ),
     JBrowseROutput("config")
   ),
@@ -107,7 +107,7 @@ ui <- page_navbar(
     "Plugins",
     p(
       "A config that loads the ModifyHTTPHeaders plugin and sets the ",
-      code("internetAccounts"), " it reads, which have no R argument."
+      code("internetAccounts"), " it reads."
     ),
     JBrowseROutput("plugins")
   )
@@ -127,7 +127,7 @@ server <- function(input, output, session) {
   })
 
   output$search <- renderJBrowseR(JBrowseR(
-    "hg38",
+    assembly = "hg38",
     tracks = list(list(uri = refseq_hg38, name = "NCBI RefSeq Genes")),
     location = "BRCA1"
   ))
@@ -139,7 +139,7 @@ server <- function(input, output, session) {
     name = c("feature1", "feature2")
   )
   output$dataframe <- renderJBrowseR(JBrowseR(
-    "hg19",
+    assembly = "hg19",
     tracks = list(track_data_frame(features, "my_features")),
     location = "2:1..101200"
   ))
@@ -151,7 +151,7 @@ server <- function(input, output, session) {
   peaks <- reactive(call_peaks(input$threshold))
   output$npeaks <- renderText(paste(nrow(peaks()), "peaks called"))
   output$peaks <- renderJBrowseR(JBrowseR(
-    "hg38",
+    assembly = "hg38",
     tracks = list(track_data_frame(peaks(), "called_peaks")),
     location = "17:43,000,000..43,125,000"
   ))
@@ -164,14 +164,13 @@ server <- function(input, output, session) {
     ))
   })
 
-  # The three buttons move the browser through its proxy rather than through a
-  # reactive location, so the long-read track is not refetched and whatever the
-  # user had zoomed or opened survives the jump.
-  observeEvent(input$klhdc2, update_location("sv", "14:50,230,000..50,255,000"))
-  observeEvent(input$tatdn1, update_location("sv", "8:125,490,000..125,560,000"))
-  observeEvent(input$erbb2, update_location("sv", "17:37,686,000..37,730,000"))
+  # The buttons move the rendered browser without re-running its render
+  # expression.
+  observeEvent(input$klhdc2, update_jbrowse("sv", location = "14:50,230,000..50,255,000"))
+  observeEvent(input$tatdn1, update_jbrowse("sv", location = "8:125,490,000..125,560,000"))
+  observeEvent(input$erbb2, update_jbrowse("sv", location = "17:37,686,000..37,730,000"))
   output$sv <- renderJBrowseR(JBrowseR(
-    "hg19",
+    assembly = "hg19",
     tracks = list(
       list(
     uri =
@@ -193,15 +192,13 @@ server <- function(input, output, session) {
     location = "17:37,686,000..37,730,000"
   ))
 
-  output$config <- renderJBrowseR(JBrowseR(
-    config = "./config.json",
-    location = "10:29,838,737..29,838,819"
-  ))
+  output$config <- renderJBrowseR(
+    do.call(JBrowseR, jsonlite::read_json("config.json"))
+  )
 
-  output$plugins <- renderJBrowseR(JBrowseR(
-    config = "./plugins_config.json",
-    location = "1:20,000,000-20,500,000"
-  ))
+  output$plugins <- renderJBrowseR(
+    do.call(JBrowseR, jsonlite::read_json("plugins_config.json"))
+  )
 }
 
 shinyApp(ui, server)

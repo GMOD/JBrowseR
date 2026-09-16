@@ -26,7 +26,7 @@ save_demo <- function(widget, file) {
 # a hosted genome hub: assembly, gene search, and a RefSeq gene track
 save_demo(
   JBrowseR(
-    "hg38",
+    assembly = "hg38",
     tracks = list(list(
     uri =
       paste0(
@@ -44,7 +44,7 @@ save_demo(
 # data-URL alignments track the view infers
 save_demo(
   JBrowseR(
-    "https://jbrowse.org/genomes/volvox/volvox.fa",
+    assembly = "https://jbrowse.org/genomes/volvox/volvox.fa",
     tracks = list("https://jbrowse.org/genomes/volvox/volvox.bam"),
     location = "ctgA:1..5,000"
   ),

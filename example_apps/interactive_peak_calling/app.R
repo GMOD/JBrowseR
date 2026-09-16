@@ -85,7 +85,7 @@ server <- function(input, output, session) {
   output$npeaks <- renderText(paste(nrow(peaks()), "peaks called"))
 
   output$browserOutput <- renderJBrowseR(JBrowseR(
-    "hg38",
+    assembly = "hg38",
     tracks = list(track_data_frame(peaks(), "called_peaks")),
     location = "17:43,000,000..43,125,000"
   ))
