@@ -121,8 +121,9 @@ observeEvent(input$browser_selected_feature, {
 ```
 
 To move the browser from R, send it a command rather than re-rendering it. A
-reactive `location` rebuilds the whole browser, which refetches its tracks and
-discards the user's zoom.
+reactive `location` does navigate the browser in place, but it re-runs the
+render expression, and one fed from `input$browser_location` loops.
+`update_location()` moves the browser without re-rendering it.
 
 ```{r}
 observeEvent(input$goto_myc, {
