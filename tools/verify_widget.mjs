@@ -1,9 +1,9 @@
 // End-to-end check of the seams between R and the built bundle, in a real
 // browser. Three of them, none reachable from testthat or tsc:
 //
-//   - the `update_location()` wire. `tests/testthat/test-update.R` pins what R
+//   - the `update_jbrowse()` wire. `tests/testthat/test-update.R` pins what R
 //     sends; this pins what the bundle does with it. The seam is a string
-//     ("jbrowser-call") and a plain object, so nothing typed crosses it and a
+//     ("jbrowser-update") and a plain object, so nothing typed crosses it and a
 //     rename on one side is silent on the other.
 //   - the live reconcile. A re-render that changes only `tracks` must reach the
 //     browser already on the page rather than build another, which is the whole
@@ -11,6 +11,7 @@
 //   - `onError`. createLinearGenomeView resolves the assembly inside itself, so
 //     a genome that will not resolve never reaches the promise the widget
 //     awaits — the failure has to be routed out or the user gets a blank box.
+//   - the app widget restores a changed `session` in place.
 //   - the app widget's hub merge. JBrowseRApp spreads resolveAssemblies' result
 //     over what R sent, and a hub brings a track catalog of its own, so a
 //     result that did not carry R's tracks replaced them with the hub's.
@@ -119,9 +120,9 @@ const errors = []
   errors.push(...pageErrors)
   try {
     const registered = await page.evaluate(
-      () => typeof window.__handlers['jbrowser-call'] === 'function',
+      () => typeof window.__handlers['jbrowser-update'] === 'function',
     )
-    check(registered, 'the bundle registers a jbrowser-call handler')
+    check(registered, 'the bundle registers a jbrowser-update handler')
 
     // Sent immediately after renderValue, while createLinearGenomeView is still
     // resolving. This is the race an `observe()` at app startup hits, and the
@@ -129,11 +130,7 @@ const errors = []
     // resolved controller would drop this call with the browser looking fine.
     await page.evaluate(
       (id, location) => {
-        window.__handlers['jbrowser-call']({
-          id,
-          method: 'update',
-          args: { location },
-        })
+        window.__handlers['jbrowser-update']({ id, options: { location } })
       },
       OUTPUT_ID,
       TARGET,
@@ -207,10 +204,9 @@ const errors = []
     // in a state nothing else on the page can diagnose.
     const unknownIdThrew = await page.evaluate(() => {
       try {
-        window.__handlers['jbrowser-call']({
+        window.__handlers['jbrowser-update']({
           id: 'not-a-widget',
-          method: 'update',
-          args: { location: '1:1-100' },
+          options: { location: '1:1-100' },
         })
         return false
       } catch {
@@ -280,6 +276,28 @@ const errors = []
       .then(() => true)
       .catch(() => false)
     check(shown, "the app widget opens R's own track beside the hub's catalog")
+
+    // A re-render that changes only `session` goes through setSession: the
+    // container stays, and the emptied session reports no views
+    await waitForReady(page)
+    const before = await page.evaluate(() => window.__unmounts)
+    await page.evaluate(id => {
+      const session = window.__inputs[`${id}_session`]
+      window.render({ ...window.__x, session: { ...session, views: [] } })
+    }, OUTPUT_ID)
+    const emptied = await page
+      .waitForFunction(
+        id => window.__inputs[`${id}_location`]?.length === 0,
+        { timeout: 30000 },
+        OUTPUT_ID,
+      )
+      .then(() => true)
+      .catch(() => false)
+    const after = await page.evaluate(() => window.__unmounts)
+    check(
+      emptied && after === before,
+      `a session-only re-render restores in place (${after - before} unmounts)`,
+    )
   } finally {
     await page.close()
   }
