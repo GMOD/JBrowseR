@@ -68,8 +68,33 @@ jbrowser_exports <- function() {
   sub("^export\\((.*)\\)$", "\\1", grep("^export\\(", ns, value = TRUE))
 }
 
-# problems in one document, which shares definitions across its chunks
-check_document <- function(chunks, known, exports) {
+interface_keys <- function(file, interface) {
+  lines <- readLines(file.path(repo, "..", "jbrowse-components", file), warn = FALSE)
+  start <- grep(paste0("^export interface ", interface, "\\b"), lines)
+  end <- start + grep("^}", lines[-seq_len(start)])[1]
+  sub("^  (\\w+)\\??:.*", "\\1", grep("^  \\w+\\??:", lines[start:end], value = TRUE))
+}
+
+# NULL where the sibling jbrowse-components checkout is absent, which skips the
+# argument half of the check
+upstream_option_keys <- function() {
+  lgv <- "products/jbrowse-react-linear-genome-view/src/createLinearGenomeView.ts"
+  app <- "products/jbrowse-react-app/src/JBrowse/JBrowse.tsx"
+  if (!file.exists(file.path(repo, "..", "jbrowse-components", lgv))) {
+    return(NULL)
+  }
+  keys <- list(
+    JBrowseR = c(
+      interface_keys(lgv, "LinearGenomeViewState"),
+      interface_keys(lgv, "CreateLinearGenomeViewOptions")
+    ),
+    JBrowseRApp = setdiff(interface_keys(app, "JBrowseProps"), c("ref", "headerButtons"))
+  )
+  keys$update_jbrowse <- unique(unlist(keys))
+  keys
+}
+
+check_document <- function(chunks, known, exports, option_keys) {
   parsed <- lapply(chunks, function(chunk) {
     pd <- utils::getParseData(parse(text = chunk$code, keep.source = TRUE))
     pd$where <- chunk$where
@@ -101,12 +126,14 @@ check_document <- function(chunks, known, exports) {
       }
       call <- pd[pd$id == pd$parent[pd$id == row$parent], ]
       args <- pd[pd$parent == call$id & pd$token == "SYMBOL_SUB", ]
-      if (fn %in% exports && (!length(pkg) || pkg == "JBrowseR")) {
-        formal <- names(formals(getExportedValue("JBrowseR", fn)))
-        if (!"..." %in% formal) {
-          for (j in which(!args$text %in% formal)) {
-            flag(args[j, ], paste0(fn, "() has no argument `", args$text[j], "`"))
-          }
+      if (fn %in% names(option_keys) && (!length(pkg) || pkg == "JBrowseR")) {
+        formal <- c(names(formals(getExportedValue("JBrowseR", fn))), option_keys[[fn]])
+        for (j in which(!args$text %in% formal)) {
+          flag(args[j, ], paste0(fn, "() has no option `", args$text[j], "`"))
+        }
+        positional <- sum(pd$parent == call$id & pd$token == "expr") - 1 - nrow(args)
+        if (positional > (fn == "update_jbrowse")) {
+          flag(row, paste0(fn, "() takes every option by name"))
         }
       }
       if (fn == "list" && all(c("type", "init") %in% args$text)) {
@@ -121,6 +148,16 @@ test_that("documented R calls only what the package and its dependencies export"
   skip_if_not(file.exists(file.path(repo, "README.Rmd")), "docs are not in a built package")
   known <- known_functions()
   exports <- jbrowser_exports()
-  problems <- unlist(lapply(unname(doc_chunks()), check_document, known = known, exports = exports))
+  option_keys <- upstream_option_keys()
+  problems <- unlist(lapply(unname(doc_chunks()), check_document,
+    known = known, exports = exports, option_keys = option_keys
+  ))
   expect(length(problems) == 0, paste(c("the docs have drifted:", problems), collapse = "\n"))
+})
+
+test_that("the upstream option interfaces still parse", {
+  keys <- upstream_option_keys()
+  skip_if(is.null(keys), "no sibling jbrowse-components checkout")
+  expect_true(all(c("assembly", "tracks", "location", "plugins") %in% keys$JBrowseR))
+  expect_true(all(c("assemblies", "views", "session", "configuration") %in% keys$JBrowseRApp))
 })

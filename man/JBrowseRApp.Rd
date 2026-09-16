@@ -5,89 +5,47 @@
 \title{Embed the full JBrowse 2 app (multiple views of any type)}
 \usage{
 JBrowseRApp(
-  assemblies = NULL,
-  tracks = NULL,
-  views = NULL,
-  session = NULL,
+  ...,
   local_files = NULL,
-  plugins = NULL,
-  theme = NULL,
-  configuration = NULL,
-  config = NULL,
   width = NULL,
   height = NULL,
   elementId = NULL
 )
 }
 \arguments{
-\item{assemblies}{A list of assemblies. Each entry is a config —
-\code{list(name = , uri = )} — or a shorthand string: a hub name (\code{"hg38"},
-\code{"GCF_..."}) or a sequence-file URL, the same shorthands \code{\link[=JBrowseR]{JBrowseR()}}
-accepts. A synteny/dotplot view needs two or more.}
+\item{...}{\code{createApp} options, each named.}
 
-\item{tracks}{A list of full track config lists. A synteny track spans two
-assemblies, so it names both in \code{assemblyNames} and in its adapter.}
-
-\item{views}{A list of view objects, \code{list(type = , ...)}.}
-
-\item{session}{A previously saved session to restore instead of \code{views} —
-the value a running app reported as
-\code{input[[paste0(outputId, "_session")]]}. Unlike \code{views}, which describes
-what to open, this carries the state the user built: navigation, open
-tracks, per-display settings, widgets. \code{views} still describes what
-File → New session returns to.}
-
-\item{local_files}{Files on this machine to open without a web server: a path,
-a vector of paths, or a list mixing paths with \code{raw} vectors of bytes you
-already hold. Each registers under its basename (or its list name), and a
-track then refers to that name as if it were a URL — see the "Hosting data"
-vignette. A conventional sibling index (\code{.tbi}, \code{.csi}, \code{.bai}, \code{.crai},
-\code{.fai}, \code{.gzi}) next to a path is picked up too, so an indexed file stays
-indexed and JBrowse reads only the region on screen.}
-
-\item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
-
-\item{theme}{A theme config, the
-\href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
-palette} JBrowse takes. Shorthand for \code{configuration}'s \code{theme} slot,
-which wins over it.}
-
-\item{configuration}{JBrowse's root
-\href{https://jbrowse.org/jb2/docs/config_guide/}{\code{configuration} block},
-handed over as it stands — \code{theme}, \code{formatDetails}, \code{logoPath},
-\code{shareURL} and the rest, without an R argument each.}
-
-\item{config}{These same options as one object, in JBrowse's camelCase
-(\code{assemblies}, \code{tracks}, \code{views}, \code{internetAccounts}, ...): a list, or the
-path, URL, or JSON text of a file holding them. Arguments override its
-fields. A JBrowse Web \code{config.json} supplies its assemblies, tracks and
-plugins this way, but not its \code{defaultSession}: pass \code{views}.}
+\item{local_files}{Files on this machine to open without a web server: a
+path, a vector of paths, or a list mixing paths with \code{raw} vectors. Each
+registers under its basename (or its list name), and a track refers to that
+name as if it were a URL. A sibling index (\code{.tbi}, \code{.csi}, \code{.bai}, \code{.crai},
+\code{.fai}, \code{.gzi}) next to a path comes along.}
 
 \item{width, height, elementId}{Standard htmlwidget sizing arguments.}
 }
 \value{
-an htmlwidget of the JBrowse 2 app
+an htmlwidget
 }
 \description{
-Where \code{\link[=JBrowseR]{JBrowseR()}} shows a single linear genome view, \code{JBrowseRApp()} drives
-the whole app engine, so \code{views} can mix a linear view, a synteny view, a
-dotplot, and more.
+Where \code{\link[=JBrowseR]{JBrowseR()}} shows one linear genome view, \code{JBrowseRApp()} runs the
+whole app, so \code{views} can mix a linear view, a synteny view, a dotplot, and
+more.
 }
 \details{
-Each \code{views} entry is a view object, \code{list(type = , ...)}, with every setting
-written directly beside \code{type} — the same object a \code{config.json}'s
-\code{defaultSession.views} holds, and the fields are that view's own
-\href{https://jbrowse.org/jb2/docs/models/}{state-model options}. There is no
-R constructor for it, so every view type JBrowse has — including one a
-runtime \code{plugins} entry registers — opens with nothing added to this package.
+Every named argument in \code{...} is an option of JBrowse's
+\href{https://jbrowse.org/jb2/docs/embedded_components/}{\code{createApp}}, sent
+verbatim under JBrowse's own camelCase name: \code{assemblies}, \code{tracks}, \code{views},
+\code{session}, \code{connections}, \code{internetAccounts}, \code{aggregateTextSearchAdapters},
+\code{configuration}, \code{plugins}, and whatever JBrowse adds next. A whole options
+object is \code{do.call(JBrowseRApp, jsonlite::read_json("options.json"))}.
 
-A comparative view's panels are \code{list(assembly = , loc = )}, one per side.
-Note that fields JBrowse reads as arrays need \code{list()}, since a length-1
-vector would serialize as a JSON scalar.
+A \code{views} entry is \code{list(type = , ...)} with the view's settings beside
+\code{type}, the object a \code{config.json}'s \code{defaultSession.views} holds. An
+\code{assemblies} entry may be a hub name or sequence-file URL, as
+\code{\link[=JBrowseR]{JBrowseR()}}'s \code{assembly} takes.
 }
 \examples{
 \dontrun{
-# assemblies also accept hub-name shorthands: assemblies = list("hg38", "mm39")
 JBrowseRApp(
   assemblies = list(
     list(name = "hg38", uri = hg38_fa),

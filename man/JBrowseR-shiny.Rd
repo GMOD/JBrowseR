@@ -13,16 +13,13 @@ renderJBrowseR(expr, env = parent.frame(), quoted = FALSE)
 \arguments{
 \item{outputId}{output variable to read from}
 
-\item{width}{Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.}
-
-\item{height}{Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.}
+\item{width, height}{a valid CSS unit, or a number coerced to pixels}
 
 \item{expr}{An expression that generates a JBrowseR}
 
 \item{env}{The environment in which to evaluate \code{expr}.}
 
-\item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
-is useful if you want to save an expression in a variable.}
+\item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})?}
 }
 \value{
 the Shiny UI bindings for a JBrowseR htmlwidget
@@ -30,45 +27,19 @@ the Shiny UI bindings for a JBrowseR htmlwidget
 the Shiny server bindings for a JBrowseR htmlwidget
 }
 \description{
-Output and render functions for using JBrowseR within Shiny
-applications and interactive Rmd documents.
+Output and render functions for \code{\link[=JBrowseR]{JBrowseR()}} in Shiny apps and interactive
+Rmd documents.
 }
 \details{
-Clicking a feature sets \code{input[[paste0(outputId, "_selected_feature")]]},
-which is namespaced per output and so is safe with several browsers on a
-page or inside a Shiny module.
+The widget reports three inputs, namespaced by output id:
+\code{input[[paste0(outputId, "_selected_feature")]]} is the clicked feature,
+\verb{_location} the visible region as the location box prints it (thousands
+separators included), and \verb{_session} the layout in the shape \verb{session =}
+takes. Each settles after a gesture rather than firing per frame.
 
-Panning or zooming sets \code{input[[paste0(outputId, "_location")]]} to the
-visible region, so the server can recompute for what the user is looking at.
-It settles after the gesture rather than firing per frame, and there is no
-global twin — use the namespaced id:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{output$browser <- renderJBrowseR(JBrowseR("hg38", location = "BRCA1"))
-output$region <- renderText(input$browser_location)
-}\if{html}{\out{</div>}}
-
-The value is the same string the location box displays, which means it is
-formatted for reading rather than for parsing: coordinates carry thousand
-separators (\code{"17:43,044,295..43,125,483"}), and a view showing several
-regions gives them space-separated. Strip the commas before doing arithmetic
-with it — \code{as.numeric(gsub(",", "", x))}. It feeds straight back into
-\verb{location =} unchanged, though (JBrowse parses what it prints).
-
-Note that reading it in a reactive that also feeds \code{renderJBrowseR()} builds
-a loop, whatever the render costs. Read it to drive \emph{other} outputs, and
-navigate with \code{\link[=update_location]{update_location()}}.
-
-Whatever the user does to the layout — navigating, opening tracks,
-rearranging them — is reported as
-\code{input[[paste0(outputId, "_session")]]}, in the same shape \verb{session =}
-takes. So "save this view" is storing that value and reopening it is passing
-it back, under the same input name \code{\link[=JBrowseRApp]{JBrowseRApp()}} uses.
-
-Re-rendering does not throw the browser away. A render whose payload differs
-only in \code{tracks}, \code{location} or \code{local_files} is reconciled into the browser
-already on the page: the tracks it names are opened and the ones it drops
-are closed, and the user's zoom, track order, scroll position and selection
-survive. Everything else — a different \code{assembly}, \code{session}, \code{plugins},
-\code{theme} or \code{config} — is what the browser is built from, so stating a new
-one builds a new browser.
+A re-render whose options differ only in \code{tracks}, \code{location} or
+\code{local_files} is applied to the browser on the page, keeping the user's zoom
+and track order; any other changed option builds a new browser. Reading
+\verb{_location} or \verb{_session} in the reactive that feeds \code{renderJBrowseR()} builds
+a loop: navigate from an observer with \code{\link[=update_jbrowse]{update_jbrowse()}} instead.
 }

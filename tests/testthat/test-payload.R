@@ -1,79 +1,35 @@
-# The widget constructors send createLinearGenomeView/createApp options verbatim
-# (camelCase); these check the payload built into the htmlwidget's `x`.
-
-test_that("JBrowseR builds a camelCase LinearGenomeView payload", {
+test_that("options reach the payload verbatim, under JBrowse's names", {
+  search <- list(type = "TrixTextSearchAdapter", textSearchAdapterId = "hg38-index")
   x <- JBrowseR(
-    "hg38",
+    assembly = "hg38",
     location = "BRCA1",
-    text_search = list(
-      type = "TrixTextSearchAdapter",
-      textSearchAdapterId = "hg38-index",
-      ixFilePath = list(uri = "a.ix"),
-      ixxFilePath = list(uri = "a.ixx"),
-      metaFilePath = list(uri = "meta.json"),
-      assemblyNames = list("hg38")
-    ),
-    theme = list(palette = list(primary = list(main = "#123456")))
+    aggregateTextSearchAdapters = list(search),
+    configuration = list(theme = list(palette = list(primary = list(main = "#123456")))),
+    someOptionJBrowseAddsLater = TRUE
   )$x
   expect_equal(x$assembly, "hg38")
   expect_equal(x$location, "BRCA1")
-  # a single search adapter is wrapped into the array the view wants
-  expect_equal(x$aggregateTextSearchAdapters[[1]]$type, "TrixTextSearchAdapter")
+  expect_equal(x$aggregateTextSearchAdapters, list(search))
   expect_equal(x$configuration$theme$palette$primary$main, "#123456")
-  # no legacy wire fields leak through (exact names: `config` would otherwise
-  # partial-match `configuration`)
-  expect_false(any(c("config", "textSearch", "theme") %in% names(x)))
+  expect_true(x$someOptionJBrowseAddsLater)
 })
 
-test_that("explicit args override a config base", {
-  x <- JBrowseR("hg38", config = list(assembly = "old", tracks = list("t")))$x
-  expect_equal(x$assembly, "hg38")
-  expect_equal(x$tracks, list("t"))
-})
-
-test_that("JBrowseRApp sends assemblies/tracks/views for createApp", {
-  x <- JBrowseRApp(
-    assemblies = list(list(name = "g", uri = "g.fa")),
-    views = list(list(type = "LinearGenomeView", assembly = "g"))
-  )$x
-  expect_length(x$assemblies, 1)
+test_that("a whole options object goes through do.call", {
+  path <- tempfile(fileext = ".json")
+  on.exit(unlink(path))
+  writeLines('{"assemblies": [{"name": "g"}], "views": [{"type": "LinearGenomeView", "assembly": "g"}]}', path)
+  x <- do.call(JBrowseRApp, jsonlite::read_json(path))$x
+  expect_equal(x$assemblies[[1]]$name, "g")
   expect_equal(x$views[[1]]$type, "LinearGenomeView")
 })
 
-test_that("both widgets require an assembly or a config", {
-  expect_error(JBrowseR(), "assembly")
-  expect_error(JBrowseRApp(), "assemblies")
+test_that("an unnamed option is an error", {
+  expect_error(JBrowseR("hg38"), "every option is named")
+  expect_error(JBrowseRApp(list("hg38")), "every option is named")
 })
 
-test_that("config reads a path, a URL, or inline JSON (all via jsonlite)", {
-  path <- tempfile(fileext = ".json")
-  on.exit(unlink(path))
-  writeLines('{"assembly": {"name": "from-file"}, "tracks": []}', path)
-  expect_equal(JBrowseR(config = path)$x$assembly$name, "from-file")
-  expect_equal(
-    JBrowseR(config = '{"assembly": {"name": "inline"}}')$x$assembly$name,
-    "inline"
-  )
-})
-
-test_that("configuration passes the root block through, with theme as one slot", {
-  x <- JBrowseR(
-    "hg38",
-    configuration = list(
-      logoPath = list(uri = "logo.svg"),
-      theme = list(palette = list(primary = list(main = "#000000")))
-    ),
-    theme = list(palette = list(primary = list(main = "#123456")))
-  )$x
-  # the block survives whole, and `theme` lands in it rather than replacing it
-  expect_equal(x$configuration$logoPath$uri, "logo.svg")
-  expect_equal(x$configuration$theme$palette$primary$main, "#123456")
-
-  # and it reaches the app widget under the same name
-  y <- JBrowseRApp(
-    assemblies = list("hg38"),
-    configuration = list(logoPath = list(uri = "logo.svg"))
-  )$x
-  expect_equal(y$configuration$logoPath$uri, "logo.svg")
-  expect_false("configuration" %in% names(JBrowseR("hg38")$x))
+test_that("NULL options are left off, and no options is an empty object", {
+  x <- JBrowseR(assembly = "hg38", session = NULL)$x
+  expect_equal(names(x), "assembly")
+  expect_equal(as.character(htmlwidgets:::toJSON2(JBrowseRApp()$x)), "{}")
 })

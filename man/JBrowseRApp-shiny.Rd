@@ -13,16 +13,13 @@ renderJBrowseRApp(expr, env = parent.frame(), quoted = FALSE)
 \arguments{
 \item{outputId}{output variable to read from}
 
-\item{width}{Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.}
-
-\item{height}{Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.}
+\item{width, height}{a valid CSS unit, or a number coerced to pixels}
 
 \item{expr}{An expression that generates a JBrowseRApp}
 
 \item{env}{The environment in which to evaluate \code{expr}.}
 
-\item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
-is useful if you want to save an expression in a variable.}
+\item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})?}
 }
 \value{
 the Shiny UI bindings for a JBrowseRApp htmlwidget
@@ -30,37 +27,13 @@ the Shiny UI bindings for a JBrowseRApp htmlwidget
 the Shiny server bindings for a JBrowseRApp htmlwidget
 }
 \description{
-Output and render functions for using \code{\link[=JBrowseRApp]{JBrowseRApp()}} within Shiny
-applications and interactive Rmd documents. These are separate from
-\code{\link[=JBrowseROutput]{JBrowseROutput()}} because the app is a separate widget with its own
-JavaScript bundle: htmlwidgets dispatches on the output element's class, so
-rendering a \code{JBrowseRApp()} into a \code{JBrowseROutput()} loads the single-view
-bundle and fails to build.
+Output and render functions for \code{\link[=JBrowseRApp]{JBrowseRApp()}}. The app is a separate
+widget with its own bundle, so it cannot render into a \code{\link[=JBrowseROutput]{JBrowseROutput()}}.
 }
 \details{
-Whatever the user does to the layout — navigating, opening tracks, adding or
-rearranging views — is reported as
-\code{input[[paste0(outputId, "_session")]]}, in the same shape \verb{session =}
-takes. So "save this layout" is storing that value, and reopening it is
-passing it back:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{output$app <- renderJBrowseRApp(JBrowseRApp(assemblies, views = saved()))
-observeEvent(input$save, \{ saved(input$app_session) \})
-}\if{html}{\out{</div>}}
-
-It rides a coarse signal — which views exist, what each has open, and where
-each is looking — so it settles after a gesture instead of firing per frame.
-Reading it in the reactive that feeds \code{renderJBrowseRApp()} builds a loop:
-store it on an event, don't wire it straight through.
-
-Two narrower read-backs sit beside it, under the same names
-\code{\link[=JBrowseROutput]{JBrowseROutput()}} uses. \code{input[[paste0(outputId, "_selected_feature")]]} is
-the feature the user last clicked, in any view.
-\code{input[[paste0(outputId, "_location")]]} is where the app is looking — a
-\emph{list}, one entry per open view, because this widget holds any number of
-them where \code{\link[=JBrowseR]{JBrowseR()}} holds one and reports a single string. A comparative
-view contributes a character vector, one per panel, since a synteny view has
-no single visible region. The entries are in view order, which changes when
-the user adds or closes a view, so read \verb{_session} instead when you need to
-know which view a region belongs to.
+The app reports \code{input[[paste0(outputId, "_session")]]} in the shape
+\verb{session =} takes, \verb{_selected_feature} for the clicked feature, and
+\verb{_location} as a list with one entry per open view. A re-render that changes
+only \code{session} restores it in the app on the page; any other changed option
+builds a new app.
 }

@@ -43,7 +43,7 @@ track_data_frame <- function(data, name, assembly_name = NULL, ...) {
     type = if ("score" %in% colnames(data)) "QuantitativeTrack" else "FeatureTrack",
     trackId = paste(c(assembly_name, name), collapse = "_"),
     name = name,
-    assemblyNames = as_json_array(assembly_name),
+    assemblyNames = if (!is.null(assembly_name)) as.list(assembly_name),
     adapter = list(type = "FromConfigAdapter", features = features)
   )
   utils::modifyList(drop_null(out), list(...))

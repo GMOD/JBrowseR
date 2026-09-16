@@ -1,141 +1,66 @@
 #' Embed a JBrowse 2 linear genome view
 #'
 #' Renders an interactive, GPU-accelerated JBrowse 2 linear genome view as an
-#' htmlwidget for use in R Markdown documents, Shiny apps, or the interactive R
-#' console.
+#' htmlwidget for R Markdown documents, Shiny apps, or the R console.
 #'
-#' The API is declarative, and the thing you describe it with is JBrowse's own
-#' config: assemblies, tracks and sessions are the same
-#' \href{https://jbrowse.org/jb2/docs/config_guide/}{JSON objects} a
-#' `config.json` holds, written as R lists. There are deliberately no
-#' constructors for them — what you write here is what the config file holds,
-#' and nothing in this package has to grow when JBrowse gains a track type, an
-#' adapter or a display. The one exception is [track_data_frame()], for the one
-#' thing config JSON cannot express: an R data frame.
+#' Every named argument in `...` is an option of JBrowse's
+#' \href{https://jbrowse.org/jb2/docs/embedded_components/}{`createLinearGenomeView`},
+#' sent verbatim under JBrowse's own camelCase name: `assembly`, `tracks`,
+#' `location`, `session`, `aggregateTextSearchAdapters`, `internetAccounts`,
+#' `plugins`, `configuration`, and whatever JBrowse adds next. This package
+#' names none of them, so a whole options object is
+#' `do.call(JBrowseR, jsonlite::read_json("options.json"))`.
 #'
-#' One R-specific trap: a length-1 vector serializes to a JSON scalar, so fields
-#' JBrowse reads as arrays (`assemblyNames`, `aliases`) are written with
-#' `list()` — `assemblyNames = list("hg38")`, not `"hg38"`.
+#' `assembly` takes a hub name (`"hg38"`, a GenArk accession), a sequence-file
+#' URL, or an assembly config. A `tracks` entry takes a bare data-file URL, a
+#' `list(uri = )`, a [track_data_frame()] result, or a full track config.
+#' `plugins` entries are `list(name = , url = )`.
 #'
-#' @param assembly A hub name understood by jbrowse.org (e.g. `"hg38"`, `"hg19"`,
-#'   or a GenArk accession like `"GCF_000001405.40"`), a sequence-file URL the
-#'   view builds an assembly from (`".../hg38.fa.gz"`, `.2bit`), or an assembly
-#'   config list — `list(name = , uri = )`, plus `aliases` or `refNameAliases`
-#'   when needed.
-#' @param tracks A list of track entries: a bare data-file URL, a
-#'   `list(uri = )` spec the view expands, a config from [track_data_frame()],
-#'   or a full track config. Entries missing `assemblyNames` are backfilled with
-#'   the assembly's name by the view.
-#' @param location A region string (`"chr1:1-1000"`) or, when the assembly hub
-#'   provides a gene-name search index, a gene name (`"BRCA1"`).
-#' @param session A saved session to open instead of `tracks` and `location` —
-#'   the value a running [JBrowseRApp()] reported as
-#'   `input[[paste0(outputId, "_session")]]`, or one you stored. It owns the
-#'   whole initial layout when given. Same argument name as [JBrowseRApp()]'s.
-#' @param text_search One or more aggregate text-search adapter configs (e.g. a
-#'   `TrixTextSearchAdapter`), enabling gene-name search.
-#' @param theme A theme config, the
-#'   \href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
-#'   palette} JBrowse takes: `list(palette = list(primary = list(main = )))`.
-#'   Shorthand for `configuration`'s `theme` slot, which wins over it.
-#' @param configuration JBrowse's root
-#'   \href{https://jbrowse.org/jb2/docs/config_guide/}{`configuration` block},
-#'   handed over as it stands — `theme`, `formatDetails`, `logoPath`,
-#'   `shareURL` and the rest, without an R argument each.
-#' @param local_files Files on this machine to open without a web server: a path,
-#'   a vector of paths, or a list mixing paths with `raw` vectors of bytes you
-#'   already hold. Each registers under its basename (or its list name), and a
-#'   track then refers to that name as if it were a URL — see the "Hosting data"
-#'   vignette. A conventional sibling index (`.tbi`, `.csi`, `.bai`, `.crai`,
-#'   `.fai`, `.gzi`) next to a path is picked up too, so an indexed file stays
-#'   indexed and JBrowse reads only the region on screen.
-#' @param plugins A list of JBrowse plugin specs (name + url) to load at runtime.
-#' @param config These same options as one object, in JBrowse's camelCase
-#'   (`assembly`, `tracks`, `aggregateTextSearchAdapters`, `internetAccounts`,
-#'   ...): a list, or the path, URL, or JSON text of a file holding them.
-#'   Arguments override its fields. A JBrowse Web `config.json` is not this
-#'   shape: this view reads neither its `assemblies` nor its `defaultSession`.
+#' A length-1 vector serializes to a JSON scalar, so fields JBrowse reads as
+#' arrays take `list()`: `assemblyNames = list("hg38")`.
+#'
+#' @param ... `createLinearGenomeView` options, each named.
+#' @param local_files Files on this machine to open without a web server: a
+#'   path, a vector of paths, or a list mixing paths with `raw` vectors. Each
+#'   registers under its basename (or its list name), and a track refers to that
+#'   name as if it were a URL. A sibling index (`.tbi`, `.csi`, `.bai`, `.crai`,
+#'   `.fai`, `.gzi`) next to a path comes along.
 #' @param width,height,elementId Standard htmlwidget sizing arguments.
 #'
-#' @return an htmlwidget of the JBrowse 2 linear genome view
+#' @return an htmlwidget
 #'
 #' @import htmlwidgets
 #' @export
 #'
 #' @examples
-#' # a whole human genome browser in one line (gene search included)
-#' JBrowseR("hg38", location = "BRCA1")
-JBrowseR <- function(assembly = NULL, tracks = NULL, location = NULL,
-                     session = NULL, text_search = NULL, theme = NULL,
-                     configuration = NULL, local_files = NULL, plugins = NULL,
-                     config = NULL, width = NULL, height = NULL,
+#' JBrowseR(assembly = "hg38", location = "BRCA1")
+JBrowseR <- function(..., local_files = NULL, width = NULL, height = NULL,
                      elementId = NULL) {
-  if (is.null(assembly) && is.null(config)) {
-    stop("provide an `assembly` (or a whole `config`)", call. = FALSE)
-  }
-  create_widget("JBrowseR", config, list(
-    assembly = assembly,
-    tracks = tracks,
-    location = location,
-    session = session,
-    aggregateTextSearchAdapters = as_adapter_list(text_search),
-    configuration = with_theme(configuration, theme),
-    localFiles = read_local_files(local_files),
-    plugins = plugins
-  ), width, height, elementId)
+  create_widget("JBrowseR", list(...), local_files, width, height, elementId)
 }
 
 #' Shiny bindings for JBrowseR
 #'
-#' Output and render functions for using JBrowseR within Shiny
-#' applications and interactive Rmd documents.
+#' Output and render functions for [JBrowseR()] in Shiny apps and interactive
+#' Rmd documents.
 #'
-#' Clicking a feature sets `input[[paste0(outputId, "_selected_feature")]]`,
-#' which is namespaced per output and so is safe with several browsers on a
-#' page or inside a Shiny module.
+#' The widget reports three inputs, namespaced by output id:
+#' `input[[paste0(outputId, "_selected_feature")]]` is the clicked feature,
+#' `_location` the visible region as the location box prints it (thousands
+#' separators included), and `_session` the layout in the shape `session =`
+#' takes. Each settles after a gesture rather than firing per frame.
 #'
-#' Panning or zooming sets `input[[paste0(outputId, "_location")]]` to the
-#' visible region, so the server can recompute for what the user is looking at.
-#' It settles after the gesture rather than firing per frame, and there is no
-#' global twin — use the namespaced id:
-#'
-#' ```r
-#' output$browser <- renderJBrowseR(JBrowseR("hg38", location = "BRCA1"))
-#' output$region <- renderText(input$browser_location)
-#' ```
-#'
-#' The value is the same string the location box displays, which means it is
-#' formatted for reading rather than for parsing: coordinates carry thousand
-#' separators (`"17:43,044,295..43,125,483"`), and a view showing several
-#' regions gives them space-separated. Strip the commas before doing arithmetic
-#' with it — `as.numeric(gsub(",", "", x))`. It feeds straight back into
-#' `location =` unchanged, though (JBrowse parses what it prints).
-#'
-#' Note that reading it in a reactive that also feeds `renderJBrowseR()` builds
-#' a loop, whatever the render costs. Read it to drive *other* outputs, and
-#' navigate with [update_location()].
-#'
-#' Whatever the user does to the layout — navigating, opening tracks,
-#' rearranging them — is reported as
-#' `input[[paste0(outputId, "_session")]]`, in the same shape `session =`
-#' takes. So "save this view" is storing that value and reopening it is passing
-#' it back, under the same input name [JBrowseRApp()] uses.
-#'
-#' Re-rendering does not throw the browser away. A render whose payload differs
-#' only in `tracks`, `location` or `local_files` is reconciled into the browser
-#' already on the page: the tracks it names are opened and the ones it drops
-#' are closed, and the user's zoom, track order, scroll position and selection
-#' survive. Everything else — a different `assembly`, `session`, `plugins`,
-#' `theme` or `config` — is what the browser is built from, so stating a new
-#' one builds a new browser.
+#' A re-render whose options differ only in `tracks`, `location` or
+#' `local_files` is applied to the browser on the page, keeping the user's zoom
+#' and track order; any other changed option builds a new browser. Reading
+#' `_location` or `_session` in the reactive that feeds `renderJBrowseR()` builds
+#' a loop: navigate from an observer with [update_jbrowse()] instead.
 #'
 #' @param outputId output variable to read from
-#' @param width Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
-#' @param height Must be a valid CSS unit or a number, which will be coerced to a string and have \code{'px'} appended.
+#' @param width,height a valid CSS unit, or a number coerced to pixels
 #' @param expr An expression that generates a JBrowseR
-#' @param env The environment in which to evaluate \code{expr}.
-#' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
-#'   is useful if you want to save an expression in a variable.
+#' @param env The environment in which to evaluate `expr`.
+#' @param quoted Is `expr` a quoted expression (with `quote()`)?
 #'
 #' @name JBrowseR-shiny
 #'
@@ -154,6 +79,6 @@ JBrowseROutput <- function(outputId, width = "100%", height = "400px") {
 renderJBrowseR <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
     expr <- substitute(expr)
-  } # force quoted
+  }
   htmlwidgets::shinyRenderWidget(expr, JBrowseROutput, env, quoted = TRUE)
 }

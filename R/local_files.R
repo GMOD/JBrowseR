@@ -1,24 +1,10 @@
-# Files on this machine, shipped into the browser as bytes rather than served
-# over HTTP. See the `local_files` argument of JBrowseR()/JBrowseRApp().
-#
-# The wire format is the one jsonlite already gives us: a `raw` vector
-# serializes to a base64 string, and htmlwidgets unboxes it, so the payload
-# carries `localFiles: { "<name>": "<base64>" }` with no encoding step here.
-# `srcjs/widget.ts` decodes it back to bytes.
+# jsonlite serializes a raw vector as base64, which srcjs/widget.ts decodes
 
-# Index files an adapter asks for by deriving the name from its data file's, so
-# registering one under `<name><suffix>` is what keeps an indexed file indexed.
 INDEX_SUFFIXES <- c(".tbi", ".csi", ".bai", ".crai", ".fai", ".gzi")
 
-# Warn before writing a document nobody can open. Base64 costs a third on top,
-# and the result is embedded in the HTML (or sent over Shiny's websocket), so
-# this is the size of the page rather than of a request the browser can stream.
+# the bytes ride base64-encoded inside the page, not as a streamable request
 SIZE_WARN_BYTES <- 50 * 1024^2
 
-# `x` is a path, a character vector of paths, or a list mixing paths with raw
-# vectors of bytes you already hold. Names override the registered name; without
-# one a path registers under its basename, which is what a track config then
-# refers to.
 read_local_files <- function(x) {
   if (is.null(x)) {
     return(NULL)
@@ -63,7 +49,6 @@ read_local_files <- function(x) {
   out
 }
 
-# one path, plus any conventional sibling index next to it
 read_local_file <- function(out, path, given) {
   if (!file.exists(path)) {
     stop("`local_files` file does not exist: ", path, call. = FALSE)
@@ -79,8 +64,6 @@ read_local_file <- function(out, path, given) {
   out
 }
 
-# Registering twice under one name is a mistake with no good reading — one of
-# the two files would silently never be seen — so it stops rather than picking.
 add_local_file <- function(out, name, bytes) {
   if (!is.null(out[[name]])) {
     stop("`local_files` has two entries named \"", name, "\"", call. = FALSE)

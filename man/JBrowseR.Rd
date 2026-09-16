@@ -5,95 +5,48 @@
 \title{Embed a JBrowse 2 linear genome view}
 \usage{
 JBrowseR(
-  assembly = NULL,
-  tracks = NULL,
-  location = NULL,
-  session = NULL,
-  text_search = NULL,
-  theme = NULL,
-  configuration = NULL,
+  ...,
   local_files = NULL,
-  plugins = NULL,
-  config = NULL,
   width = NULL,
   height = NULL,
   elementId = NULL
 )
 }
 \arguments{
-\item{assembly}{A hub name understood by jbrowse.org (e.g. \code{"hg38"}, \code{"hg19"},
-or a GenArk accession like \code{"GCF_000001405.40"}), a sequence-file URL the
-view builds an assembly from (\code{".../hg38.fa.gz"}, \verb{.2bit}), or an assembly
-config list — \code{list(name = , uri = )}, plus \code{aliases} or \code{refNameAliases}
-when needed.}
+\item{...}{\code{createLinearGenomeView} options, each named.}
 
-\item{tracks}{A list of track entries: a bare data-file URL, a
-\code{list(uri = )} spec the view expands, a config from \code{\link[=track_data_frame]{track_data_frame()}},
-or a full track config. Entries missing \code{assemblyNames} are backfilled with
-the assembly's name by the view.}
-
-\item{location}{A region string (\code{"chr1:1-1000"}) or, when the assembly hub
-provides a gene-name search index, a gene name (\code{"BRCA1"}).}
-
-\item{session}{A saved session to open instead of \code{tracks} and \code{location} —
-the value a running \code{\link[=JBrowseRApp]{JBrowseRApp()}} reported as
-\code{input[[paste0(outputId, "_session")]]}, or one you stored. It owns the
-whole initial layout when given. Same argument name as \code{\link[=JBrowseRApp]{JBrowseRApp()}}'s.}
-
-\item{text_search}{One or more aggregate text-search adapter configs (e.g. a
-\code{TrixTextSearchAdapter}), enabling gene-name search.}
-
-\item{theme}{A theme config, the
-\href{https://jbrowse.org/jb2/docs/config_guide/#configuring-the-theme}{MUI
-palette} JBrowse takes: \code{list(palette = list(primary = list(main = )))}.
-Shorthand for \code{configuration}'s \code{theme} slot, which wins over it.}
-
-\item{configuration}{JBrowse's root
-\href{https://jbrowse.org/jb2/docs/config_guide/}{\code{configuration} block},
-handed over as it stands — \code{theme}, \code{formatDetails}, \code{logoPath},
-\code{shareURL} and the rest, without an R argument each.}
-
-\item{local_files}{Files on this machine to open without a web server: a path,
-a vector of paths, or a list mixing paths with \code{raw} vectors of bytes you
-already hold. Each registers under its basename (or its list name), and a
-track then refers to that name as if it were a URL — see the "Hosting data"
-vignette. A conventional sibling index (\code{.tbi}, \code{.csi}, \code{.bai}, \code{.crai},
-\code{.fai}, \code{.gzi}) next to a path is picked up too, so an indexed file stays
-indexed and JBrowse reads only the region on screen.}
-
-\item{plugins}{A list of JBrowse plugin specs (name + url) to load at runtime.}
-
-\item{config}{These same options as one object, in JBrowse's camelCase
-(\code{assembly}, \code{tracks}, \code{aggregateTextSearchAdapters}, \code{internetAccounts},
-...): a list, or the path, URL, or JSON text of a file holding them.
-Arguments override its fields. A JBrowse Web \code{config.json} is not this
-shape: this view reads neither its \code{assemblies} nor its \code{defaultSession}.}
+\item{local_files}{Files on this machine to open without a web server: a
+path, a vector of paths, or a list mixing paths with \code{raw} vectors. Each
+registers under its basename (or its list name), and a track refers to that
+name as if it were a URL. A sibling index (\code{.tbi}, \code{.csi}, \code{.bai}, \code{.crai},
+\code{.fai}, \code{.gzi}) next to a path comes along.}
 
 \item{width, height, elementId}{Standard htmlwidget sizing arguments.}
 }
 \value{
-an htmlwidget of the JBrowse 2 linear genome view
+an htmlwidget
 }
 \description{
 Renders an interactive, GPU-accelerated JBrowse 2 linear genome view as an
-htmlwidget for use in R Markdown documents, Shiny apps, or the interactive R
-console.
+htmlwidget for R Markdown documents, Shiny apps, or the R console.
 }
 \details{
-The API is declarative, and the thing you describe it with is JBrowse's own
-config: assemblies, tracks and sessions are the same
-\href{https://jbrowse.org/jb2/docs/config_guide/}{JSON objects} a
-\code{config.json} holds, written as R lists. There are deliberately no
-constructors for them — what you write here is what the config file holds,
-and nothing in this package has to grow when JBrowse gains a track type, an
-adapter or a display. The one exception is \code{\link[=track_data_frame]{track_data_frame()}}, for the one
-thing config JSON cannot express: an R data frame.
+Every named argument in \code{...} is an option of JBrowse's
+\href{https://jbrowse.org/jb2/docs/embedded_components/}{\code{createLinearGenomeView}},
+sent verbatim under JBrowse's own camelCase name: \code{assembly}, \code{tracks},
+\code{location}, \code{session}, \code{aggregateTextSearchAdapters}, \code{internetAccounts},
+\code{plugins}, \code{configuration}, and whatever JBrowse adds next. This package
+names none of them, so a whole options object is
+\code{do.call(JBrowseR, jsonlite::read_json("options.json"))}.
 
-One R-specific trap: a length-1 vector serializes to a JSON scalar, so fields
-JBrowse reads as arrays (\code{assemblyNames}, \code{aliases}) are written with
-\code{list()} — \code{assemblyNames = list("hg38")}, not \code{"hg38"}.
+\code{assembly} takes a hub name (\code{"hg38"}, a GenArk accession), a sequence-file
+URL, or an assembly config. A \code{tracks} entry takes a bare data-file URL, a
+\code{list(uri = )}, a \code{\link[=track_data_frame]{track_data_frame()}} result, or a full track config.
+\code{plugins} entries are \code{list(name = , url = )}.
+
+A length-1 vector serializes to a JSON scalar, so fields JBrowse reads as
+arrays take \code{list()}: \code{assemblyNames = list("hg38")}.
 }
 \examples{
-# a whole human genome browser in one line (gene search included)
-JBrowseR("hg38", location = "BRCA1")
+JBrowseR(assembly = "hg38", location = "BRCA1")
 }

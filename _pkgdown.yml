@@ -15,6 +15,7 @@ reference:
       - JBrowseR
       - renderJBrowseR
       - JBrowseROutput
+      - update_jbrowse
   - title: 'Your R data on the genome'
     desc: 'The one thing a JBrowse config cannot express itself'
   - contents:

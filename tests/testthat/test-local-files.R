@@ -12,7 +12,7 @@ write_temp <- function(name, bytes = as.raw(1:4)) {
 
 test_that("a path registers its bytes under its basename", {
   path <- write_temp("peaks.bed.gz", as.raw(c(31, 139, 8)))
-  x <- JBrowseR("hg38", local_files = path)$x
+  x <- JBrowseR(assembly = "hg38", local_files = path)$x
   expect_equal(names(x$localFiles), "peaks.bed.gz")
   expect_equal(x$localFiles[["peaks.bed.gz"]], as.raw(c(31, 139, 8)))
 })
@@ -23,7 +23,7 @@ test_that("a path registers its bytes under its basename", {
 test_that("a sibling index is picked up under the name the adapter derives", {
   path <- write_temp("peaks.bed.gz")
   writeBin(as.raw(9), paste0(path, ".tbi"))
-  x <- JBrowseR("hg38", local_files = path)$x
+  x <- JBrowseR(assembly = "hg38", local_files = path)$x
   expect_setequal(names(x$localFiles), c("peaks.bed.gz", "peaks.bed.gz.tbi"))
   expect_equal(x$localFiles[["peaks.bed.gz.tbi"]], as.raw(9))
 })
@@ -32,20 +32,20 @@ test_that("only a matching sibling is picked up", {
   path <- write_temp("reads.bam")
   writeBin(as.raw(9), paste0(path, ".bai"))
   writeBin(as.raw(9), paste0(path, ".notanindex"))
-  x <- JBrowseR("hg38", local_files = path)$x
+  x <- JBrowseR(assembly = "hg38", local_files = path)$x
   expect_setequal(names(x$localFiles), c("reads.bam", "reads.bam.bai"))
 })
 
 test_that("several files, and a name given explicitly", {
   a <- write_temp("a.bw", as.raw(1))
   b <- write_temp("b.bw", as.raw(2))
-  x <- JBrowseR("hg38", local_files = c(a, "renamed.bw" = b))$x
+  x <- JBrowseR(assembly = "hg38", local_files = c(a, "renamed.bw" = b))$x
   expect_setequal(names(x$localFiles), c("a.bw", "renamed.bw"))
   expect_equal(x$localFiles[["renamed.bw"]], as.raw(2))
 })
 
 test_that("bytes already in memory can be passed directly", {
-  x <- JBrowseR("hg38", local_files = list(`x.bed` = as.raw(c(7, 8))))$x
+  x <- JBrowseR(assembly = "hg38", local_files = list(`x.bed` = as.raw(c(7, 8))))$x
   expect_equal(x$localFiles[["x.bed"]], as.raw(c(7, 8)))
 })
 
@@ -56,24 +56,24 @@ test_that("JBrowseRApp takes local_files too", {
 })
 
 test_that("no local_files leaves the field off the payload", {
-  expect_false("localFiles" %in% names(JBrowseR("hg38")$x))
+  expect_false("localFiles" %in% names(JBrowseR(assembly = "hg38")$x))
 })
 
 # Each of these is a mistake with no good reading, and each fails silently if
 # it is allowed through: a missing file registers nothing, a duplicate name
 # drops one of the two files, and an unnamed raw vector cannot be referred to.
 test_that("mistakes are reported rather than half-applied", {
-  expect_error(JBrowseR("hg38", local_files = "no/such/file.bam"), "does not exist")
+  expect_error(JBrowseR(assembly = "hg38", local_files = "no/such/file.bam"), "does not exist")
   path <- write_temp("dup.bw")
   expect_error(
-    JBrowseR("hg38", local_files = c("same" = path, "same" = path)),
+    JBrowseR(assembly = "hg38", local_files = c("same" = path, "same" = path)),
     "two entries named"
   )
   expect_error(
-    JBrowseR("hg38", local_files = list(as.raw(1))),
+    JBrowseR(assembly = "hg38", local_files = list(as.raw(1))),
     "needs a name"
   )
-  expect_error(JBrowseR("hg38", local_files = 42), "file paths")
+  expect_error(JBrowseR(assembly = "hg38", local_files = 42), "file paths")
 })
 
 # The bytes travel base64-encoded inside the document, so a large file makes a
@@ -81,7 +81,7 @@ test_that("mistakes are reported rather than half-applied", {
 test_that("an oversized set warns before it is embedded", {
   big <- raw(SIZE_WARN_BYTES + 1)
   expect_warning(
-    JBrowseR("hg38", local_files = list(`big.bw` = big)),
+    JBrowseR(assembly = "hg38", local_files = list(`big.bw` = big)),
     "base64"
   )
 })
@@ -90,7 +90,7 @@ test_that("an oversized set warns before it is embedded", {
 # jsonlite renders a raw vector as base64 and htmlwidgets unboxes it, which is
 # the whole transport. srcjs/widget.ts decodes exactly this.
 test_that("bytes serialize as base64 in the widget payload", {
-  x <- JBrowseR("hg38", local_files = list(`x.bed` = as.raw(c(1, 2, 255))))$x
+  x <- JBrowseR(assembly = "hg38", local_files = list(`x.bed` = as.raw(c(1, 2, 255))))$x
   json <- jsonlite::fromJSON(htmlwidgets:::toJSON2(x))
   expect_equal(json$localFiles$x.bed, "AQL/")
 })

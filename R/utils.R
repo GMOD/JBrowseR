@@ -1,5 +1,3 @@
-# a coalescing operator: `a %||% b` is `a` unless it is NULL. Defined here for
-# R (>= 4.1); base R only gained `%||%` in 4.4.
 `%||%` <- function(a, b) {
   if (is.null(a)) b else a
 }
@@ -8,19 +6,23 @@ drop_null <- function(x) {
   x[!vapply(x, is.null, logical(1))]
 }
 
-# id vectors (trackIds, assemblyNames) must serialize as a JSON array even at
-# length 1; NULL stays NULL so drop_null omits the field
-as_json_array <- function(x) {
-  if (is.null(x)) NULL else as.list(x)
+# a named list, so an empty one serializes as {} rather than []
+named_options <- function(options) {
+  keys <- names(options) %||% rep("", length(options))
+  if (!all(nzchar(keys))) {
+    stop("every option is named, e.g. `assembly = \"hg38\"`", call. = FALSE)
+  }
+  options <- drop_null(options)
+  names(options) <- names(options) %||% character()
+  options
 }
 
-# Every widget payload is createApp/createLinearGenomeView's options verbatim
-# (camelCase): the `config` escape hatch is the base, `fields` the explicit
-# arguments that override it, so both constructors share one createWidget call.
-create_widget <- function(name, config, fields, width, height, elementId) {
+create_widget <- function(name, options, local_files, width, height, elementId) {
+  options <- named_options(options)
+  options$localFiles <- read_local_files(local_files)
   htmlwidgets::createWidget(
     name = name,
-    x = utils::modifyList(as_config(config), drop_null(fields)),
+    x = options,
     width = width,
     height = height,
     package = "JBrowseR",
@@ -31,31 +33,4 @@ create_widget <- function(name, config, fields, width, height, elementId) {
       browser.fill = TRUE
     )
   )
-}
-
-# `theme` is the shorthand for one slot of the root configuration block, so it
-# lands in it rather than beside it: passing both means the block plus that
-# theme, not two blocks of which one wins.
-with_theme <- function(configuration, theme) {
-  if (is.null(theme)) {
-    configuration
-  } else {
-    utils::modifyList(configuration %||% list(), list(theme = theme))
-  }
-}
-
-# a single adapter has $type, a list of them does not
-as_adapter_list <- function(x) {
-  if (is.null(x) || is.null(x$type)) x else list(x)
-}
-
-# a string is a path, a URL, or the JSON itself; fromJSON tells them apart
-as_config <- function(config) {
-  if (is.null(config)) {
-    list()
-  } else if (is.character(config)) {
-    jsonlite::fromJSON(config, simplifyVector = FALSE)
-  } else {
-    config
-  }
 }
