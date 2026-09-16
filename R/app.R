@@ -10,6 +10,8 @@
 #' \href{https://jbrowse.org/jb2/docs/models/}{state-model options}. There is no
 #' R constructor for it, so every view type JBrowse has — including one a
 #' runtime `plugins` entry registers — opens with nothing added to this package.
+#' Settings nested under `init`, the spelling before JBrowse 5, still open but
+#' draw a warning.
 #'
 #' A comparative view's panels are `list(assembly = , loc = )`, one per side.
 #' Note that fields JBrowse reads as arrays need `list()`, since a length-1
@@ -88,6 +90,7 @@ JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
   if (is.null(assemblies) && is.null(config)) {
     stop("provide `assemblies` (or a whole `config`)", call. = FALSE)
   }
+  warn_nested_init(views)
   create_widget("JBrowseRApp", config, list(
     assemblies = assemblies,
     tracks = tracks,
@@ -97,6 +100,21 @@ JBrowseRApp <- function(assemblies = NULL, tracks = NULL, views = NULL,
     plugins = plugins,
     configuration = with_theme(configuration, theme)
   ), width, height, elementId)
+}
+
+warn_nested_init <- function(views) {
+  for (view in views) {
+    init <- if (is.list(view)) view[["init"]]
+    if (!is.null(init)) {
+      type <- view[["type"]] %||% "a view"
+      keys <- if (is.null(names(init))) "..." else paste0(names(init), " = ", collapse = ", ")
+      warning(
+        type, " nests its settings under `init`, which JBrowse deprecated. ",
+        "Write them beside `type`: list(type = \"", type, "\", ", keys, ")",
+        call. = FALSE
+      )
+    }
+  }
 }
 
 #' Shiny bindings for JBrowseRApp

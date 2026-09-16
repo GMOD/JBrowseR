@@ -34,6 +34,22 @@ test_that("JBrowseRApp passes assemblies, tracks and views through verbatim", {
   expect_equal(w$x$views[[1]]$tracks, list("hg38_mm39"))
 })
 
+test_that("a view nesting its settings under init draws a warning naming the flat shape", {
+  expect_warning(
+    w <- JBrowseRApp(
+      assemblies = list(list(name = "hg38")),
+      views = list(list(type = "DotplotView", init = list(assembly = "hg38")))
+    ),
+    "beside `type`: list(type = \"DotplotView\", assembly = )",
+    fixed = TRUE
+  )
+  expect_equal(w$x$views[[1]]$init$assembly, "hg38")
+  expect_no_warning(JBrowseRApp(
+    assemblies = list(list(name = "hg38")),
+    views = list(synteny_view_spec)
+  ))
+})
+
 test_that("any view type opens with no change to this package", {
   w <- JBrowseRApp(
     assemblies = list(list(name = "hg38")),
