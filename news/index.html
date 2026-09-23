@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.14.0</span>
       </span>
     </div>
 
@@ -75,6 +75,14 @@
       <small>Source: <a href="https://github.com/GMOD/JBrowseR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.14.0" id="jbrowser-0140">JBrowseR 0.14.0<a class="anchor" aria-label="anchor" href="#jbrowser-0140"></a></h2>
+<p>Install with <code>devtools::install_github("GMOD/JBrowseR")</code>.</p>
+<ul><li>
+<code><a href="../reference/track_data_frame.html">track_data_frame()</a></code> no longer needs a <code>name</code> column, takes the reference name as <code>chrom</code>, <code>chr</code> or <code>refName</code>, and builds its features column-wise rather than slicing the frame a row at a time.</li>
+<li>A <code>displays</code> entry handed to <code><a href="../reference/track_data_frame.html">track_data_frame()</a></code> plots the columns: <code>LinearMarkDisplay</code> is JBrowse’s grammar of graphics, and the introduction vignette draws a windowed Fst scan as bars on a value axis coloured by a threshold scale.</li>
+<li>The widget bundles are rebuilt, bringing the mark display’s threshold scales, reference rules and axis titles.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.13.0" id="jbrowser-0130">JBrowseR 0.13.0<a class="anchor" aria-label="anchor" href="#jbrowser-0130"></a></h2>
 <p>Install with <code>devtools::install_github("GMOD/JBrowseR")</code>.</p>

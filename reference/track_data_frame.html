@@ -20,7 +20,7 @@ the genome."><meta property="og:image" content="https://gmod.github.io/JBrowseR/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.14.0</span>
       </span>
     </div>
 
@@ -95,9 +95,11 @@ the genome.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A data frame with columns <code>chrom</code>, <code>start</code>, <code>end</code>, <code>name</code>. An
-optional <code>score</code> column makes it a quantitative track; every other column
-rides along as a feature attribute, shown in the feature details.</p></dd>
+<dd><p>A data frame with columns <code>chrom</code> (or <code>chr</code>, or <code>refName</code>),
+<code>start</code> and <code>end</code> (0-based, half-open). An optional <code>score</code> column makes it
+a quantitative track; every other column rides along as a feature
+attribute, shown in the feature details and readable by a display's
+encoding.</p></dd>
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
@@ -110,7 +112,9 @@ rides along as a feature attribute, shown in the feature details.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Extra config merged into the track.</p></dd>
+<dd><p>Extra config merged into the track. A <code>displays</code> list plots the
+columns the way a grammar of graphics does: a <code>LinearMarkDisplay</code> maps a
+column to <code>y</code> and another to a colour scale.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -157,9 +161,6 @@ rides along as a feature attribute, shown in the feature details.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$uniqueId</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my_features-1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$refName</span>
@@ -177,8 +178,101 @@ rides along as a feature attribute, shown in the feature details.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$uniqueId</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my_features-2"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># a point per row at its log2 fold-change, coloured by call</span></span></span>
+<span class="r-in"><span><span class="va">de</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  chrom <span class="op">=</span> <span class="st">"7"</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e6</span>, <span class="fl">2e6</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e6</span>, <span class="fl">2e6</span><span class="op">)</span> <span class="op">+</span> <span class="fl">6000</span>,</span></span>
+<span class="r-in"><span>  log2fc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.1</span>, <span class="op">-</span><span class="fl">1.7</span><span class="op">)</span>, sig <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"up"</span>, <span class="st">"down"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">track_data_frame</span><span class="op">(</span><span class="va">de</span>, <span class="st">"de"</span>, displays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  type <span class="op">=</span> <span class="st">"LinearMarkDisplay"</span>,</span></span>
+<span class="r-in"><span>  marks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    shape <span class="op">=</span> <span class="st">"point"</span>,</span></span>
+<span class="r-in"><span>    encoding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"log2fc"</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>field <span class="op">=</span> <span class="st">"sig"</span>, scale <span class="op">=</span> <span class="st">"categorical"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "FeatureTrack"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $trackId</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "de"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "de"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "FromConfigAdapter"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$refName</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "7"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$start</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1e+06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$end</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1006000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$log2fc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$sig</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "up"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[1]]$uniqueId</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "de-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$refName</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "7"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$start</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2e+06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$end</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2006000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$log2fc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$sig</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "down"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $adapter$features[[2]]$uniqueId</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "de-2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LinearMarkDisplay"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$marks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$marks[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$marks[[1]]$shape</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "point"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$marks[[1]]$encoding</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$marks[[1]]$encoding$y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "log2fc"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$marks[[1]]$encoding$color</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$marks[[1]]$encoding$color$field</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sig"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $displays[[1]]$marks[[1]]$encoding$color$scale</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "categorical"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

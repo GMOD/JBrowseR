@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">JBrowseR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.13.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.14.0</span>
       </span>
     </div>
 
@@ -158,8 +158,33 @@
 <span>  location <span class="op">=</span> <span class="st">"17:43,000,000..43,125,000"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/demo-dataframe.png" width="100%"></p>
-<p>Files on your own machine need no host either — <code>local_files</code> reads them into the document, and a track refers to one by name as if it were a URL. The sibling index comes along, so an indexed file stays indexed and only the region on screen is ever read:</p>
+<p>A <code>displays</code> entry plots the columns the way a grammar of graphics does: a <code>LinearMarkDisplay</code> maps a column to the value axis and another to a colour scale, and the axis, legend and reference lines follow from the scales. This is a windowed Fst scan between two <em>Drosophila</em> populations, computed in R:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
+<span>  assembly <span class="op">=</span> <span class="st">"dm6"</span>,</span>
+<span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="reference/track_data_frame.html">track_data_frame</a></span><span class="op">(</span></span>
+<span>    <span class="va">fst</span>, <span class="st">"Fst (African vs cosmopolitan)"</span>,</span>
+<span>    displays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      type <span class="op">=</span> <span class="st">"LinearMarkDisplay"</span>,</span>
+<span>      scales <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Fst"</span>, rules <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">0.25</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      marks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        shape <span class="op">=</span> <span class="st">"bar"</span>,</span>
+<span>        encoding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>          y <span class="op">=</span> <span class="st">"fst"</span>,</span>
+<span>          color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>            field <span class="op">=</span> <span class="st">"fst"</span>, scale <span class="op">=</span> <span class="st">"threshold"</span>,</span>
+<span>            domain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">0.12</span>, <span class="fl">0.25</span><span class="op">)</span>,</span>
+<span>            range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"#90a4ae"</span>, <span class="st">"#f9a825"</span>, <span class="st">"#d84315"</span><span class="op">)</span></span>
+<span>          <span class="op">)</span></span>
+<span>        <span class="op">)</span></span>
+<span>      <span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span>,</span>
+<span>  location <span class="op">=</span> <span class="st">"chr2R:11,900,000..12,450,000"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/demo-marks.png" width="100%"></p>
+<p>Files on your own machine need no host either — <code>local_files</code> reads them into the document, and a track refers to one by name as if it were a URL. The sibling index comes along, so an indexed file stays indexed and only the region on screen is ever read:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/JBrowseR.html">JBrowseR</a></span><span class="op">(</span></span>
 <span>  assembly <span class="op">=</span> <span class="st">"hg38"</span>,</span>
 <span>  tracks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="st">"peaks.bed.gz"</span>, name <span class="op">=</span> <span class="st">"Peaks"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -204,21 +229,21 @@
 </h2>
 <p>If you use JBrowseR in your research, please cite:</p>
 <p><a href="https://doi.org/10.1093/bioinformatics/btab459" class="external-link">Hershberg et al., 2021. JBrowseR: An R Interface to the JBrowse 2 Genome Browser</a></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="sc">@</span>article{hershberg2021jbrowser,</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  title<span class="ot">=</span>{JBrowseR<span class="sc">:</span> An R Interface to the JBrowse <span class="dv">2</span> Genome Browser},</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  author<span class="ot">=</span>{Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  journal<span class="ot">=</span>{Bioinformatics}</span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="sc">@</span>article{hershberg2021jbrowser,</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  title<span class="ot">=</span>{JBrowseR<span class="sc">:</span> An R Interface to the JBrowse <span class="dv">2</span> Genome Browser},</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  author<span class="ot">=</span>{Hershberg, Elliot A and Stevens, Garrett and Diesh, Colin and Xie, Peter and De Jesus Martinez, Teresa and Buels, Robert and Stein, Lincoln and Holmes, Ian},</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  journal<span class="ot">=</span>{Bioinformatics}</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="for-developers">For developers<a class="anchor" aria-label="anchor" href="#for-developers"></a>
 </h2>
 <p>The R package ships a prebuilt JavaScript bundle in <code>inst/htmlwidgets/</code>. To rebuild it against a local checkout of <a href="https://github.com/GMOD/jbrowse-components" class="external-link">jbrowse-components</a> (expected as a sibling directory), install <a href="https://pnpm.io" class="external-link">pnpm</a> and run:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>git clone https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>GMOD<span class="sc">/</span>JBrowseR</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>cd JBrowseR</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>pnpm install</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>pnpm build       <span class="co"># writes inst/htmlwidgets/JBrowseR.js and .css</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>R <span class="sc">-</span>e <span class="st">'devtools::install()'</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>git clone https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>GMOD<span class="sc">/</span>JBrowseR</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>cd JBrowseR</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>pnpm install</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>pnpm build       <span class="co"># writes inst/htmlwidgets/JBrowseR.js and .css</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>R <span class="sc">-</span>e <span class="st">'devtools::install()'</span></span></code></pre></div>
 </div>
 </div>
   </div>
