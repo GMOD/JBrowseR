@@ -23,7 +23,34 @@ test_that("track_data_frame() carries extra columns onto each feature", {
 })
 
 test_that("track_data_frame() rejects missing columns", {
-  expect_error(track_data_frame(data.frame(x = 1), "t"), "missing required")
+  expect_error(track_data_frame(data.frame(x = 1), "t"), "missing required.*chrom, start, end")
+  expect_error(track_data_frame(data.frame(chrom = "1", start = 1), "t"), "missing required.*end")
+})
+
+test_that("track_data_frame() takes the reference name under any of its spellings", {
+  for (col in c("chrom", "chr", "refName")) {
+    df <- data.frame(start = 1, end = 9)
+    df[[col]] <- "1"
+    f <- track_data_frame(df, "t")$adapter$features[[1]]
+    expect_equal(f$refName, "1")
+    expect_named(f, c("start", "end", "refName", "uniqueId"))
+  }
+})
+
+test_that("track_data_frame() needs no name column", {
+  df <- data.frame(chrom = "1", start = 1, end = 9, fst = 0.3)
+  expect_equal(track_data_frame(df, "t")$adapter$features[[1]]$fst, 0.3)
+})
+
+test_that("track_data_frame() merges extra config, so a displays list plots the columns", {
+  df <- data.frame(chrom = "1", start = 1, end = 9, log2fc = 1.5)
+  displays <- list(list(
+    type = "LinearMarkDisplay",
+    marks = list(list(shape = "point", encoding = list(y = "log2fc")))
+  ))
+  t <- track_data_frame(df, "t", displays = displays, height = 200)
+  expect_equal(t$displays, displays)
+  expect_equal(t$height, 200)
 })
 
 test_that("track_data_frame() without score is a FeatureTrack", {

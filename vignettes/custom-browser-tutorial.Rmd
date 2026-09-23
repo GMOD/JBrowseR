@@ -84,8 +84,8 @@ JBrowseR(
 
 `track_data_frame()` turns a data frame into an in-browser track with no files
 and no server — the natural way to put an analysis you ran in R onto the genome.
-The frame needs `chrom`, `start`, `end`, and `name` columns; an optional `score`
-column makes it a quantitative track.
+The frame needs `chrom`, `start` and `end` columns; an optional `score` column
+makes it a quantitative track.
 
 ```{r}
 regions <- data.frame(

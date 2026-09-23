@@ -7,16 +7,20 @@
 track_data_frame(data, name, assembly_name = NULL, ...)
 }
 \arguments{
-\item{data}{A data frame with columns \code{chrom}, \code{start}, \code{end}, \code{name}. An
-optional \code{score} column makes it a quantitative track; every other column
-rides along as a feature attribute, shown in the feature details.}
+\item{data}{A data frame with columns \code{chrom} (or \code{chr}, or \code{refName}),
+\code{start} and \code{end} (0-based, half-open). An optional \code{score} column makes it
+a quantitative track; every other column rides along as a feature
+attribute, shown in the feature details and readable by a display's
+encoding.}
 
 \item{name}{Track display name.}
 
 \item{assembly_name}{Assembly the track belongs to. Usually left \code{NULL} —
 \code{\link[=JBrowseR]{JBrowseR()}} backfills it from the loaded assembly.}
 
-\item{...}{Extra config merged into the track.}
+\item{...}{Extra config merged into the track. A \code{displays} list plots the
+columns the way a grammar of graphics does: a \code{LinearMarkDisplay} maps a
+column to \code{y} and another to a colour scale.}
 }
 \value{
 a track config list
@@ -35,4 +39,17 @@ df <- data.frame(
   name = c("feature1", "feature2")
 )
 track_data_frame(df, "my_features")
+
+# a point per row at its log2 fold-change, coloured by call
+de <- data.frame(
+  chrom = "7", start = c(1e6, 2e6), end = c(1e6, 2e6) + 6000,
+  log2fc = c(2.1, -1.7), sig = c("up", "down")
+)
+track_data_frame(de, "de", displays = list(list(
+  type = "LinearMarkDisplay",
+  marks = list(list(
+    shape = "point",
+    encoding = list(y = "log2fc", color = list(field = "sig", scale = "categorical"))
+  ))
+)))
 }
