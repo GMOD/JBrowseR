@@ -1,6 +1,6 @@
-# The vignettes set eval = FALSE and the notebooks run only on Colab, so their R
-# is parsed here rather than run: the notebooks called helpers deleted in
-# d9ef6d5 for six weeks with nothing failing.
+# The vignettes set eval = FALSE, the notebooks run only on Colab and the Shiny
+# apps run only on shinyapps, so their R is parsed here rather than run: the
+# notebooks called helpers deleted in d9ef6d5 for six weeks with nothing failing.
 
 repo <- test_path("..", "..")
 
@@ -21,6 +21,10 @@ doc_chunks <- function() {
       )
     })
   })
+  apps <- list.files(file.path(repo, "example_apps"), "^app[.]R$", full.names = TRUE, recursive = TRUE)
+  from_app <- lapply(apps, function(path) {
+    list(list(where = path, offset = 0, code = readLines(path, warn = FALSE)))
+  })
   notebooks <- list.files(file.path(repo, "examples"), "[.]ipynb$", full.names = TRUE)
   from_ipynb <- lapply(notebooks, function(path) {
     cells <- jsonlite::fromJSON(path, simplifyVector = FALSE)$cells
@@ -33,9 +37,14 @@ doc_chunks <- function() {
     })
   })
   split(
-    c(unlist(from_rmd, recursive = FALSE), unlist(from_ipynb, recursive = FALSE)),
+    c(
+      unlist(from_rmd, recursive = FALSE),
+      unlist(from_app, recursive = FALSE),
+      unlist(from_ipynb, recursive = FALSE)
+    ),
     c(
       rep(rmds, lengths(from_rmd)),
+      rep(apps, lengths(from_app)),
       rep(notebooks, lengths(from_ipynb))
     )
   )
@@ -106,6 +115,13 @@ check_document <- function(chunks, known, exports, option_keys) {
     lhs <- pd[pd$parent %in% arrows$parent & pd$token == "expr", ]
     pd$text[pd$parent %in% lhs$id & pd$token == "SYMBOL"]
   })))
+  # a package the document attaches itself is allowed, as the Shiny apps do
+  attached <- unique(unlist(lapply(parsed, function(pd) {
+    calls <- pd[pd$token == "SYMBOL_FUNCTION_CALL" & pd$text %in% c("library", "require"), ]
+    args <- pd[pd$parent %in% pd$parent[pd$id %in% calls$parent] & pd$token == "expr", ]
+    pd$text[pd$parent %in% args$id & pd$token == "SYMBOL"]
+  })))
+  known <- c(known, package_exports(attached))
 
   problems <- character()
   flag <- function(row, msg) {
