@@ -197,6 +197,20 @@ an exported `update_jbrowse()` that silently does nothing for anyone who
 installs from GitHub. It is built against the *local* monorepo checkout, so
 rebuild it once the monorepo commits it needs are pushed.
 
+**A stale bundle renders a partial encoding and says nothing.** The bundles
+built on 2026-09-16 drew a `LinearMarkDisplay` threshold scale as a viridis
+ramp, no reference rules and no axis title, because those landed in the
+monorepo on the 20th and 21st; every readiness signal was green. `pnpm build`
+first when a figure ignores part of its config.
+
+**Install with `R CMD INSTALL --no-multiarch --no-docs .`, not
+`devtools::install()`.** The latter copies the checkout to /tmp before
+applying `.Rbuildignore`, and `node_modules` links into the monorepo, so the
+copy is the monorepo's dependency tree and dies on space. `library(JBrowseR)`
+in `tools/gen_screenshot_specs.R` and `testthat::test_local()` load the
+*installed* package, so a figure run before the install reports the old
+package's errors.
+
 ## The RPC runs in an inlined worker, and that doubles the bundle
 
 Both widgets pass `makeWorkerInstance` with the product's
