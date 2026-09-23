@@ -1,4 +1,6 @@
-# JBrowseR (development version)
+# JBrowseR 0.14.0
+
+Install with `devtools::install_github("GMOD/JBrowseR")`.
 
 - `track_data_frame()` no longer needs a `name` column, takes the reference name
   as `chrom`, `chr` or `refName`, and builds its features column-wise rather
