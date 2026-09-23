@@ -1,3 +1,15 @@
+# JBrowseR (development version)
+
+- `track_data_frame()` no longer needs a `name` column, takes the reference name
+  as `chrom`, `chr` or `refName`, and builds its features column-wise rather
+  than slicing the frame a row at a time.
+- A `displays` entry handed to `track_data_frame()` plots the columns:
+  `LinearMarkDisplay` is JBrowse's grammar of graphics, and the introduction
+  vignette draws a windowed Fst scan as bars on a value axis coloured by a
+  threshold scale.
+- The widget bundles are rebuilt, bringing the mark display's threshold scales,
+  reference rules and axis titles.
+
 # JBrowseR 0.13.0
 
 Install with `devtools::install_github("GMOD/JBrowseR")`.

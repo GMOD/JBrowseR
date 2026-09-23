@@ -206,6 +206,64 @@ JBrowseR(
 
 ![Data-frame track of R-computed peaks](../man/figures/demo-dataframe.png)
 
+**A plot from a data frame.** A `displays` entry says how to draw the rows, and
+`LinearMarkDisplay` is JBrowse's grammar of graphics: `encoding` maps columns to
+channels the way `aes()` does, and the axis, legend and reference lines come
+from the scales rather than from code. Here a windowed Fst scan between two
+*Drosophila* populations, computed in base R from hosted allele frequencies, is
+a `bar` per window with `fst` on the value axis and a threshold colour scale
+over the same column. The sweep at *Cyp6g1* is the run of bars past the 0.25
+rule.
+
+```{r demo-marks}
+freqs <- read.csv("https://jbrowse.org/demos/popgen/dest_cyp6g1_freqs.csv")
+p1 <- freqs$afr_freq
+p2 <- freqs$cosmo_freq
+window <- freqs$pos %/% 10000 * 10000
+num <- tapply((p1 - p2)^2, window, sum)
+den <- tapply(p1 * (1 - p2) + p2 * (1 - p1), window, sum)
+fst <- data.frame(
+  chrom = "chr2R",
+  start = as.integer(names(num)),
+  end = as.integer(names(num)) + 10000,
+  fst = round(pmax(num / den, 0), 3),
+  n_snps = as.vector(table(window))
+)
+fst <- fst[fst$n_snps >= 20, ]
+
+JBrowseR(
+  assembly = "dm6",
+  tracks = list(track_data_frame(
+    fst, "Fst (African vs cosmopolitan)",
+    displays = list(list(
+      type = "LinearMarkDisplay",
+      scales = list(y = list(title = "Fst", rules = list(0.25))),
+      marks = list(list(
+        shape = "bar",
+        encoding = list(
+          y = "fst",
+          color = list(
+            field = "fst", scale = "threshold",
+            domain = list(0.12, 0.25),
+            range = list("#90a4ae", "#f9a825", "#d84315")
+          )
+        )
+      ))
+    ))
+  )),
+  location = "chr2R:11,900,000..12,450,000"
+)
+```
+
+![Windowed Fst as bars on a value axis, coloured by a threshold scale](../man/figures/demo-marks.png)
+
+`marks` takes a `bar`, `point` or `span` per entry, `scale` is `categorical`,
+`linear`, `log` or `threshold`, and a `transform` list can bin, count or pack
+the rows first; the
+[mark display guide](https://jbrowse.org/jb2/docs/config_guides/mark_display/)
+has the whole grammar. Every array in it is a `list()`: `rules = 0.25` would
+serialize as a scalar.
+
 **Cancer structural variants.** The SKBR3 breast-cancer cell line has a heavily
 rearranged genome. PacBio long reads span breakpoints short reads cannot, and
 Sniffles calls the structural variants from them. This view lands on a

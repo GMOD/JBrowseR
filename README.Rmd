@@ -94,6 +94,38 @@ JBrowseR(
 
 <img src="man/figures/demo-dataframe.png" width="100%" />
 
+A `displays` entry plots the columns the way a grammar of graphics does: a
+`LinearMarkDisplay` maps a column to the value axis and another to a colour
+scale, and the axis, legend and reference lines follow from the scales. This is
+a windowed Fst scan between two *Drosophila* populations, computed in R:
+
+```r
+JBrowseR(
+  assembly = "dm6",
+  tracks = list(track_data_frame(
+    fst, "Fst (African vs cosmopolitan)",
+    displays = list(list(
+      type = "LinearMarkDisplay",
+      scales = list(y = list(title = "Fst", rules = list(0.25))),
+      marks = list(list(
+        shape = "bar",
+        encoding = list(
+          y = "fst",
+          color = list(
+            field = "fst", scale = "threshold",
+            domain = list(0.12, 0.25),
+            range = list("#90a4ae", "#f9a825", "#d84315")
+          )
+        )
+      ))
+    ))
+  )),
+  location = "chr2R:11,900,000..12,450,000"
+)
+```
+
+<img src="man/figures/demo-marks.png" width="100%" />
+
 Files on your own machine need no host either — `local_files` reads them into
 the document, and a track refers to one by name as if it were a URL. The sibling
 index comes along, so an indexed file stays indexed and only the region on

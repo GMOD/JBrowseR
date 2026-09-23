@@ -75,6 +75,56 @@ JBrowseR(
 )
 ```
 
+## A plot from a data frame
+
+A `displays` entry says how to draw the rows. `LinearMarkDisplay` is JBrowse's
+grammar of graphics: `encoding` maps columns to channels the way `aes()` does,
+and the axis, legend and reference lines come from the scales. A windowed Fst
+scan between two *Drosophila* populations, computed in base R from hosted allele
+frequencies, becomes a bar per window on a value axis, coloured by a threshold
+scale over the same column; the sweep at *Cyp6g1* is the run of bars past the
+0.25 rule.
+
+```{r marks}
+freqs <- read.csv("https://jbrowse.org/demos/popgen/dest_cyp6g1_freqs.csv")
+p1 <- freqs$afr_freq
+p2 <- freqs$cosmo_freq
+window <- freqs$pos %/% 10000 * 10000
+num <- tapply((p1 - p2)^2, window, sum)
+den <- tapply(p1 * (1 - p2) + p2 * (1 - p1), window, sum)
+fst <- data.frame(
+  chrom = "chr2R",
+  start = as.integer(names(num)),
+  end = as.integer(names(num)) + 10000,
+  fst = round(pmax(num / den, 0), 3),
+  n_snps = as.vector(table(window))
+)
+fst <- fst[fst$n_snps >= 20, ]
+
+JBrowseR(
+  assembly = "dm6",
+  tracks = list(track_data_frame(
+    fst, "Fst (African vs cosmopolitan)",
+    displays = list(list(
+      type = "LinearMarkDisplay",
+      scales = list(y = list(title = "Fst", rules = list(0.25))),
+      marks = list(list(
+        shape = "bar",
+        encoding = list(
+          y = "fst",
+          color = list(
+            field = "fst", scale = "threshold",
+            domain = list(0.12, 0.25),
+            range = list("#90a4ae", "#f9a825", "#d84315")
+          )
+        )
+      ))
+    ))
+  )),
+  location = "chr2R:11,900,000..12,450,000"
+)
+```
+
 ## A file from this R session, with no server
 
 `track_data_frame()` above puts every feature in the page as JSON, which stops
