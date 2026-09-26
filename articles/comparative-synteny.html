@@ -151,9 +151,9 @@ thing with the name defaulted from the file.)</p>
 <div class="section level2">
 <h2 id="one-all-vs-all-track-between-them">One all-vs-all track between them<a class="anchor" aria-label="anchor" href="#one-all-vs-all-track-between-them"></a>
 </h2>
-<p>A single <code>AllVsAllPAFAdapter</code> track serves every pair from
-one PAF file. It spans all four assemblies. The track config is a plain
-list, the same JSON a JBrowse config file would hold.</p>
+<p>A single <code>MultiGenomePAFAdapter</code> track serves every pair
+from one PAF file. It spans all four assemblies. The track config is a
+plain list, the same JSON a JBrowse config file would hold.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ecoli_ava</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  type <span class="op">=</span> <span class="st">"SyntenyTrack"</span>,</span>
@@ -161,7 +161,7 @@ list, the same JSON a JBrowse config file would hold.</p>
 <span>  name <span class="op">=</span> <span class="st">"E. coli all-vs-all (minimap2 PAF)"</span>,</span>
 <span>  assemblyNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">strains</span><span class="op">)</span>,</span>
 <span>  adapter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    type <span class="op">=</span> <span class="st">"AllVsAllPAFAdapter"</span>,</span>
+<span>    type <span class="op">=</span> <span class="st">"MultiGenomePAFAdapter"</span>,</span>
 <span>    assemblyNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">strains</span><span class="op">)</span>,</span>
 <span>    pafLocation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base</span>, <span class="st">"/all_vs_all.paf.gz"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
