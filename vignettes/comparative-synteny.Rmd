@@ -54,8 +54,8 @@ assemblies <- lapply(strains, function(s) {
 
 ## One all-vs-all track between them
 
-A single `AllVsAllPAFAdapter` track serves every pair from one PAF file. It spans
-all four assemblies. The track config is a plain list, the same JSON a JBrowse
+A single `MultiGenomePAFAdapter` track serves every pair from one PAF file. It
+spans all four assemblies. The track config is a plain list, the same JSON a JBrowse
 config file would hold.
 
 ```{r}
@@ -65,7 +65,7 @@ ecoli_ava <- list(
   name = "E. coli all-vs-all (minimap2 PAF)",
   assemblyNames = as.list(strains),
   adapter = list(
-    type = "AllVsAllPAFAdapter",
+    type = "MultiGenomePAFAdapter",
     assemblyNames = as.list(strains),
     pafLocation = list(uri = paste0(base, "/all_vs_all.paf.gz"))
   )
