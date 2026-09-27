@@ -32,7 +32,6 @@ export const fromMonorepo = subpath =>
 // string and no hint.
 export const {
   findChromeExecutable,
-  waitForDisplaysDone,
   waitForLoadingComplete,
   waitForQuiescent,
 } = await import(fromMonorepo('products/jbrowse-capture/src/index.ts'))
@@ -127,13 +126,12 @@ const READY_TIMEOUT = 90000
 
 /**
  * Ready when the loading overlay is gone, no "Downloading…"/"Loading…" status
- * text remains, and every display has flipped to its `-done` test-id — the same
+ * text remains, and no display is still fetching or unpainted — the same
  * signals jbrowse-web's own browser tests use, rather than a sleep.
  */
 export async function waitForReady(page, timeout = READY_TIMEOUT) {
   await waitForLoadingComplete(page, { waitForDownloads: true, timeout })
   await waitForQuiescent(page, { timeout })
-  await waitForDisplaysDone(page, timeout)
 }
 
 // Headless renders WebGL through swiftshader, which is what the genome views
