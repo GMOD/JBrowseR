@@ -24,10 +24,11 @@
 // puppeteer resolves from the sibling jbrowse-components checkout (override
 // with PUPPETEER_FROM=/path/to/pkg-dir). Run:  node tools/verify_widget.mjs
 import {
+  READY_TIMEOUT,
   htmlwidgetsHost,
   launch,
   serveRepo,
-  waitForReady,
+  waitForAppSettled,
 } from './browser_harness.mjs'
 
 // The widget renders into an element whose id is what a Shiny outputId becomes,
@@ -185,7 +186,7 @@ const errors = []
     // payload's `location` is still START, so a rebuild would yank the view
     // back to chromosome 10 and empty the container on the way. Reconciling
     // leaves the user where the proxy call put them and only opens the track.
-    await waitForReady(page)
+    await waitForAppSettled(page, { timeout: READY_TIMEOUT })
     const before = await page.evaluate(() => window.__unmounts)
     await page.evaluate(
       (location, track) => {
@@ -204,7 +205,7 @@ const errors = []
       .catch(() => false)
     check(opened, 'a re-render that adds a track opens it')
 
-    await waitForReady(page)
+    await waitForAppSettled(page, { timeout: READY_TIMEOUT })
     await checkRpcWorker(page, 'JBrowseR')
     const after = await page.evaluate(
       id => ({
@@ -303,7 +304,7 @@ const errors = []
 
     // A re-render that changes only `session` goes through setSession: the
     // container stays, and the emptied session reports no views
-    await waitForReady(page)
+    await waitForAppSettled(page, { timeout: READY_TIMEOUT })
     const before = await page.evaluate(() => window.__unmounts)
     await page.evaluate(id => {
       const session = window.__inputs[`${id}_session`]

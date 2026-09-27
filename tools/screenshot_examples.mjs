@@ -9,11 +9,12 @@ import { mkdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 import {
+  READY_TIMEOUT,
   REPO,
   htmlwidgetsHost,
   launch,
   serveRepo,
-  waitForReady,
+  waitForJBrowseReady,
 } from './browser_harness.mjs'
 
 const specs = JSON.parse(
@@ -26,7 +27,7 @@ await mkdir(join(REPO, 'man/figures'), { recursive: true })
 const browser = await launch()
 
 // Render one spec in a fresh page and write its figure. Returns the page errors
-// it collected, or null when the widget never painted a canvas at all.
+// it collected, or null when the widget never finished its first frame.
 async function capture(name, spec) {
   const tall = spec.bundle === 'JBrowseRApp.js'
   const page = await browser.newPage()
@@ -45,13 +46,13 @@ async function capture(name, spec) {
     })
     try {
       await page.waitForFunction(() => window.__rendered === true, { timeout: 30000 })
-      await page.waitForSelector('#root canvas', { timeout: 45000 })
+      await waitForJBrowseReady(page, { timeout: READY_TIMEOUT })
+      await page.waitForSelector('#root canvas', { timeout: 1000 })
     } catch (e) {
       console.error(`✗ ${name}: never rendered — ${e.message}`)
       if (errors.length) console.error('  page errors:', errors.slice(0, 3).join(' | '))
       return null
     }
-    await waitForReady(page)
     await page.screenshot({ path: join(REPO, 'man/figures', `${name}.png`) })
     return errors
   } finally {

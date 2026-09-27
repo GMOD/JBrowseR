@@ -30,11 +30,17 @@ export const fromMonorepo = subpath =>
 // then puppeteer's own download. Without it a box that has google-chrome but
 // has never run `puppeteer browsers install` fails at launch with a version
 // string and no hint.
-export const {
-  findChromeExecutable,
-  waitForLoadingComplete,
-  waitForQuiescent,
-} = await import(fromMonorepo('products/jbrowse-capture/src/index.ts'))
+const capture = await import(
+  fromMonorepo('products/jbrowse-capture/src/index.ts')
+)
+const { BASE_CHROME_ARGS, findChromeExecutable } = capture
+
+// waitForJBrowseReady for a first frame: a view open, the app holding itself
+// ready, every display painted, and a throw naming the display that was not.
+// waitForAppSettled after a re-render, where the app already reads ready and
+// the wait is for that to hold. Network-bound here, hence the long budget.
+export const { waitForAppSettled, waitForJBrowseReady } = capture
+export const READY_TIMEOUT = 90000
 
 export const REPO = new URL('..', import.meta.url).pathname
 
@@ -122,22 +128,10 @@ window.__rendered = true
 </script></body></html>`
 }
 
-const READY_TIMEOUT = 90000
-
-/**
- * Ready when the loading overlay is gone, no "Downloading…"/"Loading…" status
- * text remains, and no display is still fetching or unpainted — the same
- * signals jbrowse-web's own browser tests use, rather than a sleep.
- */
-export async function waitForReady(page, timeout = READY_TIMEOUT) {
-  await waitForLoadingComplete(page, { waitForDownloads: true, timeout })
-  await waitForQuiescent(page, { timeout })
-}
-
 // Headless renders WebGL through swiftshader, which is what the genome views
 // need and all this repo's figures use.
 const HEADLESS_ARGS = [
-  '--no-sandbox',
+  ...BASE_CHROME_ARGS,
   '--enable-unsafe-swiftshader',
   '--use-gl=angle',
   '--use-angle=swiftshader',
