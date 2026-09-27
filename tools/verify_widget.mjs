@@ -21,7 +21,7 @@
 //
 // Needs network — it loads the hosted hg38 hub, same as the figures do.
 //
-// puppeteer resolves from the sibling jbrowse-components checkout (override
+// @jbrowse/capture resolves from the sibling jbrowse-components checkout (override
 // with PUPPETEER_FROM=/path/to/pkg-dir). Run:  node tools/verify_widget.mjs
 import {
   READY_TIMEOUT,

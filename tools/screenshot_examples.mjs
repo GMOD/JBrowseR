@@ -3,7 +3,7 @@
 // so we verify the bundle renders). Reads tools/screenshot_specs.json (from
 // gen_screenshot_specs.R); writes man/figures/<name>.png.
 //
-// puppeteer resolves from the sibling jbrowse-components checkout (override with
+// @jbrowse/capture resolves from the sibling jbrowse-components checkout (override with
 // PUPPETEER_FROM=/path/to/pkg-dir). Run:  node tools/screenshot_examples.mjs
 import { mkdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'

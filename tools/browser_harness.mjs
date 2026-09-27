@@ -1,39 +1,25 @@
-// What screenshot_examples.mjs and verify_widget.mjs both need: puppeteer out of
-// the sibling jbrowse-components checkout, a static server over this repo, a
-// browser that renders WebGL with no GPU, and a page that fakes the htmlwidgets
-// host. Shared because the two copies of it had already drifted — one had the
+// What screenshot_examples.mjs and verify_widget.mjs both need: @jbrowse/capture
+// out of the sibling jbrowse-components checkout, a static server over this
+// repo, a browser that renders WebGL with no GPU, and a page that fakes the
+// htmlwidgets host. Shared because the two copies of it had already drifted — one had the
 // launch flags, the other a stale import path for the readiness waits.
 
 import { readFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
-import { createRequire } from 'node:module'
 import { basename, extname, join } from 'node:path'
 
-// puppeteer isn't a dep of this repo; resolve it from the sibling
-// jbrowse-components checkout (override with PUPPETEER_FROM=/path/to/pkg-dir).
-export const MONOREPO =
+// The sibling jbrowse-components checkout (override with
+// PUPPETEER_FROM=/path/to/its/package.json), whose @jbrowse/capture source this
+// imports directly, puppeteer and the chrome-picking with it. It used to come
+// from packages/browser-test-utils/src/waits.ts, which no longer exists — the
+// nightly render job died at that import with ERR_MODULE_NOT_FOUND.
+const MONOREPO =
   process.env.PUPPETEER_FROM ??
   new URL('../../jbrowse-components/package.json', import.meta.url).pathname
 
-export const puppeteer = createRequire(MONOREPO)('puppeteer')
-
-/** Resolve a path inside that checkout, for importing its source directly. */
-export const fromMonorepo = subpath =>
-  new URL(subpath, `file://${MONOREPO}`).href
-
-// The readiness waits and the chrome-picking come from @jbrowse/capture, the
-// published half of that checkout's browser tooling. They used to be imported
-// from packages/browser-test-utils/src/waits.ts, which no longer exists — the
-// nightly render job died at that import with ERR_MODULE_NOT_FOUND.
-//
-// findChromeExecutable is CHROME_PATH, then the first installed system browser,
-// then puppeteer's own download. Without it a box that has google-chrome but
-// has never run `puppeteer browsers install` fails at launch with a version
-// string and no hint.
 const capture = await import(
-  fromMonorepo('products/jbrowse-capture/src/index.ts')
+  new URL('products/jbrowse-capture/src/index.ts', `file://${MONOREPO}`).href
 )
-const { BASE_CHROME_ARGS, findChromeExecutable } = capture
 
 // waitForJBrowseReady for a first frame: a view open, the app holding itself
 // ready, every display painted, and a throw naming the display that was not.
@@ -130,18 +116,13 @@ window.__rendered = true
 
 // Headless renders WebGL through swiftshader, which is what the genome views
 // need and all this repo's figures use.
-const HEADLESS_ARGS = [
-  ...BASE_CHROME_ARGS,
-  '--enable-unsafe-swiftshader',
-  '--use-gl=angle',
-  '--use-angle=swiftshader',
-  '--ignore-gpu-blocklist',
-]
-
 export function launch() {
-  return puppeteer.launch({
-    headless: true,
-    executablePath: findChromeExecutable(),
-    args: HEADLESS_ARGS,
+  return capture.launchBrowser({
+    args: [
+      '--enable-unsafe-swiftshader',
+      '--use-gl=angle',
+      '--use-angle=swiftshader',
+      '--ignore-gpu-blocklist',
+    ],
   })
 }
