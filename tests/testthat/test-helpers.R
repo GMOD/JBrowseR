@@ -46,7 +46,7 @@ test_that("track_data_frame() merges extra config, so a displays list plots the 
   df <- data.frame(chrom = "1", start = 1, end = 9, log2fc = 1.5)
   displays <- list(list(
     type = "LinearMarkDisplay",
-    marks = list(list(shape = "point", encoding = list(y = "log2fc")))
+    marks = list(list(mark = "point", encoding = list(y = "log2fc")))
   ))
   t <- track_data_frame(df, "t", displays = displays, height = 200)
   expect_equal(t$displays, displays)

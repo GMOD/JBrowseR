@@ -108,7 +108,7 @@ JBrowseR(
       type = "LinearMarkDisplay",
       scales = list(y = list(title = "Fst", rules = list(0.25))),
       marks = list(list(
-        shape = "bar",
+        mark = "bar",
         encoding = list(
           y = "fst",
           color = list(

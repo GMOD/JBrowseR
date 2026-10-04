@@ -48,7 +48,7 @@ de <- data.frame(
 track_data_frame(de, "de", displays = list(list(
   type = "LinearMarkDisplay",
   marks = list(list(
-    shape = "point",
+    mark = "point",
     encoding = list(y = "log2fc", color = list(field = "sig", scale = "categorical"))
   ))
 )))
