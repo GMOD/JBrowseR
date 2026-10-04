@@ -96,18 +96,28 @@ function check(ok, what) {
 }
 
 // positive, on the worker's own rpcServer: a worker count would also see the
-// parsers' own workers, which the main thread spawns when the RPC runs there
-async function checkRpcWorker(page, widget) {
-  const registered = await Promise.all(
-    page
-      .workers()
-      .map(w =>
-        w
-          .evaluate(() => Object.keys(self.rpcServer?.methods ?? {}))
-          .catch(() => []),
-      ),
-  )
-  const rpc = registered.find(methods => methods.includes('CoreGetFeatures'))
+// parsers' own workers, which the main thread spawns when the RPC runs there.
+// Polled, since a caller may ask before the RPC worker has booted; a
+// main-thread fallback never serves CoreGetFeatures, so it still fails.
+async function checkRpcWorker(page, widget, timeout = 30000) {
+  const deadline = Date.now() + timeout
+  let registered = []
+  let rpc
+  while (rpc === undefined && Date.now() < deadline) {
+    registered = await Promise.all(
+      page
+        .workers()
+        .map(w =>
+          w
+            .evaluate(() => Object.keys(self.rpcServer?.methods ?? {}))
+            .catch(() => []),
+        ),
+    )
+    rpc = registered.find(methods => methods.includes('CoreGetFeatures'))
+    if (rpc === undefined) {
+      await new Promise(r => setTimeout(r, 250))
+    }
+  }
   check(
     rpc !== undefined,
     `${widget} runs its RPC in a worker (${rpc ? `${rpc.length} methods` : `${registered.length} workers, none serving RPC`})`,
