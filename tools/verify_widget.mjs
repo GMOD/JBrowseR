@@ -176,8 +176,8 @@ const errors = []
     // It comes back as `chr17:…` though `17:…` was sent, because the reported
     // refName is the assembly's and the hub's hg38 spells it `chr17`. JBrowse
     // aliases the two, so this is what a Shiny app comparing strings sees too —
-    // the trap the HANDOFF's `_location` note is about, asserted here rather
-    // than only described.
+    // the trap agent-docs/reference/traps.md describes for `_location`,
+    // asserted here rather than only described.
     const landed = await page
       .waitForFunction(
         id => /^(chr)?17:/.test(window.__inputs[`${id}_location`] ?? ''),
