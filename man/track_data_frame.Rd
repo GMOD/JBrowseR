@@ -49,7 +49,7 @@ track_data_frame(de, "de", displays = list(list(
   type = "LinearMarkDisplay",
   marks = list(list(
     mark = "point",
-    encoding = list(y = "log2fc", color = list(field = "sig", scale = "categorical"))
+    encoding = list(y = "log2fc", color = list(field = "sig", scale = list(type = "ordinal")))
   ))
 )))
 }

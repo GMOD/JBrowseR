@@ -60,11 +60,9 @@ Now `location` can be a gene name.
 ```{r}
 hg19_search <- list(
   type = "TrixTextSearchAdapter",
-  textSearchAdapterId = "hg19-index",
   assemblyNames = list("hg19"),
   ixFilePath = list(uri = "https://jbrowse.org/genomes/hg19/trix/hg19.ix"),
-  ixxFilePath = list(uri = "https://jbrowse.org/genomes/hg19/trix/hg19.ixx"),
-  metaFilePath = list(uri = "https://jbrowse.org/genomes/hg19/trix/meta.json")
+  ixxFilePath = list(uri = "https://jbrowse.org/genomes/hg19/trix/hg19.ixx")
 )
 ```
 

@@ -1,5 +1,5 @@
 test_that("options reach the payload verbatim, under JBrowse's names", {
-  search <- list(type = "TrixTextSearchAdapter", textSearchAdapterId = "hg38-index")
+  search <- list(type = "TrixTextSearchAdapter", ixFilePath = list(uri = "hg38.ix"))
   x <- JBrowseR(
     assembly = "hg38",
     location = "BRCA1",

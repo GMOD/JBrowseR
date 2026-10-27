@@ -38,7 +38,7 @@
 #'   type = "LinearMarkDisplay",
 #'   marks = list(list(
 #'     mark = "point",
-#'     encoding = list(y = "log2fc", color = list(field = "sig", scale = "categorical"))
+#'     encoding = list(y = "log2fc", color = list(field = "sig", scale = list(type = "ordinal")))
 #'   ))
 #' )))
 track_data_frame <- function(data, name, assembly_name = NULL, ...) {
